@@ -109,6 +109,11 @@
       font-size:clamp(72px,21vw,112px);line-height:.86;font-weight:950;letter-spacing:-.08em;
       white-space:nowrap;text-rendering:geometricPrecision;
     }
+    .problem.level-up{
+      color:var(--orange);
+      font-size:clamp(48px,15vw,74px);
+      letter-spacing:-.04em;
+    }
     .game-controls{display:none;min-height:0}
     .game-controls.show{display:grid;grid-template-rows:auto minmax(0,1fr);gap:9px}
     .answer-row{display:grid;grid-template-columns:minmax(0,1fr) 102px;gap:9px}
@@ -169,7 +174,7 @@
     <header class="top">
       <h1 class="title">快速計算</h1>
       <div class="top-actions">
-        <div class="mark">60 SEC</div>
+        <div id="levelMark" class="mark">LV 1 · 0/10</div>
         <button id="soundBtn" class="sound" type="button" aria-label="聲音開關">♪</button>
       </div>
     </header>
@@ -216,14 +221,19 @@
         timer:$('timer'),score:$('score'),problem:$('problem'),answer:$('answer'),
         submit:$('submitBtn'),start:$('startBtn'),restart:$('restartBtn'),clear:$('clearBtn'),back:$('backBtn'),
         resultBox:$('resultBox'),resultScore:$('resultScore'),resultText:$('resultText'),
-        playArea:$('playArea'),gameControls:$('gameControls'),sound:$('soundBtn')
+        playArea:$('playArea'),gameControls:$('gameControls'),sound:$('soundBtn'),levelMark:$('levelMark')
       };
       const digitKeys=[...document.querySelectorAll('[data-key]')];
-      let running=false,remaining=60,score=0,correct=0,wrong=0,streak=0,currentAnswer=0;
-      let value='',timerId=null,nextId=null;
+
+      const TARGET_PER_LEVEL=10;
+      const LEVEL_SECONDS=60;
+
+      let running=false,transitioning=false,remaining=LEVEL_SECONDS;
+      let score=0,totalCorrect=0,totalWrong=0,streak=0,currentAnswer=0;
+      let currentLevel=1,levelCorrect=0,value='',timerId=null,transitionId=null;
       let audioCtx=null,masterGain=null,bgmTimer=null,bgmStep=0,muted=false;
+
       const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
-      const level=()=>Math.min(8,1+Math.floor(correct/5));
 
       function ensureAudio(){
         const AudioContextClass=window.AudioContext||window.webkitAudioContext;
@@ -237,6 +247,7 @@
         if(audioCtx.state==='suspended') audioCtx.resume();
         return true;
       }
+
       function tone(freq,duration=.06,type='sine',volume=.025,delay=0){
         if(muted||!ensureAudio()) return;
         const now=audioCtx.currentTime+delay;
@@ -252,15 +263,23 @@
         osc.start(now);
         osc.stop(now+duration+.02);
       }
+
       function tapSound(){tone(520,.028,'square',.010)}
-      function correctSound(){tone(660,.055,'sine',.024);tone(880,.07,'sine',.018,.045)}
-      function wrongSound(){tone(185,.08,'triangle',.025)}
-      function finishSound(){
-        tone(523.25,.10,'sine',.025);tone(659.25,.10,'sine',.023,.10);tone(783.99,.18,'sine',.026,.20)
+      function correctSound(){tone(660,.05,'sine',.022);tone(880,.065,'sine',.016,.04)}
+      function wrongSound(){tone(185,.075,'triangle',.022)}
+      function levelSound(){
+        tone(523.25,.08,'sine',.025);
+        tone(659.25,.08,'sine',.024,.08);
+        tone(783.99,.13,'sine',.026,.16);
       }
+      function finishSound(){
+        tone(392,.10,'triangle',.022);
+        tone(329.63,.14,'triangle',.020,.10);
+      }
+
       function bgmTick(){
         if(!running||muted) return;
-        const melody=[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23];
+        const melody=[261.63,329.63,392,329.63,293.66,349.23,440,349.23];
         const bass=[130.81,146.83,164.81,146.83];
         tone(melody[bgmStep%melody.length],.16,'triangle',.007);
         if(bgmStep%2===0) tone(bass[Math.floor(bgmStep/2)%bass.length],.22,'sine',.005);
@@ -276,72 +295,236 @@
       function stopBgm(){
         if(bgmTimer){clearInterval(bgmTimer);bgmTimer=null}
       }
+
       function setValue(v){
-        value=v.slice(0,6);
+        value=v.slice(0,7);
         E.answer.textContent=value||'';
         E.answer.classList.toggle('empty',!value);
       }
+
+      function updateLevelMark(){
+        E.levelMark.textContent=`LV ${currentLevel} · ${levelCorrect}/${TARGET_PER_LEVEL}`;
+      }
+
       function makeProblem(){
-        const lv=level();
+        transitioning=false;
+        E.problem.classList.remove('level-up');
+
+        const lv=currentLevel;
         let a,b,op,ans;
-        const pool=lv<3?['+','-']:lv<5?['+','-','×']:['+','-','×','÷'];
-        op=pool[rnd(0,pool.length-1)];
-        if(op==='+'){
-          const m=lv<2?20:lv<4?50:100;a=rnd(2,m);b=rnd(2,m);ans=a+b;
-        }else if(op==='-'){
-          const m=lv<2?20:lv<4?60:120;a=rnd(5,m);b=rnd(1,a);ans=a-b;
-        }else if(op==='×'){
-          const m=lv<5?9:12;a=rnd(2,m);b=rnd(2,m);ans=a*b;
+
+        if(lv===1){
+          op=Math.random()<.5?'+':'-';
+          if(op==='+'){
+            a=rnd(1,9); b=rnd(1,9); ans=a+b;
+          }else{
+            a=rnd(4,18); b=rnd(1,a); ans=a-b;
+          }
+        }else if(lv===2){
+          op=Math.random()<.5?'+':'-';
+          if(op==='+'){
+            a=rnd(10,39); b=rnd(2,9); ans=a+b;
+          }else{
+            a=rnd(12,49); b=rnd(2,9); ans=a-b;
+          }
+        }else if(lv===3){
+          op=Math.random()<.5?'+':'-';
+          if(op==='+'){
+            a=rnd(12,59); b=rnd(11,49); ans=a+b;
+          }else{
+            a=rnd(25,89); b=rnd(10,a-1); ans=a-b;
+          }
+        }else if(lv===4){
+          const pool=['+','-','×'];
+          op=pool[rnd(0,pool.length-1)];
+          if(op==='×'){
+            a=rnd(2,9); b=rnd(2,9); ans=a*b;
+          }else if(op==='+'){
+            a=rnd(20,79); b=rnd(10,59); ans=a+b;
+          }else{
+            a=rnd(35,99); b=rnd(10,a-1); ans=a-b;
+          }
+        }else if(lv===5){
+          const pool=['+','-','×'];
+          op=pool[rnd(0,pool.length-1)];
+          if(op==='×'){
+            a=rnd(3,12); b=rnd(3,12); ans=a*b;
+          }else if(op==='+'){
+            a=rnd(30,99); b=rnd(20,89); ans=a+b;
+          }else{
+            a=rnd(50,149); b=rnd(20,a-1); ans=a-b;
+          }
+        }else if(lv===6){
+          const pool=['+','-','×','÷'];
+          op=pool[rnd(0,pool.length-1)];
+          if(op==='×'){
+            a=rnd(4,12); b=rnd(4,12); ans=a*b;
+          }else if(op==='÷'){
+            b=rnd(2,12); ans=rnd(2,12); a=b*ans;
+          }else if(op==='+'){
+            a=rnd(50,149); b=rnd(30,119); ans=a+b;
+          }else{
+            a=rnd(80,199); b=rnd(25,a-1); ans=a-b;
+          }
         }else{
-          b=rnd(2,lv<7?9:12);ans=rnd(2,lv<7?9:12);a=b*ans;
+          // Level 7+ keeps scaling instead of stopping at a fixed cap.
+          const pool=['+','-','×','÷'];
+          op=pool[rnd(0,pool.length-1)];
+          const extra=lv-7;
+          const addMax=Math.min(999,220+extra*55);
+          const multMax=Math.min(20,12+Math.floor(extra/2)*2);
+
+          if(op==='×'){
+            a=rnd(6,multMax); b=rnd(5,multMax); ans=a*b;
+          }else if(op==='÷'){
+            b=rnd(3,multMax); ans=rnd(3,multMax); a=b*ans;
+          }else if(op==='+'){
+            a=rnd(70,addMax); b=rnd(45,Math.max(50,addMax-20)); ans=a+b;
+          }else{
+            a=rnd(110,addMax); b=rnd(35,a-1); ans=a-b;
+          }
         }
+
         currentAnswer=ans;
         E.problem.textContent=`${a} ${op} ${b}`;
         setValue('');
       }
+
+      function startLevelTimer(){
+        clearInterval(timerId);
+        remaining=LEVEL_SECONDS;
+        E.timer.textContent=String(LEVEL_SECONDS);
+        timerId=setInterval(()=>{
+          remaining--;
+          E.timer.textContent=String(Math.max(0,remaining));
+          if(remaining<=0) finish();
+        },1000);
+      }
+
+      function advanceLevel(){
+        transitioning=true;
+        clearInterval(timerId);
+        levelSound();
+
+        const timeBonus=remaining*2;
+        score+=timeBonus;
+        E.score.textContent=String(score);
+
+        currentLevel++;
+        levelCorrect=0;
+        updateLevelMark();
+        setValue('');
+        E.problem.textContent=`LEVEL ${currentLevel}`;
+        E.problem.classList.add('level-up');
+
+        clearTimeout(transitionId);
+        transitionId=setTimeout(()=>{
+          if(!running) return;
+          makeProblem();
+          startLevelTimer();
+        },650);
+      }
+
       function submit(){
-        if(!running||value==='') return;
+        if(!running||transitioning||value==='') return;
         const val=Number(value);
+
         if(val===currentAnswer){
-          correct++;streak++;score+=10+Math.min(streak,10);E.score.textContent=String(score);correctSound();makeProblem();
+          totalCorrect++;
+          levelCorrect++;
+          streak++;
+          score+=10+Math.min(streak,10)+currentLevel;
+          E.score.textContent=String(score);
+          correctSound();
+          updateLevelMark();
+
+          if(levelCorrect>=TARGET_PER_LEVEL){
+            advanceLevel();
+          }else{
+            makeProblem();
+          }
         }else{
-          wrong++;streak=0;score=Math.max(0,score-3);E.score.textContent=String(score);wrongSound();setValue('');makeProblem();
+          totalWrong++;
+          streak=0;
+          score=Math.max(0,score-3);
+          E.score.textContent=String(score);
+          wrongSound();
+          setValue('');
+          makeProblem();
         }
       }
+
       function finish(){
-        running=false;clearInterval(timerId);clearTimeout(nextId);stopBgm();E.timer.textContent='0';
-        const tries=correct+wrong;
-        const acc=tries?Math.round(correct/tries*100):0;
-        E.resultScore.textContent=`${score} 分`;
-        E.resultText.textContent=`答對 ${correct} 題 · 正確率 ${acc}%`;
+        running=false;
+        transitioning=false;
+        clearInterval(timerId);
+        clearTimeout(transitionId);
+        stopBgm();
+        E.timer.textContent='0';
+
+        const tries=totalCorrect+totalWrong;
+        const acc=tries?Math.round(totalCorrect/tries*100):0;
+        E.resultScore.textContent=`LV ${currentLevel}`;
+        E.resultText.textContent=`總分 ${score} · 答對 ${totalCorrect} 題 · 正確率 ${acc}%`;
         E.resultBox.classList.add('show');
         finishSound();
       }
+
       function start(){
-        clearInterval(timerId);clearTimeout(nextId);
-        running=true;ensureAudio();remaining=60;score=0;correct=0;wrong=0;streak=0;
-        E.timer.textContent='60';E.score.textContent='0';E.start.hidden=true;E.playArea.hidden=false;
-        E.gameControls.classList.add('show');E.resultBox.classList.remove('show');
-        makeProblem();startBgm();
-        timerId=setInterval(()=>{
-          remaining--;E.timer.textContent=String(Math.max(0,remaining));if(remaining<=0) finish();
-        },1000);
+        clearInterval(timerId);
+        clearTimeout(transitionId);
+
+        running=true;
+        transitioning=false;
+        ensureAudio();
+        remaining=LEVEL_SECONDS;
+        score=0;
+        totalCorrect=0;
+        totalWrong=0;
+        streak=0;
+        currentLevel=1;
+        levelCorrect=0;
+
+        E.timer.textContent=String(LEVEL_SECONDS);
+        E.score.textContent='0';
+        E.start.hidden=true;
+        E.playArea.hidden=false;
+        E.gameControls.classList.add('show');
+        E.resultBox.classList.remove('show');
+
+        updateLevelMark();
+        makeProblem();
+        startLevelTimer();
+        startBgm();
       }
+
       E.start.addEventListener('click',start);
-      E.restart.addEventListener('click',()=>{E.resultBox.classList.remove('show');start()});
-      E.submit.addEventListener('click',()=>{if(running&&value!=='') submit()});
-      E.clear.addEventListener('click',()=>{if(running){tapSound();setValue('')}});
-      E.back.addEventListener('click',()=>{if(running){tapSound();setValue(value.slice(0,-1))}});
+      E.restart.addEventListener('click',()=>{
+        E.resultBox.classList.remove('show');
+        start();
+      });
+      E.submit.addEventListener('click',()=>{if(running&&!transitioning&&value!=='') submit()});
+      E.clear.addEventListener('click',()=>{if(running&&!transitioning){tapSound();setValue('')}});
+      E.back.addEventListener('click',()=>{if(running&&!transitioning){tapSound();setValue(value.slice(0,-1))}});
       digitKeys.forEach(btn=>btn.addEventListener('click',()=>{
-        if(running){tapSound();setValue(value+btn.dataset.key)}
+        if(running&&!transitioning){tapSound();setValue(value+btn.dataset.key)}
       }));
+
       E.sound.addEventListener('click',()=>{
         muted=!muted;
         E.sound.textContent=muted?'×':'♪';
         E.sound.classList.toggle('off',muted);
         E.sound.setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');
-        if(muted){stopBgm()}else{ensureAudio();tone(660,.06,'sine',.02);if(running) startBgm()}
+        if(muted){
+          stopBgm();
+        }else{
+          ensureAudio();
+          tone(660,.06,'sine',.02);
+          if(running) startBgm();
+        }
       });
+
+      updateLevelMark();
     })();
   </script>
 </body>
