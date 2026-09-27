@@ -301,10 +301,28 @@
 
       function bgmTick(){
         if(!running||muted) return;
-        const melody=[261.63,329.63,392,329.63,293.66,349.23,440,349.23];
-        const bass=[130.81,146.83,164.81,146.83];
-        tone(melody[bgmStep%melody.length],.16,'triangle',.014);
-        if(bgmStep%2===0) tone(bass[Math.floor(bgmStep/2)%bass.length],.22,'sine',.010);
+
+        // Original arcade-style brain-training loop: brighter, faster, and louder.
+        const melody=[
+          329.63,392.00,493.88,392.00,
+          349.23,440.00,523.25,440.00,
+          392.00,493.88,587.33,493.88,
+          349.23,440.00,523.25,659.25
+        ];
+        const bass=[130.81,146.83,164.81,196.00];
+
+        tone(melody[bgmStep%melody.length],.115,'square',.030);
+
+        if(bgmStep%2===0){
+          tone(bass[Math.floor(bgmStep/2)%bass.length],.20,'triangle',.022);
+        }
+
+        if(bgmStep%4===0){
+          tone(98,.055,'sine',.018);
+        }else if(bgmStep%4===2){
+          tone(740,.025,'square',.012);
+        }
+
         bgmStep++;
       }
       function startBgm(){
@@ -312,7 +330,7 @@
         if(muted||!running||!ensureAudio()) return;
         bgmStep=0;
         bgmTick();
-        bgmTimer=setInterval(bgmTick,375);
+        bgmTimer=setInterval(bgmTick,250);
       }
       function stopBgm(){
         if(bgmTimer){clearInterval(bgmTimer);bgmTimer=null}
