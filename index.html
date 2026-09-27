@@ -313,7 +313,7 @@
 
     <section id="gameControls" class="game-controls">
       <div class="answer-row">
-        <div id="answer" class="answer empty" role="status" aria-label="答案">答案</div>
+        <div id="answer" class="answer empty" role="status" aria-label="作答區"></div>
         <button id="submitBtn" class="submit" type="button">送出</button>
       </div>
 
@@ -362,7 +362,7 @@
 
       function setValue(v){
         value=v.slice(0,6);
-        E.answer.textContent=value||'答案';
+        E.answer.textContent=value||'';
         E.answer.classList.toggle('empty',!value);
       }
 
