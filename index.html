@@ -36,14 +36,17 @@
       gap:9px;
       overflow:hidden;
       isolation:isolate;
+      background:
+        linear-gradient(118deg,transparent 0 63%,rgba(75,0,215,.035) 63% 64%,transparent 64% 100%),
+        linear-gradient(62deg,transparent 0 76%,rgba(242,138,53,.045) 76% 77%,transparent 77% 100%);
     }
 
     .app::before{
       content:"";
       position:absolute;
-      width:170px;height:170px;
-      right:-70px;top:74px;
-      opacity:.18;
+      width:210px;height:210px;
+      right:-78px;top:72px;
+      opacity:.22;
       z-index:-1;
       background-image:radial-gradient(circle,var(--orange) 1px,transparent 1.2px);
       background-size:7px 7px;
@@ -53,11 +56,11 @@
     .app::after{
       content:"";
       position:absolute;
-      left:-48px;bottom:96px;
-      width:120px;height:120px;
+      left:-62px;bottom:82px;
+      width:170px;height:170px;
       border:2px solid var(--violet);
       border-radius:50%;
-      opacity:.12;
+      opacity:.14;
       z-index:-1;
     }
 
@@ -140,23 +143,14 @@
     .start:active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--violet-soft)}
 
     .problem{
-      font-size:clamp(62px,19vw,96px);
+      font-size:clamp(72px,21vw,112px);
       line-height:.86;
       font-weight:950;
       letter-spacing:-.08em;
       white-space:nowrap;
       text-rendering:geometricPrecision;
     }
-    .feedback{
-      height:22px;
-      margin-top:12px;
-      font-size:13px;
-      line-height:22px;
-      font-weight:900;
-      color:var(--orange);
-      letter-spacing:.03em;
-    }
-    .feedback.bad{color:#b34d1a}
+    .feedback{display:none}
 
     .game-controls{
       display:none;
@@ -182,7 +176,7 @@
       color:var(--violet);
       border:0;
       border-bottom:4px solid var(--violet);
-      font-size:30px;
+      font-size:36px;
       line-height:1;
       font-weight:950;
       font-variant-numeric:tabular-nums;
@@ -212,7 +206,7 @@
       border-radius:16px;
       background:rgba(244,241,255,.72);
       color:var(--violet);
-      font-size:30px;
+      font-size:36px;
       line-height:1;
       font-weight:950;
       box-shadow:0 3px 0 rgba(75,0,215,.08);
@@ -275,7 +269,7 @@
 
     @media(min-height:780px){
       .keypad{grid-template-rows:repeat(4,minmax(68px,1fr))}
-      .key{min-height:68px;font-size:32px}
+      .key{min-height:68px;font-size:40px}
     }
     @media(max-height:700px){
       .app{gap:6px;padding-top:8px;padding-bottom:8px}
@@ -283,11 +277,10 @@
       .title{font-size:18px}
       .mark{font-size:10px}
       .hud-item strong{font-size:23px}
-      .problem{font-size:56px}
-      .feedback{margin-top:7px}
-      .answer{height:48px;font-size:26px}
+      .problem{font-size:64px}
+      .answer{height:48px;font-size:32px}
       .keypad{grid-template-rows:repeat(4,minmax(51px,1fr));gap:6px}
-      .key{min-height:51px;font-size:27px}
+      .key{min-height:51px;font-size:32px}
       .start{min-height:58px}
     }
   </style>
@@ -315,7 +308,6 @@
 
       <div id="playArea" hidden>
         <div id="problem" class="problem"></div>
-        <div id="feedback" class="feedback" aria-live="polite"></div>
       </div>
     </section>
 
@@ -355,7 +347,7 @@
       const $=id=>document.getElementById(id);
       const E={
         timer:$('timer'),score:$('score'),problem:$('problem'),answer:$('answer'),
-        feedback:$('feedback'),submit:$('submitBtn'),start:$('startBtn'),
+        submit:$('submitBtn'),start:$('startBtn'),
         restart:$('restartBtn'),clear:$('clearBtn'),back:$('backBtn'),
         resultBox:$('resultBox'),resultScore:$('resultScore'),resultText:$('resultText'),
         playArea:$('playArea'),gameControls:$('gameControls')
@@ -372,11 +364,6 @@
         value=v.slice(0,6);
         E.answer.textContent=value||'答案';
         E.answer.classList.toggle('empty',!value);
-      }
-
-      function show(text,bad=false){
-        E.feedback.textContent=text;
-        E.feedback.className=bad?'feedback bad':'feedback';
       }
 
       function makeProblem(){
@@ -414,17 +401,14 @@
           streak++;
           score+=10+Math.min(streak,10);
           E.score.textContent=String(score);
-          show('答對');
           makeProblem();
         }else{
           wrong++;
           streak=0;
           score=Math.max(0,score-3);
           E.score.textContent=String(score);
-          show(`答案 ${currentAnswer}`,true);
           setValue('');
-          clearTimeout(nextId);
-          nextId=setTimeout(()=>{if(running){show('');makeProblem()}},300);
+          makeProblem();
         }
       }
 
@@ -459,7 +443,6 @@
         E.gameControls.classList.add('show');
         E.resultBox.classList.remove('show');
 
-        show('');
         makeProblem();
 
         timerId=setInterval(()=>{
