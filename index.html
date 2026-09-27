@@ -263,7 +263,7 @@
       let currentLevel=1,levelCorrect=0,value='',timerId=null,transitionId=null;
       let seenProblems=new Set();
       let audioCtx=null,masterGain=null,bgmBuffer=null,bgmSource=null,bgmGain=null,bgmToken=0,muted=false;
-      const BGM_URL='assets/golden-bgm-loop.m4a';
+      const BGM_URL='assets/rag-time-on-the-rag-loop.m4a';
       const bgmDataPromise=fetch(BGM_URL,{cache:'force-cache'}).then(r=>{if(!r.ok) throw new Error('BGM load failed');return r.arrayBuffer()}).catch(()=>null);
 
       const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
