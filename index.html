@@ -32,7 +32,7 @@
       width:min(100%,520px);
       height:100dvh;
       margin:0 auto;
-      padding:max(12px,env(safe-area-inset-top)) 16px max(12px,env(safe-area-inset-bottom));
+      padding:max(12px,env(safe-area-inset-top)) 10px max(10px,env(safe-area-inset-bottom));
       display:grid;
       grid-template-rows:auto auto minmax(120px,1fr) auto;
       gap:9px;
@@ -123,11 +123,11 @@
     }
     .keypad{
       min-height:0;display:grid;grid-template-columns:repeat(3,1fr);
-      grid-template-rows:repeat(4,minmax(60px,1fr));gap:8px;
+      grid-template-rows:repeat(4,minmax(74px,1fr));gap:9px;
     }
     .key{
-      min-height:60px;border:2.5px solid var(--violet);border-radius:16px;background:rgba(244,241,255,.72);
-      color:var(--violet);font-size:36px;line-height:1;font-weight:950;box-shadow:0 3px 0 rgba(75,0,215,.08);
+      min-height:74px;border:2.8px solid var(--violet);border-radius:18px;background:rgba(244,241,255,.72);
+      color:var(--violet);font-size:44px;line-height:1;font-weight:950;box-shadow:0 3px 0 rgba(75,0,215,.08);
     }
     .key.special{
       border-color:var(--orange);color:var(--orange);background:rgba(244,241,255,.54);font-size:13px;letter-spacing:.04em;
@@ -147,8 +147,8 @@
     .result-card p{margin:0 0 24px;color:var(--orange);font-size:15px;line-height:1.5;font-weight:900}
     .result-card .start{width:100%;box-shadow:none}
     @media(min-height:780px){
-      .keypad{grid-template-rows:repeat(4,minmax(68px,1fr))}
-      .key{min-height:68px;font-size:40px}
+      .keypad{grid-template-rows:repeat(4,minmax(82px,1fr))}
+      .key{min-height:82px;font-size:48px}
     }
     @media(max-height:700px){
       .app{gap:6px;padding-top:8px;padding-bottom:8px}
@@ -158,8 +158,8 @@
       .hud-item strong{font-size:23px}
       .problem{font-size:64px}
       .answer{height:48px;font-size:32px}
-      .keypad{grid-template-rows:repeat(4,minmax(51px,1fr));gap:6px}
-      .key{min-height:51px;font-size:32px}
+      .keypad{grid-template-rows:repeat(4,minmax(58px,1fr));gap:6px}
+      .key{min-height:58px;font-size:36px}
       .start{min-height:58px}
     }
   </style>
