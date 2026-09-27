@@ -111,6 +111,18 @@
       color:var(--orange);
       font-size:18px;
     }
+    .desktop-hint{
+      display:none;
+      margin-top:8px;
+      font-size:11px;
+      line-height:1.5;
+      font-weight:800;
+      letter-spacing:.04em;
+      opacity:.7;
+    }
+    @media (hover:hover) and (pointer:fine){
+      .desktop-hint{display:block}
+    }
     .start{
       min-width:180px;min-height:66px;border:3px solid var(--orange);border-radius:999px;
       background:var(--orange);color:white;font-size:20px;font-weight:950;letter-spacing:.08em;
@@ -199,6 +211,7 @@
         60 秒一關<br>
         答對 <strong>8 題</strong> → 下一階<br>
         難度會逐階提升
+        <span class="desktop-hint">電腦：數字鍵輸入 · Backspace 刪除 · Delete 清除 · Enter 送出</span>
       </div>
       <button id="startBtn" class="start" type="button">開始</button>
       <div id="playArea" hidden><div id="problem" class="problem"></div></div>
@@ -642,6 +655,36 @@
       digitKeys.forEach(btn=>btn.addEventListener('click',()=>{
         if(running&&!transitioning){tapSound();setValue(value+btn.dataset.key)}
       }));
+
+      document.addEventListener('keydown',event=>{
+        if(!running||transitioning||event.ctrlKey||event.metaKey||event.altKey) return;
+
+        if(/^\d$/.test(event.key)){
+          event.preventDefault();
+          tapSound();
+          setValue(value+event.key);
+          return;
+        }
+
+        if(event.key==='Backspace'){
+          event.preventDefault();
+          tapSound();
+          setValue(value.slice(0,-1));
+          return;
+        }
+
+        if(event.key==='Delete'){
+          event.preventDefault();
+          tapSound();
+          setValue('');
+          return;
+        }
+
+        if(event.key==='Enter'){
+          event.preventDefault();
+          if(value!=='') submit();
+        }
+      });
 
       E.sound.addEventListener('click',()=>{
         muted=!muted;
