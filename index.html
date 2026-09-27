@@ -249,9 +249,7 @@
       let score=0,totalCorrect=0,totalWrong=0,streak=0,currentAnswer=0;
       let currentLevel=1,levelCorrect=0,value='',timerId=null,transitionId=null;
       let seenProblems=new Set();
-      let audioCtx=null,masterGain=null,bgmBuffer=null,bgmSource=null,bgmGain=null,bgmToken=0,muted=false;
-      const BGM_URL='assets/golden-bgm-loop.m4a';
-      const bgmDataPromise=fetch(BGM_URL,{cache:'force-cache'}).then(r=>{if(!r.ok) throw new Error('BGM load failed');return r.arrayBuffer()}).catch(()=>null);
+      let audioCtx=null,masterGain=null,bgmGain=null,bgmTimer=null,bgmStep=0,muted=false;
 
       const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 
@@ -301,44 +299,73 @@
         tone(659.25,.08,'sine',.050,.055);
       }
 
-      async function loadBgm(){
-        if(bgmBuffer) return bgmBuffer;
-        if(!ensureAudio()) return null;
-        const data=await bgmDataPromise;
-        if(!data) return null;
-        try{
-          bgmBuffer=await audioCtx.decodeAudioData(data.slice(0));
-          return bgmBuffer;
-        }catch{
-          return null;
-        }
+      function bgmTone(freq,duration=.08,type='triangle',volume=.02,delay=0){
+        if(muted||!running||!bgmGain||!ensureAudio()) return;
+        const now=audioCtx.currentTime+delay;
+        const osc=audioCtx.createOscillator();
+        const gain=audioCtx.createGain();
+        osc.type=type;
+        osc.frequency.setValueAtTime(freq,now);
+        gain.gain.setValueAtTime(.0001,now);
+        gain.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),now+.008);
+        gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+        osc.connect(gain);
+        gain.connect(bgmGain);
+        osc.start(now);
+        osc.stop(now+duration+.02);
       }
 
-      async function startBgm(){
+      function bgmTick(){
+        if(!running||muted||!bgmGain) return;
+
+        // Original playful variety-show challenge loop.
+        // Bright, adventurous and comic, but not based on any existing melody.
+        const melody=[
+          392.00,493.88,523.25,440.00,
+          349.23,440.00,493.88,392.00,
+          440.00,554.37,587.33,493.88,
+          392.00,493.88,440.00,329.63
+        ];
+        const reply=[
+          659.25,587.33,523.25,587.33,
+          698.46,659.25,587.33,523.25
+        ];
+        const bass=[130.81,146.83,164.81,146.83];
+
+        bgmTone(melody[bgmStep%melody.length],.12,'triangle',.030);
+
+        if(bgmStep%2===0){
+          bgmTone(bass[Math.floor(bgmStep/2)%bass.length],.20,'sine',.022);
+        }
+
+        if(bgmStep%4===2){
+          bgmTone(reply[Math.floor(bgmStep/2)%reply.length],.055,'square',.010,.035);
+        }
+
+        if(bgmStep%8===4){
+          bgmTone(783.99,.045,'square',.007,.09);
+        }
+
+        bgmStep++;
+      }
+
+      function startBgm(){
         stopBgm();
         if(muted||!running||!ensureAudio()) return;
-        const token=bgmToken;
-        const buffer=await loadBgm();
-        if(!buffer||muted||!running||token!==bgmToken) return;
 
-        const source=audioCtx.createBufferSource();
-        const gain=audioCtx.createGain();
-        source.buffer=buffer;
-        source.loop=true;
-        gain.gain.value=.44;
-        source.connect(gain);
-        gain.connect(masterGain);
-        source.start(0);
-        bgmSource=source;
-        bgmGain=gain;
+        bgmGain=audioCtx.createGain();
+        bgmGain.gain.value=.24;
+        bgmGain.connect(masterGain);
+
+        bgmStep=0;
+        bgmTick();
+        bgmTimer=setInterval(bgmTick,300);
       }
 
       function stopBgm(){
-        bgmToken++;
-        if(bgmSource){
-          try{bgmSource.stop()}catch{}
-          try{bgmSource.disconnect()}catch{}
-          bgmSource=null;
+        if(bgmTimer){
+          clearInterval(bgmTimer);
+          bgmTimer=null;
         }
         if(bgmGain){
           try{bgmGain.disconnect()}catch{}
