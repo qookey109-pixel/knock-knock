@@ -338,7 +338,7 @@
         const gain=audioCtx.createGain();
         source.buffer=buffer;
         source.loop=true;
-        gain.gain.value=.42;
+        gain.gain.value=.38;
         source.connect(gain);
         gain.connect(masterGain);
         source.start(0);
