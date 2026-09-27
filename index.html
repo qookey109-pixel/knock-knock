@@ -99,6 +99,18 @@
     .center{
       min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px 0;
     }
+    .rules{
+      margin:0 0 18px;
+      font-size:15px;
+      line-height:1.75;
+      font-weight:850;
+      letter-spacing:.03em;
+      color:var(--violet);
+    }
+    .rules strong{
+      color:var(--orange);
+      font-size:18px;
+    }
     .start{
       min-width:180px;min-height:66px;border:3px solid var(--orange);border-radius:999px;
       background:var(--orange);color:white;font-size:20px;font-weight:950;letter-spacing:.08em;
@@ -128,11 +140,11 @@
     }
     .keypad{
       min-height:0;display:grid;grid-template-columns:repeat(3,1fr);
-      grid-template-rows:repeat(4,minmax(74px,1fr));gap:9px;
+      grid-template-rows:repeat(4,minmax(82px,1fr));gap:9px;
     }
     .key{
-      min-height:74px;border:2.8px solid var(--violet);border-radius:18px;background:rgba(244,241,255,.72);
-      color:var(--violet);font-size:44px;line-height:1;font-weight:950;box-shadow:0 3px 0 rgba(75,0,215,.08);
+      min-height:82px;border:3px solid var(--violet);border-radius:19px;background:rgba(244,241,255,.72);
+      color:var(--violet);font-size:48px;line-height:1;font-weight:950;box-shadow:0 3px 0 rgba(75,0,215,.08);
     }
     .key.special{
       border-color:var(--orange);color:var(--orange);background:rgba(244,241,255,.54);font-size:13px;letter-spacing:.04em;
@@ -152,8 +164,8 @@
     .result-card p{margin:0 0 24px;color:var(--orange);font-size:15px;line-height:1.5;font-weight:900}
     .result-card .start{width:100%;box-shadow:none}
     @media(min-height:780px){
-      .keypad{grid-template-rows:repeat(4,minmax(82px,1fr))}
-      .key{min-height:82px;font-size:48px}
+      .keypad{grid-template-rows:repeat(4,minmax(92px,1fr))}
+      .key{min-height:92px;font-size:54px}
     }
     @media(max-height:700px){
       .app{gap:6px;padding-top:8px;padding-bottom:8px}
@@ -163,8 +175,8 @@
       .hud-item strong{font-size:23px}
       .problem{font-size:64px}
       .answer{height:48px;font-size:32px}
-      .keypad{grid-template-rows:repeat(4,minmax(58px,1fr));gap:6px}
-      .key{min-height:58px;font-size:36px}
+      .keypad{grid-template-rows:repeat(4,minmax(64px,1fr));gap:6px}
+      .key{min-height:64px;font-size:40px}
       .start{min-height:58px}
     }
   </style>
@@ -174,7 +186,7 @@
     <header class="top">
       <h1 class="title">快速計算</h1>
       <div class="top-actions">
-        <div id="levelMark" class="mark">LV 1 · 0/10</div>
+        <div id="levelMark" class="mark">LV 1 · 0/8</div>
         <button id="soundBtn" class="sound" type="button" aria-label="聲音開關">♪</button>
       </div>
     </header>
@@ -183,6 +195,11 @@
       <div class="hud-item score"><span>SCORE</span><strong id="score">0</strong></div>
     </section>
     <section class="center">
+      <div id="rules" class="rules">
+        60 秒一關<br>
+        答對 <strong>8 題</strong> → 下一階<br>
+        難度會逐階提升
+      </div>
       <button id="startBtn" class="start" type="button">開始</button>
       <div id="playArea" hidden><div id="problem" class="problem"></div></div>
     </section>
@@ -221,11 +238,11 @@
         timer:$('timer'),score:$('score'),problem:$('problem'),answer:$('answer'),
         submit:$('submitBtn'),start:$('startBtn'),restart:$('restartBtn'),clear:$('clearBtn'),back:$('backBtn'),
         resultBox:$('resultBox'),resultScore:$('resultScore'),resultText:$('resultText'),
-        playArea:$('playArea'),gameControls:$('gameControls'),sound:$('soundBtn'),levelMark:$('levelMark')
+        playArea:$('playArea'),gameControls:$('gameControls'),sound:$('soundBtn'),levelMark:$('levelMark'),rules:$('rules')
       };
       const digitKeys=[...document.querySelectorAll('[data-key]')];
 
-      const TARGET_PER_LEVEL=10;
+      const TARGET_PER_LEVEL=8;
       const LEVEL_SECONDS=60;
 
       let running=false,transitioning=false,remaining=LEVEL_SECONDS;
@@ -547,6 +564,7 @@
         E.timer.textContent=String(LEVEL_SECONDS);
         E.score.textContent='0';
         E.start.hidden=true;
+        E.rules.hidden=true;
         E.playArea.hidden=false;
         E.gameControls.classList.add('show');
         E.resultBox.classList.remove('show');
