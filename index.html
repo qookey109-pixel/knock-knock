@@ -241,7 +241,7 @@
         if(!audioCtx){
           audioCtx=new AudioContextClass();
           masterGain=audioCtx.createGain();
-          masterGain.gain.value=.72;
+          masterGain.gain.value=.95;
           masterGain.connect(audioCtx.destination);
         }
         if(audioCtx.state==='suspended') audioCtx.resume();
@@ -264,25 +264,29 @@
         osc.stop(now+duration+.02);
       }
 
-      function tapSound(){tone(520,.028,'square',.010)}
-      function correctSound(){tone(660,.05,'sine',.022);tone(880,.065,'sine',.016,.04)}
-      function wrongSound(){tone(185,.075,'triangle',.022)}
+      function tapSound(){tone(520,.035,'square',.045)}
+      function correctSound(){tone(660,.07,'sine',.065);tone(880,.09,'sine',.050,.045)}
+      function wrongSound(){tone(185,.10,'triangle',.070)}
       function levelSound(){
-        tone(523.25,.08,'sine',.025);
-        tone(659.25,.08,'sine',.024,.08);
-        tone(783.99,.13,'sine',.026,.16);
+        tone(523.25,.09,'sine',.060);
+        tone(659.25,.09,'sine',.058,.08);
+        tone(783.99,.15,'sine',.065,.16);
       }
       function finishSound(){
-        tone(392,.10,'triangle',.022);
-        tone(329.63,.14,'triangle',.020,.10);
+        tone(392,.12,'triangle',.060);
+        tone(329.63,.16,'triangle',.055,.10);
+      }
+      function startSound(){
+        tone(523.25,.06,'sine',.055);
+        tone(659.25,.08,'sine',.050,.055);
       }
 
       function bgmTick(){
         if(!running||muted) return;
         const melody=[261.63,329.63,392,329.63,293.66,349.23,440,349.23];
         const bass=[130.81,146.83,164.81,146.83];
-        tone(melody[bgmStep%melody.length],.16,'triangle',.007);
-        if(bgmStep%2===0) tone(bass[Math.floor(bgmStep/2)%bass.length],.22,'sine',.005);
+        tone(melody[bgmStep%melody.length],.16,'triangle',.014);
+        if(bgmStep%2===0) tone(bass[Math.floor(bgmStep/2)%bass.length],.22,'sine',.010);
         bgmStep++;
       }
       function startBgm(){
@@ -531,6 +535,7 @@
 
         updateLevelMark();
         makeProblem();
+        startSound();
         startLevelTimer();
         startBgm();
       }
