@@ -12,7 +12,6 @@
       --violet:#4b00d7;
       --orange:#f28a35;
       --violet-soft:rgba(75,0,215,.12);
-      --orange-soft:rgba(242,138,53,.16);
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html,body{
@@ -28,7 +27,6 @@
       overscroll-behavior:none;
     }
     button{font:inherit;touch-action:manipulation}
-
     .app{
       position:relative;
       width:min(100%,520px);
@@ -46,7 +44,6 @@
         repeating-linear-gradient(118deg, transparent 0 46px, rgba(75,0,215,.024) 47px 48px, transparent 49px 94px),
         repeating-linear-gradient(62deg, transparent 0 72px, rgba(242,138,53,.028) 73px 74px, transparent 75px 142px);
     }
-
     .app::before{
       content:"";
       position:absolute;
@@ -59,21 +56,6 @@
       transform:rotate(11deg);
       clip-path:polygon(18% 0,100% 0,100% 100%,0 84%);
     }
-
-    .app::after{
-      content:"";
-      position:absolute;
-      left:-72px;bottom:58px;
-      width:220px;height:220px;
-      border:2px solid var(--violet);
-      border-radius:50%;
-      opacity:.18;
-      box-shadow:
-        0 0 0 24px rgba(75,0,215,.025),
-        0 0 0 48px rgba(242,138,53,.022);
-      z-index:-1;
-    }
-
     .top{
       display:flex;
       align-items:flex-end;
@@ -89,11 +71,7 @@
       font-weight:900;
       letter-spacing:.02em;
     }
-    .top-actions{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
+    .top-actions{display:flex;align-items:center;gap:10px}
     .mark{
       color:var(--orange);
       font-size:12px;
@@ -102,204 +80,72 @@
       letter-spacing:.12em;
     }
     .sound{
-      width:34px;
-      height:34px;
-      border:2px solid var(--violet);
-      border-radius:50%;
-      background:transparent;
-      color:var(--violet);
-      font-size:17px;
-      line-height:1;
-      font-weight:900;
-      display:grid;
-      place-items:center;
-      padding:0;
+      width:34px;height:34px;border:2px solid var(--violet);border-radius:50%;
+      background:transparent;color:var(--violet);font-size:17px;line-height:1;font-weight:900;
+      display:grid;place-items:center;padding:0;
     }
-    .sound.off{
-      color:var(--orange);
-      border-color:var(--orange);
-    }
-
-    .hud{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:18px;
-      padding-top:2px;
-    }
+    .sound.off{color:var(--orange);border-color:var(--orange)}
+    .hud{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding-top:2px}
     .hud-item{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
-      gap:8px;
-      min-width:0;
-      border-bottom:1.5px solid var(--violet);
-      padding:0 1px 5px;
+      display:flex;align-items:flex-end;justify-content:space-between;gap:8px;min-width:0;
+      border-bottom:1.5px solid var(--violet);padding:0 1px 5px;
     }
-    .hud-item span{
-      font-size:9px;
-      line-height:1;
-      font-weight:900;
-      letter-spacing:.12em;
-      opacity:.68;
-    }
+    .hud-item span{font-size:9px;line-height:1;font-weight:900;letter-spacing:.12em;opacity:.68}
     .hud-item strong{
-      font-size:28px;
-      line-height:.9;
-      font-weight:950;
-      letter-spacing:-.05em;
-      font-variant-numeric:tabular-nums;
+      font-size:28px;line-height:.9;font-weight:950;letter-spacing:-.05em;font-variant-numeric:tabular-nums;
     }
     .hud-item.score{border-bottom-color:var(--orange)}
     .hud-item.score strong{color:var(--orange)}
-
     .center{
-      min-height:0;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:2px 0;
+      min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2px 0;
     }
     .start{
-      min-width:180px;
-      min-height:66px;
-      border:3px solid var(--orange);
-      border-radius:999px;
-      background:var(--orange);
-      color:white;
-      font-size:20px;
-      font-weight:950;
-      letter-spacing:.08em;
+      min-width:180px;min-height:66px;border:3px solid var(--orange);border-radius:999px;
+      background:var(--orange);color:white;font-size:20px;font-weight:950;letter-spacing:.08em;
       box-shadow:8px 8px 0 var(--violet-soft);
     }
     .start:active{transform:translate(2px,2px);box-shadow:4px 4px 0 var(--violet-soft)}
-
     .problem{
-      font-size:clamp(72px,21vw,112px);
-      line-height:.86;
-      font-weight:950;
-      letter-spacing:-.08em;
-      white-space:nowrap;
-      text-rendering:geometricPrecision;
+      font-size:clamp(72px,21vw,112px);line-height:.86;font-weight:950;letter-spacing:-.08em;
+      white-space:nowrap;text-rendering:geometricPrecision;
     }
-    .feedback{display:none}
-
-    .game-controls{
-      display:none;
-      min-height:0;
-    }
-    .game-controls.show{
-      display:grid;
-      grid-template-rows:auto minmax(0,1fr);
-      gap:9px;
-    }
-
-    .answer-row{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) 102px;
-      gap:9px;
-    }
+    .game-controls{display:none;min-height:0}
+    .game-controls.show{display:grid;grid-template-rows:auto minmax(0,1fr);gap:9px}
+    .answer-row{display:grid;grid-template-columns:minmax(0,1fr) 102px;gap:9px}
     .answer{
-      height:56px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:transparent;
-      color:var(--violet);
-      border:0;
-      border-bottom:4px solid var(--violet);
-      font-size:36px;
-      line-height:1;
-      font-weight:950;
-      font-variant-numeric:tabular-nums;
-      overflow:hidden;
+      height:56px;display:flex;align-items:center;justify-content:center;background:transparent;color:var(--violet);
+      border:0;border-bottom:4px solid var(--violet);font-size:36px;line-height:1;font-weight:950;
+      font-variant-numeric:tabular-nums;overflow:hidden;
     }
     .answer.empty{color:rgba(75,0,215,.34)}
     .submit{
-      border:0;
-      border-radius:0;
-      background:var(--orange);
-      color:white;
-      font-size:15px;
-      font-weight:950;
-      letter-spacing:.05em;
+      border:0;border-radius:0;background:var(--orange);color:white;font-size:15px;font-weight:950;letter-spacing:.05em;
     }
-
     .keypad{
-      min-height:0;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      grid-template-rows:repeat(4,minmax(60px,1fr));
-      gap:8px;
+      min-height:0;display:grid;grid-template-columns:repeat(3,1fr);
+      grid-template-rows:repeat(4,minmax(60px,1fr));gap:8px;
     }
     .key{
-      min-height:60px;
-      border:2.5px solid var(--violet);
-      border-radius:16px;
-      background:rgba(244,241,255,.72);
-      color:var(--violet);
-      font-size:36px;
-      line-height:1;
-      font-weight:950;
-      box-shadow:0 3px 0 rgba(75,0,215,.08);
+      min-height:60px;border:2.5px solid var(--violet);border-radius:16px;background:rgba(244,241,255,.72);
+      color:var(--violet);font-size:36px;line-height:1;font-weight:950;box-shadow:0 3px 0 rgba(75,0,215,.08);
     }
     .key.special{
-      border-color:var(--orange);
-      color:var(--orange);
-      background:rgba(244,241,255,.54);
-      font-size:13px;
-      letter-spacing:.04em;
+      border-color:var(--orange);color:var(--orange);background:rgba(244,241,255,.54);font-size:13px;letter-spacing:.04em;
     }
-    .key:active{
-      background:var(--violet);
-      color:var(--paper-2);
-      transform:translateY(2px);
-      box-shadow:none;
-    }
-    .key.special:active{
-      background:var(--orange);
-      color:white;
-    }
+    .key:active{background:var(--violet);color:var(--paper-2);transform:translateY(2px);box-shadow:none}
+    .key.special:active{background:var(--orange);color:white}
     .submit:active{transform:scale(.98)}
-
     .result{
-      position:absolute;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:24px;
-      background:rgba(235,232,255,.98);
-      z-index:10;
+      position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:24px;
+      background:rgba(235,232,255,.98);z-index:10;
     }
     .result.show{display:flex}
-    .result-card{
-      width:min(100%,360px);
-      text-align:left;
-      border-top:6px solid var(--orange);
-      padding-top:18px;
-    }
+    .result-card{width:min(100%,360px);text-align:left;border-top:6px solid var(--orange);padding-top:18px}
     .result-card strong{
-      display:block;
-      color:var(--violet);
-      font-size:54px;
-      line-height:.9;
-      letter-spacing:-.06em;
-      margin-bottom:12px;
+      display:block;color:var(--violet);font-size:54px;line-height:.9;letter-spacing:-.06em;margin-bottom:12px;
     }
-    .result-card p{
-      margin:0 0 24px;
-      color:var(--orange);
-      font-size:15px;
-      line-height:1.5;
-      font-weight:900;
-    }
-    .result-card .start{
-      width:100%;
-      box-shadow:none;
-    }
-
+    .result-card p{margin:0 0 24px;color:var(--orange);font-size:15px;line-height:1.5;font-weight:900}
+    .result-card .start{width:100%;box-shadow:none}
     @media(min-height:780px){
       .keypad{grid-template-rows:repeat(4,minmax(68px,1fr))}
       .key{min-height:68px;font-size:40px}
@@ -327,32 +173,19 @@
         <button id="soundBtn" class="sound" type="button" aria-label="聲音開關">♪</button>
       </div>
     </header>
-
     <section class="hud" aria-label="狀態">
-      <div class="hud-item">
-        <span>TIME</span>
-        <strong id="timer">60</strong>
-      </div>
-      <div class="hud-item score">
-        <span>SCORE</span>
-        <strong id="score">0</strong>
-      </div>
+      <div class="hud-item"><span>TIME</span><strong id="timer">60</strong></div>
+      <div class="hud-item score"><span>SCORE</span><strong id="score">0</strong></div>
     </section>
-
     <section class="center">
       <button id="startBtn" class="start" type="button">開始</button>
-
-      <div id="playArea" hidden>
-        <div id="problem" class="problem"></div>
-      </div>
+      <div id="playArea" hidden><div id="problem" class="problem"></div></div>
     </section>
-
     <section id="gameControls" class="game-controls">
       <div class="answer-row">
         <div id="answer" class="answer empty" role="status" aria-label="作答區"></div>
         <button id="submitBtn" class="submit" type="button">送出</button>
       </div>
-
       <div class="keypad" aria-label="數字鍵盤">
         <button class="key" type="button" data-key="1">1</button>
         <button class="key" type="button" data-key="2">2</button>
@@ -369,7 +202,6 @@
       </div>
     </section>
   </main>
-
   <section id="resultBox" class="result" aria-live="polite">
     <div class="result-card">
       <strong id="resultScore">0 分</strong>
@@ -377,23 +209,19 @@
       <button id="restartBtn" class="start" type="button">再玩一次</button>
     </div>
   </section>
-
   <script>
     (() => {
       const $=id=>document.getElementById(id);
       const E={
         timer:$('timer'),score:$('score'),problem:$('problem'),answer:$('answer'),
-        submit:$('submitBtn'),start:$('startBtn'),
-        restart:$('restartBtn'),clear:$('clearBtn'),back:$('backBtn'),
+        submit:$('submitBtn'),start:$('startBtn'),restart:$('restartBtn'),clear:$('clearBtn'),back:$('backBtn'),
         resultBox:$('resultBox'),resultScore:$('resultScore'),resultText:$('resultText'),
         playArea:$('playArea'),gameControls:$('gameControls'),sound:$('soundBtn')
       };
       const digitKeys=[...document.querySelectorAll('[data-key]')];
-
       let running=false,remaining=60,score=0,correct=0,wrong=0,streak=0,currentAnswer=0;
       let value='',timerId=null,nextId=null;
       let audioCtx=null,masterGain=null,bgmTimer=null,bgmStep=0,muted=false;
-
       const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
       const level=()=>Math.min(8,1+Math.floor(correct/5));
 
@@ -409,7 +237,6 @@
         if(audioCtx.state==='suspended') audioCtx.resume();
         return true;
       }
-
       function tone(freq,duration=.06,type='sine',volume=.025,delay=0){
         if(muted||!ensureAudio()) return;
         const now=audioCtx.currentTime+delay;
@@ -425,35 +252,20 @@
         osc.start(now);
         osc.stop(now+duration+.02);
       }
-
-      function tapSound(){
-        tone(520,.028,'square',.010);
-      }
-
-      function correctSound(){
-        tone(660,.055,'sine',.024);
-        tone(880,.07,'sine',.018,.045);
-      }
-
-      function wrongSound(){
-        tone(185,.08,'triangle',.025);
-      }
-
+      function tapSound(){tone(520,.028,'square',.010)}
+      function correctSound(){tone(660,.055,'sine',.024);tone(880,.07,'sine',.018,.045)}
+      function wrongSound(){tone(185,.08,'triangle',.025)}
       function finishSound(){
-        tone(523.25,.10,'sine',.025);
-        tone(659.25,.10,'sine',.023,.10);
-        tone(783.99,.18,'sine',.026,.20);
+        tone(523.25,.10,'sine',.025);tone(659.25,.10,'sine',.023,.10);tone(783.99,.18,'sine',.026,.20)
       }
-
       function bgmTick(){
         if(!running||muted) return;
         const melody=[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23];
         const bass=[130.81,146.83,164.81,146.83];
         tone(melody[bgmStep%melody.length],.16,'triangle',.007);
-        if(bgmStep%2===0) tone(bass[(bgmStep/2)%bass.length|0],.22,'sine',.005);
+        if(bgmStep%2===0) tone(bass[Math.floor(bgmStep/2)%bass.length],.22,'sine',.005);
         bgmStep++;
       }
-
       function startBgm(){
         stopBgm();
         if(muted||!running||!ensureAudio()) return;
@@ -461,75 +273,43 @@
         bgmTick();
         bgmTimer=setInterval(bgmTick,375);
       }
-
       function stopBgm(){
-        if(bgmTimer){
-          clearInterval(bgmTimer);
-          bgmTimer=null;
-        }
+        if(bgmTimer){clearInterval(bgmTimer);bgmTimer=null}
       }
-
       function setValue(v){
         value=v.slice(0,6);
         E.answer.textContent=value||'';
         E.answer.classList.toggle('empty',!value);
       }
-
       function makeProblem(){
         const lv=level();
         let a,b,op,ans;
         const pool=lv<3?['+','-']:lv<5?['+','-','×']:['+','-','×','÷'];
         op=pool[rnd(0,pool.length-1)];
-
         if(op==='+'){
-          const m=lv<2?20:lv<4?50:100;
-          a=rnd(2,m);b=rnd(2,m);ans=a+b;
+          const m=lv<2?20:lv<4?50:100;a=rnd(2,m);b=rnd(2,m);ans=a+b;
         }else if(op==='-'){
-          const m=lv<2?20:lv<4?60:120;
-          a=rnd(5,m);b=rnd(1,a);ans=a-b;
+          const m=lv<2?20:lv<4?60:120;a=rnd(5,m);b=rnd(1,a);ans=a-b;
         }else if(op==='×'){
-          const m=lv<5?9:12;
-          a=rnd(2,m);b=rnd(2,m);ans=a*b;
+          const m=lv<5?9:12;a=rnd(2,m);b=rnd(2,m);ans=a*b;
         }else{
-          b=rnd(2,lv<7?9:12);
-          ans=rnd(2,lv<7?9:12);
-          a=b*ans;
+          b=rnd(2,lv<7?9:12);ans=rnd(2,lv<7?9:12);a=b*ans;
         }
-
         currentAnswer=ans;
         E.problem.textContent=`${a} ${op} ${b}`;
         setValue('');
       }
-
       function submit(){
         if(!running||value==='') return;
         const val=Number(value);
-
         if(val===currentAnswer){
-          correct++;
-          streak++;
-          score+=10+Math.min(streak,10);
-          E.score.textContent=String(score);
-          correctSound();
-          makeProblem();
+          correct++;streak++;score+=10+Math.min(streak,10);E.score.textContent=String(score);correctSound();makeProblem();
         }else{
-          wrong++;
-          streak=0;
-          score=Math.max(0,score-3);
-          E.score.textContent=String(score);
-          wrongSound();
-          setValue('');
-          makeProblem();
+          wrong++;streak=0;score=Math.max(0,score-3);E.score.textContent=String(score);wrongSound();setValue('');makeProblem();
         }
       }
-
       function finish(){
-        running=false;
-        clearInterval(timerId);
-        clearTimeout(nextId);
-        stopBgm();
-        E.timer.textContent='0';
-
+        running=false;clearInterval(timerId);clearTimeout(nextId);stopBgm();E.timer.textContent='0';
         const tries=correct+wrong;
         const acc=tries?Math.round(correct/tries*100):0;
         E.resultScore.textContent=`${score} 分`;
@@ -537,74 +317,30 @@
         E.resultBox.classList.add('show');
         finishSound();
       }
-
       function start(){
-        clearInterval(timerId);
-        clearTimeout(nextId);
-
-        running=true;
-        ensureAudio();
-        remaining=60;
-        score=0;
-        correct=0;
-        wrong=0;
-        streak=0;
-
-        E.timer.textContent='60';
-        E.score.textContent='0';
-        E.start.hidden=true;
-        E.playArea.hidden=false;
-        E.gameControls.classList.add('show');
-        E.resultBox.classList.remove('show');
-
-        makeProblem();
-        startBgm();
-
+        clearInterval(timerId);clearTimeout(nextId);
+        running=true;ensureAudio();remaining=60;score=0;correct=0;wrong=0;streak=0;
+        E.timer.textContent='60';E.score.textContent='0';E.start.hidden=true;E.playArea.hidden=false;
+        E.gameControls.classList.add('show');E.resultBox.classList.remove('show');
+        makeProblem();startBgm();
         timerId=setInterval(()=>{
-          remaining--;
-          E.timer.textContent=String(Math.max(0,remaining));
-          if(remaining<=0) finish();
+          remaining--;E.timer.textContent=String(Math.max(0,remaining));if(remaining<=0) finish();
         },1000);
       }
-
       E.start.addEventListener('click',start);
-      E.restart.addEventListener('click',()=>{
-        E.resultBox.classList.remove('show');
-        start();
-      });
-      E.submit.addEventListener('click',()=>{
-        if(running&&value!=='') submit();
-      });
-      E.clear.addEventListener('click',()=>{
-        if(running){
-          tapSound();
-          setValue('');
-        }
-      });
-      E.back.addEventListener('click',()=>{
-        if(running){
-          tapSound();
-          setValue(value.slice(0,-1));
-        }
-      });
+      E.restart.addEventListener('click',()=>{E.resultBox.classList.remove('show');start()});
+      E.submit.addEventListener('click',()=>{if(running&&value!=='') submit()});
+      E.clear.addEventListener('click',()=>{if(running){tapSound();setValue('')}});
+      E.back.addEventListener('click',()=>{if(running){tapSound();setValue(value.slice(0,-1))}});
       digitKeys.forEach(btn=>btn.addEventListener('click',()=>{
-        if(running){
-          tapSound();
-          setValue(value+btn.dataset.key);
-        }
+        if(running){tapSound();setValue(value+btn.dataset.key)}
       }));
       E.sound.addEventListener('click',()=>{
         muted=!muted;
         E.sound.textContent=muted?'×':'♪';
         E.sound.classList.toggle('off',muted);
         E.sound.setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');
-        if(muted){
-          stopBgm();
-        }else{
-          ensureAudio();
-          tone(660,.06,'sine',.02);
-          if(running) startBgm();
-        }
+        if(muted){stopBgm()}else{ensureAudio();tone(660,.06,'sine',.02);if(running) startBgm()}
       });
     })();
   </script>
