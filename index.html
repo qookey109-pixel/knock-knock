@@ -314,74 +314,111 @@
         let a,b,op,ans;
 
         if(lv===1){
-          op=Math.random()<.5?'+':'-';
-          if(op==='+'){
-            a=rnd(1,9); b=rnd(1,9); ans=a+b;
+          // LV1 starts mixed: basic +/- , 2-digit + 1-digit, 2-digit +/- , 2–9 multiplication.
+          const mode=rnd(0,3);
+
+          if(mode===0){
+            op=Math.random()<.5?'+':'-';
+            if(op==='+'){
+              a=rnd(2,9); b=rnd(2,9); ans=a+b;
+            }else{
+              a=rnd(5,18); b=rnd(1,a); ans=a-b;
+            }
+          }else if(mode===1){
+            op='+';
+            a=rnd(10,49); b=rnd(2,9); ans=a+b;
+          }else if(mode===2){
+            op=Math.random()<.5?'+':'-';
+            if(op==='+'){
+              a=rnd(12,69); b=rnd(11,59); ans=a+b;
+            }else{
+              a=rnd(25,89); b=rnd(10,a-1); ans=a-b;
+            }
           }else{
-            a=rnd(4,18); b=rnd(1,a); ans=a-b;
-          }
-        }else if(lv===2){
-          op=Math.random()<.5?'+':'-';
-          if(op==='+'){
-            a=rnd(10,39); b=rnd(2,9); ans=a+b;
-          }else{
-            a=rnd(12,49); b=rnd(2,9); ans=a-b;
-          }
-        }else if(lv===3){
-          op=Math.random()<.5?'+':'-';
-          if(op==='+'){
-            a=rnd(12,59); b=rnd(11,49); ans=a+b;
-          }else{
-            a=rnd(25,89); b=rnd(10,a-1); ans=a-b;
-          }
-        }else if(lv===4){
-          const pool=['+','-','×'];
-          op=pool[rnd(0,pool.length-1)];
-          if(op==='×'){
+            op='×';
             a=rnd(2,9); b=rnd(2,9); ans=a*b;
-          }else if(op==='+'){
-            a=rnd(20,79); b=rnd(10,59); ans=a+b;
-          }else{
-            a=rnd(35,99); b=rnd(10,a-1); ans=a-b;
           }
-        }else if(lv===5){
-          const pool=['+','-','×'];
-          op=pool[rnd(0,pool.length-1)];
-          if(op==='×'){
-            a=rnd(3,12); b=rnd(3,12); ans=a*b;
-          }else if(op==='+'){
-            a=rnd(30,99); b=rnd(20,89); ans=a+b;
-          }else{
-            a=rnd(50,149); b=rnd(20,a-1); ans=a-b;
-          }
-        }else if(lv===6){
+
+        }else if(lv===2){
+          // Larger 2-digit arithmetic + 2–12 multiplication + easy exact division.
           const pool=['+','-','×','÷'];
           op=pool[rnd(0,pool.length-1)];
+
+          if(op==='×'){
+            a=rnd(3,12); b=rnd(3,12); ans=a*b;
+          }else if(op==='÷'){
+            b=rnd(2,9); ans=rnd(2,9); a=b*ans;
+          }else if(op==='+'){
+            a=rnd(25,89); b=rnd(15,79); ans=a+b;
+          }else{
+            a=rnd(45,119); b=rnd(12,a-1); ans=a-b;
+          }
+
+        }else if(lv===3){
+          // Hard 2-digit / light 3-digit arithmetic with full 12×12 multiplication and division.
+          const pool=['+','-','×','÷'];
+          op=pool[rnd(0,pool.length-1)];
+
           if(op==='×'){
             a=rnd(4,12); b=rnd(4,12); ans=a*b;
           }else if(op==='÷'){
-            b=rnd(2,12); ans=rnd(2,12); a=b*ans;
+            b=rnd(3,12); ans=rnd(3,12); a=b*ans;
           }else if(op==='+'){
-            a=rnd(50,149); b=rnd(30,119); ans=a+b;
+            a=rnd(55,149); b=rnd(35,99); ans=a+b;
           }else{
-            a=rnd(80,199); b=rnd(25,a-1); ans=a-b;
+            a=rnd(80,179); b=rnd(25,a-1); ans=a-b;
           }
-        }else{
-          // Level 7+ keeps scaling instead of stopping at a fixed cap.
+
+        }else if(lv===4){
+          // 3-digit arithmetic + larger one-digit products.
+          const mode=rnd(0,3);
+
+          if(mode===0){
+            op='+';
+            a=rnd(110,299); b=rnd(45,189); ans=a+b;
+          }else if(mode===1){
+            op='-';
+            a=rnd(150,349); b=rnd(40,a-1); ans=a-b;
+          }else if(mode===2){
+            op='×';
+            a=rnd(11,19); b=rnd(3,9); ans=a*b;
+          }else{
+            op='÷';
+            b=rnd(4,12); ans=rnd(5,15); a=b*ans;
+          }
+
+        }else if(lv===5){
+          // Larger 3-digit arithmetic and denser multiplication/division.
           const pool=['+','-','×','÷'];
           op=pool[rnd(0,pool.length-1)];
-          const extra=lv-7;
-          const addMax=Math.min(999,220+extra*55);
-          const multMax=Math.min(20,12+Math.floor(extra/2)*2);
 
           if(op==='×'){
-            a=rnd(6,multMax); b=rnd(5,multMax); ans=a*b;
+            a=rnd(12,20); b=rnd(4,12); ans=a*b;
           }else if(op==='÷'){
-            b=rnd(3,multMax); ans=rnd(3,multMax); a=b*ans;
+            b=rnd(4,15); ans=rnd(5,16); a=b*ans;
           }else if(op==='+'){
-            a=rnd(70,addMax); b=rnd(45,Math.max(50,addMax-20)); ans=a+b;
+            a=rnd(150,399); b=rnd(80,249); ans=a+b;
           }else{
-            a=rnd(110,addMax); b=rnd(35,a-1); ans=a-b;
+            a=rnd(220,499); b=rnd(70,a-1); ans=a-b;
+          }
+
+        }else{
+          // LV6+ continues scaling indefinitely.
+          const pool=['+','-','×','÷'];
+          op=pool[rnd(0,pool.length-1)];
+
+          const extra=lv-6;
+          const addMax=Math.min(9999,520+extra*110);
+          const multMax=Math.min(35,16+extra*2);
+
+          if(op==='×'){
+            a=rnd(10,multMax); b=rnd(6,multMax); ans=a*b;
+          }else if(op==='÷'){
+            b=rnd(4,multMax); ans=rnd(5,multMax); a=b*ans;
+          }else if(op==='+'){
+            a=rnd(180,addMax); b=rnd(90,Math.max(100,addMax-60)); ans=a+b;
+          }else{
+            a=rnd(260,addMax); b=rnd(80,a-1); ans=a-b;
           }
         }
 
