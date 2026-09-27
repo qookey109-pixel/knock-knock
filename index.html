@@ -231,6 +231,7 @@
       let running=false,transitioning=false,remaining=LEVEL_SECONDS;
       let score=0,totalCorrect=0,totalWrong=0,streak=0,currentAnswer=0;
       let currentLevel=1,levelCorrect=0,value='',timerId=null,transitionId=null;
+      let seenProblems=new Set();
       let audioCtx=null,masterGain=null,bgmTimer=null,bgmStep=0,muted=false;
 
       const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
@@ -310,15 +311,19 @@
         E.levelMark.textContent=`LV ${currentLevel} · ${levelCorrect}/${TARGET_PER_LEVEL}`;
       }
 
-      function makeProblem(){
-        transitioning=false;
-        E.problem.classList.remove('level-up');
+      function problemKey(a,b,op){
+        if(op==='+'||op==='×'){
+          const x=Math.min(a,b);
+          const y=Math.max(a,b);
+          return `${op}:${x}:${y}`;
+        }
+        return `${op}:${a}:${b}`;
+      }
 
-        const lv=currentLevel;
+      function generateProblem(lv){
         let a,b,op,ans;
 
         if(lv===1){
-          // LV1 starts mixed: basic +/- , 2-digit + 1-digit, 2-digit +/- , 2–9 multiplication.
           const mode=rnd(0,3);
 
           if(mode===0){
@@ -344,7 +349,6 @@
           }
 
         }else if(lv===2){
-          // Larger 2-digit arithmetic + 2–12 multiplication + easy exact division.
           const pool=['+','-','×','÷'];
           op=pool[rnd(0,pool.length-1)];
 
@@ -359,7 +363,6 @@
           }
 
         }else if(lv===3){
-          // Hard 2-digit / light 3-digit arithmetic with full 12×12 multiplication and division.
           const pool=['+','-','×','÷'];
           op=pool[rnd(0,pool.length-1)];
 
@@ -374,7 +377,6 @@
           }
 
         }else if(lv===4){
-          // 3-digit arithmetic + larger one-digit products.
           const mode=rnd(0,3);
 
           if(mode===0){
@@ -392,7 +394,6 @@
           }
 
         }else if(lv===5){
-          // Larger 3-digit arithmetic and denser multiplication/division.
           const pool=['+','-','×','÷'];
           op=pool[rnd(0,pool.length-1)];
 
@@ -407,7 +408,6 @@
           }
 
         }else{
-          // LV6+ continues scaling indefinitely.
           const pool=['+','-','×','÷'];
           op=pool[rnd(0,pool.length-1)];
 
@@ -426,8 +426,25 @@
           }
         }
 
-        currentAnswer=ans;
-        E.problem.textContent=`${a} ${op} ${b}`;
+        return {a,b,op,ans};
+      }
+
+      function makeProblem(){
+        transitioning=false;
+        E.problem.classList.remove('level-up');
+
+        let p=null;
+        let key='';
+
+        for(let attempt=0;attempt<200;attempt++){
+          p=generateProblem(currentLevel);
+          key=problemKey(p.a,p.b,p.op);
+          if(!seenProblems.has(key)) break;
+        }
+
+        seenProblems.add(key);
+        currentAnswer=p.ans;
+        E.problem.textContent=`${p.a} ${p.op} ${p.b}`;
         setValue('');
       }
 
@@ -525,6 +542,7 @@
         streak=0;
         currentLevel=1;
         levelCorrect=0;
+        seenProblems=new Set();
 
         E.timer.textContent=String(LEVEL_SECONDS);
         E.score.textContent='0';
