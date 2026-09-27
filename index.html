@@ -2,104 +2,239 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <meta name="theme-color" content="#ebe8ff" />
   <title>快速計算</title>
   <style>
-    :root{--bg:#ebe8ff;--paper:#f6f4ff;--purple:#4a00d8;--orange:#f08a3c}
+    :root{--bg:#ebe8ff;--paper:#f7f5ff;--purple:#4a00d8;--orange:#f28a35;--muted:rgba(74,0,216,.42)}
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-    html,body{margin:0;background:var(--bg);color:var(--purple);font-family:Arial,"Noto Sans TC","PingFang TC",sans-serif}
-    body{min-height:100vh} button,input{font:inherit} button{touch-action:manipulation}
-    .app{width:min(100%,520px);min-height:100vh;margin:0 auto;padding:14px 14px calc(20px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:14px}
-    .title{font-size:32px;line-height:.88;font-weight:900;letter-spacing:-.07em;margin:0}.title span{color:var(--orange)}
-    .hud{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .box{background:var(--paper);border:2px solid var(--purple);border-radius:18px;padding:12px;text-align:center;box-shadow:0 10px 24px rgba(74,0,216,.06)}
-    .box span{display:block;font-size:11px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;opacity:.8}
-    .box strong{display:block;margin-top:4px;font-size:34px;line-height:1;font-weight:900;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
-    .play{flex:1;display:flex;flex-direction:column;gap:12px;justify-content:center}
-    .problem{min-height:116px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(54px,14vw,92px);font-weight:900;letter-spacing:-.08em;line-height:.86}
-    .feedback{min-height:22px;text-align:center;font-size:13px;font-weight:900;letter-spacing:.05em;color:var(--orange)}
-    .feedback.bad{color:#bf541d}
-    .answer-row{display:grid;grid-template-columns:1fr 92px;gap:8px}
-    .answer{width:100%;height:60px;border-radius:18px;border:2px solid var(--purple);background:var(--paper);color:var(--purple);text-align:center;font-size:30px;font-weight:900;outline:none}
-    .answer:focus{border-color:var(--orange);box-shadow:0 0 0 4px rgba(240,138,60,.18)}
-    .submit{border:2px solid var(--orange);background:var(--orange);color:var(--paper);border-radius:18px;font-weight:900;font-size:14px;letter-spacing:.06em;cursor:pointer}
-    .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .key{min-height:56px;border-radius:18px;border:2px solid var(--purple);background:var(--paper);color:var(--purple);font-size:24px;font-weight:900;cursor:pointer}
-    .key.special{color:var(--orange);border-color:var(--orange);font-size:12px;letter-spacing:.05em}
-    .controls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .btn{min-height:50px;border-radius:18px;border:2px solid var(--purple);background:var(--paper);color:var(--purple);font-weight:900;font-size:13px;cursor:pointer}
-    .btn.primary{background:var(--purple);color:var(--paper)}
-    .result{display:none;background:var(--paper);border:2px solid var(--orange);border-radius:18px;padding:12px;text-align:center;font-weight:900;line-height:1.5}
-    .result.show{display:block}.result strong{display:block;font-size:26px;line-height:1;margin-bottom:6px;color:var(--orange);letter-spacing:-.04em}
-    .answer:disabled,.submit:disabled,.key:disabled,.btn:disabled{opacity:.38;cursor:not-allowed}
+    html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg)}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;color:var(--purple)}
+    button{font:inherit;touch-action:manipulation}
+    .app{
+      width:min(100%,520px);height:100dvh;margin:0 auto;
+      padding:max(10px,env(safe-area-inset-top)) 14px max(12px,env(safe-area-inset-bottom));
+      display:grid;grid-template-rows:auto auto minmax(120px,1fr) auto;gap:10px;overflow:hidden
+    }
+    header{display:flex;align-items:center;justify-content:center;min-height:32px}
+    h1{margin:0;font-size:20px;line-height:1;font-weight:800;letter-spacing:.02em}
+    .hud{display:flex;justify-content:center;gap:34px;font-variant-numeric:tabular-nums}
+    .hud-item{min-width:82px;text-align:center}
+    .hud-item span{display:block;font-size:10px;font-weight:800;letter-spacing:.08em;opacity:.58}
+    .hud-item strong{display:block;margin-top:2px;font-size:28px;line-height:1;font-weight:900}
+    .center{
+      min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center
+    }
+    .start{
+      min-width:150px;min-height:58px;border:0;border-radius:18px;background:var(--purple);
+      color:white;font-size:18px;font-weight:900;padding:0 26px
+    }
+    .problem{font-size:clamp(58px,18vw,92px);line-height:.9;font-weight:900;letter-spacing:-.07em;white-space:nowrap}
+    .feedback{height:24px;margin-top:14px;font-size:14px;line-height:24px;font-weight:800;color:var(--orange)}
+    .feedback.bad{color:#b84d19}
+    .game-controls{display:none}
+    .game-controls.show{display:block}
+    .answer-row{display:grid;grid-template-columns:minmax(0,1fr) 98px;gap:8px}
+    .answer{
+      height:58px;display:flex;align-items:center;justify-content:center;border:2px solid var(--purple);
+      border-radius:17px;background:var(--paper);font-size:30px;font-weight:900;font-variant-numeric:tabular-nums;overflow:hidden
+    }
+    .answer.empty{color:var(--muted)}
+    .submit{border:0;border-radius:17px;background:var(--orange);color:white;font-size:16px;font-weight:900}
+    .keypad{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(4,minmax(44px,1fr));gap:7px;margin-top:8px}
+    .key{min-height:44px;border:2px solid var(--purple);border-radius:16px;background:var(--paper);color:var(--purple);font-size:24px;font-weight:900}
+    .key.special{color:var(--orange);border-color:var(--orange);font-size:13px}
+    .key:active,.submit:active,.start:active{transform:scale(.98)}
+    .result{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(235,232,255,.97);z-index:5}
+    .result.show{display:flex}
+    .result-card{width:min(100%,360px);text-align:center}
+    .result-card strong{display:block;color:var(--orange);font-size:44px;line-height:1;margin-bottom:10px}
+    .result-card p{margin:0 0 20px;font-size:16px;font-weight:800}
+    .result-card .start{width:100%}
+    @media(max-height:700px){
+      .app{gap:7px;padding-top:8px;padding-bottom:8px}
+      h1{font-size:18px}.hud-item strong{font-size:24px}.problem{font-size:54px}
+      .feedback{margin-top:8px}.answer{height:52px}.key{min-height:40px}
+    }
   </style>
 </head>
 <body>
   <main class="app">
-    <header><h1 class="title">QUICK <span>MATH</span></h1></header>
-    <section class="hud">
-      <div class="box"><span>Time</span><strong id="timer">60</strong></div>
-      <div class="box"><span>Score</span><strong id="score">0</strong></div>
+    <header><h1>快速計算</h1></header>
+
+    <section class="hud" aria-label="狀態">
+      <div class="hud-item"><span>TIME</span><strong id="timer">60</strong></div>
+      <div class="hud-item"><span>SCORE</span><strong id="score">0</strong></div>
     </section>
-    <section class="play">
-      <div id="problem" class="problem">8 + 7</div>
-      <div id="feedback" class="feedback">按開始</div>
-      <form id="answerForm" class="answer-row">
-        <input id="answer" class="answer" type="text" inputmode="numeric" autocomplete="off" placeholder="答案" disabled aria-label="答案" />
-        <button id="submitBtn" class="submit" type="submit" disabled>送出</button>
-      </form>
+
+    <section class="center">
+      <button id="startBtn" class="start" type="button">開始</button>
+
+      <div id="playArea" hidden>
+        <div id="problem" class="problem"></div>
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="gameControls" class="game-controls">
+      <div class="answer-row">
+        <div id="answer" class="answer empty" role="status" aria-label="答案">答案</div>
+        <button id="submitBtn" class="submit" type="button">送出</button>
+      </div>
+
       <div class="keypad">
-        <button class="key" type="button" data-key="1">1</button><button class="key" type="button" data-key="2">2</button><button class="key" type="button" data-key="3">3</button>
-        <button class="key" type="button" data-key="4">4</button><button class="key" type="button" data-key="5">5</button><button class="key" type="button" data-key="6">6</button>
-        <button class="key" type="button" data-key="7">7</button><button class="key" type="button" data-key="8">8</button><button class="key" type="button" data-key="9">9</button>
-        <button id="clearBtn" class="key special" type="button">清除</button><button class="key" type="button" data-key="0">0</button><button id="backBtn" class="key special" type="button">←</button>
+        <button class="key" type="button" data-key="1">1</button>
+        <button class="key" type="button" data-key="2">2</button>
+        <button class="key" type="button" data-key="3">3</button>
+        <button class="key" type="button" data-key="4">4</button>
+        <button class="key" type="button" data-key="5">5</button>
+        <button class="key" type="button" data-key="6">6</button>
+        <button class="key" type="button" data-key="7">7</button>
+        <button class="key" type="button" data-key="8">8</button>
+        <button class="key" type="button" data-key="9">9</button>
+        <button id="clearBtn" class="key special" type="button">清除</button>
+        <button class="key" type="button" data-key="0">0</button>
+        <button id="backBtn" class="key special" type="button">←</button>
       </div>
-      <div class="controls">
-        <button id="startBtn" class="btn primary" type="button">開始</button>
-        <button id="restartBtn" class="btn" type="button" disabled>重來</button>
-      </div>
-      <div id="resultBox" class="result" aria-live="polite"><strong id="resultScore">0 分</strong><div id="resultText">—</div></div>
     </section>
   </main>
+
+  <section id="resultBox" class="result" aria-live="polite">
+    <div class="result-card">
+      <strong id="resultScore">0 分</strong>
+      <p id="resultText">—</p>
+      <button id="restartBtn" class="start" type="button">再玩一次</button>
+    </div>
+  </section>
+
   <script>
     (() => {
       const $=id=>document.getElementById(id);
-      const E={timer:$('timer'),score:$('score'),problem:$('problem'),answer:$('answer'),feedback:$('feedback'),form:$('answerForm'),submit:$('submitBtn'),start:$('startBtn'),restart:$('restartBtn'),clear:$('clearBtn'),back:$('backBtn'),resultBox:$('resultBox'),resultScore:$('resultScore'),resultText:$('resultText')};
+      const E={
+        timer:$('timer'),score:$('score'),problem:$('problem'),answer:$('answer'),
+        feedback:$('feedback'),submit:$('submitBtn'),start:$('startBtn'),
+        restart:$('restartBtn'),clear:$('clearBtn'),back:$('backBtn'),
+        resultBox:$('resultBox'),resultScore:$('resultScore'),resultText:$('resultText'),
+        playArea:$('playArea'),gameControls:$('gameControls')
+      };
       const digitKeys=[...document.querySelectorAll('[data-key]')];
-      let running=false,remaining=60,score=0,correct=0,wrong=0,streak=0,currentAnswer=15,timerId=null,nextId=null;
+
+      let running=false,remaining=60,score=0,correct=0,wrong=0,streak=0,currentAnswer=0;
+      let value='',timerId=null,nextId=null;
+
       const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
       const level=()=>Math.min(8,1+Math.floor(correct/5));
-      function controls(on){E.answer.disabled=!on;E.submit.disabled=!on;E.clear.disabled=!on;E.back.disabled=!on;digitKeys.forEach(k=>k.disabled=!on)}
-      function update(){E.score.textContent=String(score)}
-      function show(text,isBad=false){E.feedback.textContent=text;E.feedback.className=isBad?'feedback bad':'feedback'}
+
+      function setValue(v){
+        value=v.slice(0,6);
+        E.answer.textContent=value||'答案';
+        E.answer.classList.toggle('empty',!value);
+      }
+
+      function show(text,bad=false){
+        E.feedback.textContent=text;
+        E.feedback.className=bad?'feedback bad':'feedback';
+      }
+
       function makeProblem(){
-        const lv=level();let a,b,op,ans;
-        const pool=lv<3?['+','-']:lv<5?['+','-','×']:['+','-','×','÷'];op=pool[rnd(0,pool.length-1)];
-        if(op==='+'){const m=lv<2?20:lv<4?50:100;a=rnd(2,m);b=rnd(2,m);ans=a+b}
-        else if(op==='-'){const m=lv<2?20:lv<4?60:120;a=rnd(5,m);b=rnd(1,a);ans=a-b}
-        else if(op==='×'){const m=lv<5?9:12;a=rnd(2,m);b=rnd(2,m);ans=a*b}
-        else{b=rnd(2,lv<7?9:12);ans=rnd(2,lv<7?9:12);a=b*ans}
-        currentAnswer=ans;E.problem.textContent=`${a} ${op} ${b}`;E.answer.value='';if(running)E.answer.focus()
+        const lv=level();
+        let a,b,op,ans;
+        const pool=lv<3?['+','-']:lv<5?['+','-','×']:['+','-','×','÷'];
+        op=pool[rnd(0,pool.length-1)];
+
+        if(op==='+'){
+          const m=lv<2?20:lv<4?50:100;
+          a=rnd(2,m);b=rnd(2,m);ans=a+b;
+        }else if(op==='-'){
+          const m=lv<2?20:lv<4?60:120;
+          a=rnd(5,m);b=rnd(1,a);ans=a-b;
+        }else if(op==='×'){
+          const m=lv<5?9:12;
+          a=rnd(2,m);b=rnd(2,m);ans=a*b;
+        }else{
+          b=rnd(2,lv<7?9:12);
+          ans=rnd(2,lv<7?9:12);
+          a=b*ans;
+        }
+
+        currentAnswer=ans;
+        E.problem.textContent=`${a} ${op} ${b}`;
+        setValue('');
       }
+
       function submit(){
-        if(!running)return;const raw=E.answer.value.trim();if(raw==='')return;const val=Number(raw);if(!Number.isFinite(val))return;
-        if(val===currentAnswer){correct++;streak++;score+=10+Math.min(streak,10);show('答對');update();makeProblem()}
-        else{wrong++;streak=0;score=Math.max(0,score-3);show(`答案 ${currentAnswer}`,true);E.answer.value='';update();clearTimeout(nextId);nextId=setTimeout(()=>{if(running)makeProblem()},320)}
+        if(!running||value==='') return;
+        const val=Number(value);
+
+        if(val===currentAnswer){
+          correct++;
+          streak++;
+          score+=10+Math.min(streak,10);
+          E.score.textContent=String(score);
+          show('答對');
+          makeProblem();
+        }else{
+          wrong++;
+          streak=0;
+          score=Math.max(0,score-3);
+          E.score.textContent=String(score);
+          show(`答案 ${currentAnswer}`,true);
+          setValue('');
+          clearTimeout(nextId);
+          nextId=setTimeout(()=>{if(running){show('');makeProblem()}},300);
+        }
       }
+
       function finish(){
-        running=false;clearInterval(timerId);clearTimeout(nextId);E.timer.textContent='0';controls(false);E.start.disabled=false;E.restart.disabled=false;
-        const tries=correct+wrong;const acc=tries?Math.round(correct/tries*100):0;show('完成');E.resultScore.textContent=`${score} 分`;E.resultText.textContent=`答對 ${correct} 題 / 正確率 ${acc}%`;E.resultBox.classList.add('show')
+        running=false;
+        clearInterval(timerId);
+        clearTimeout(nextId);
+        E.timer.textContent='0';
+
+        const tries=correct+wrong;
+        const acc=tries?Math.round(correct/tries*100):0;
+        E.resultScore.textContent=`${score} 分`;
+        E.resultText.textContent=`答對 ${correct} 題 / 正確率 ${acc}%`;
+        E.resultBox.classList.add('show');
       }
+
       function start(){
-        clearInterval(timerId);clearTimeout(nextId);running=true;remaining=60;score=0;correct=0;wrong=0;streak=0;E.timer.textContent='60';E.start.disabled=true;E.restart.disabled=false;E.resultBox.classList.remove('show');controls(true);update();show('開始');makeProblem();
-        timerId=setInterval(()=>{remaining--;E.timer.textContent=String(Math.max(0,remaining));if(remaining<=0)finish()},1000)
+        clearInterval(timerId);
+        clearTimeout(nextId);
+
+        running=true;
+        remaining=60;
+        score=0;
+        correct=0;
+        wrong=0;
+        streak=0;
+
+        E.timer.textContent='60';
+        E.score.textContent='0';
+        E.start.hidden=true;
+        E.playArea.hidden=false;
+        E.gameControls.classList.add('show');
+        E.resultBox.classList.remove('show');
+
+        show('');
+        makeProblem();
+
+        timerId=setInterval(()=>{
+          remaining--;
+          E.timer.textContent=String(Math.max(0,remaining));
+          if(remaining<=0) finish();
+        },1000);
       }
-      E.start.addEventListener('click',start);E.restart.addEventListener('click',start);E.form.addEventListener('submit',e=>{e.preventDefault();submit()});
-      E.clear.addEventListener('click',()=>{if(running){E.answer.value='';E.answer.focus()}});
-      E.back.addEventListener('click',()=>{if(running){E.answer.value=E.answer.value.slice(0,-1);E.answer.focus()}});
-      digitKeys.forEach(btn=>btn.addEventListener('click',()=>{if(!running)return;E.answer.value=(E.answer.value+btn.dataset.key).slice(0,6);E.answer.focus()}));
-      controls(false);update();
+
+      E.start.addEventListener('click',start);
+      E.restart.addEventListener('click',()=>{
+        E.resultBox.classList.remove('show');
+        start();
+      });
+      E.submit.addEventListener('click',submit);
+      E.clear.addEventListener('click',()=>setValue(''));
+      E.back.addEventListener('click',()=>setValue(value.slice(0,-1)));
+      digitKeys.forEach(btn=>btn.addEventListener('click',()=>{if(running)setValue(value+btn.dataset.key)}));
     })();
   </script>
 </body>
