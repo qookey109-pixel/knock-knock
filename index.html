@@ -249,7 +249,9 @@
       let score=0,totalCorrect=0,totalWrong=0,streak=0,currentAnswer=0;
       let currentLevel=1,levelCorrect=0,value='',timerId=null,transitionId=null;
       let seenProblems=new Set();
-      let audioCtx=null,masterGain=null,bgmTimer=null,bgmStep=0,muted=false;
+      let audioCtx=null,masterGain=null,bgmBuffer=null,bgmSource=null,bgmGain=null,bgmToken=0,muted=false;
+      const BGM_URL='assets/golden-bgm-loop.m4a';
+      const bgmDataPromise=fetch(BGM_URL,{cache:'force-cache'}).then(r=>{if(!r.ok) throw new Error('BGM load failed');return r.arrayBuffer()}).catch(()=>null);
 
       const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 
@@ -299,50 +301,49 @@
         tone(659.25,.08,'sine',.050,.055);
       }
 
-      function bgmTick(){
-        if(!running||muted) return;
-
-        // Original jaunty variety-show / adventure loop.
-        // Bright, playful and slightly mischievous without copying any existing TV theme.
-        const melody=[
-          392.00,523.25,493.88,440.00,
-          392.00,440.00,493.88,587.33,
-          523.25,493.88,440.00,392.00,
-          349.23,392.00,440.00,523.25
-        ];
-        const answer=[
-          659.25,587.33,523.25,493.88,
-          523.25,587.33,659.25,783.99
-        ];
-        const bass=[130.81,146.83,164.81,146.83];
-
-        tone(melody[bgmStep%melody.length],.105,'triangle',.024);
-
-        if(bgmStep%4===2){
-          tone(answer[Math.floor(bgmStep/2)%answer.length],.07,'square',.013);
+      async function loadBgm(){
+        if(bgmBuffer) return bgmBuffer;
+        if(!ensureAudio()) return null;
+        const data=await bgmDataPromise;
+        if(!data) return null;
+        try{
+          bgmBuffer=await audioCtx.decodeAudioData(data.slice(0));
+          return bgmBuffer;
+        }catch{
+          return null;
         }
-
-        if(bgmStep%2===0){
-          tone(bass[Math.floor(bgmStep/2)%bass.length],.18,'sine',.018);
-        }
-
-        if(bgmStep%4===0){
-          tone(110,.045,'triangle',.014);
-        }else if(bgmStep%4===2){
-          tone(880,.02,'square',.009);
-        }
-
-        bgmStep++;
       }
-      function startBgm(){
+
+      async function startBgm(){
         stopBgm();
         if(muted||!running||!ensureAudio()) return;
-        bgmStep=0;
-        bgmTick();
-        bgmTimer=setInterval(bgmTick,300);
+        const token=bgmToken;
+        const buffer=await loadBgm();
+        if(!buffer||muted||!running||token!==bgmToken) return;
+
+        const source=audioCtx.createBufferSource();
+        const gain=audioCtx.createGain();
+        source.buffer=buffer;
+        source.loop=true;
+        gain.gain.value=.44;
+        source.connect(gain);
+        gain.connect(masterGain);
+        source.start(0);
+        bgmSource=source;
+        bgmGain=gain;
       }
+
       function stopBgm(){
-        if(bgmTimer){clearInterval(bgmTimer);bgmTimer=null}
+        bgmToken++;
+        if(bgmSource){
+          try{bgmSource.stop()}catch{}
+          try{bgmSource.disconnect()}catch{}
+          bgmSource=null;
+        }
+        if(bgmGain){
+          try{bgmGain.disconnect()}catch{}
+          bgmGain=null;
+        }
       }
 
       function setValue(v){
