@@ -17,7 +17,11 @@
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html,body{
       margin:0;width:100%;height:100%;overflow:hidden;
-      background:var(--paper);color:var(--violet);
+      color:var(--violet);
+      background:
+        radial-gradient(circle at 12% 18%, rgba(242,138,53,.10) 0 1px, transparent 1.5px) 0 0/10px 10px,
+        radial-gradient(circle at 88% 82%, rgba(75,0,215,.075) 0 1px, transparent 1.5px) 0 0/12px 12px,
+        var(--paper);
     }
     body{
       font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;
@@ -37,30 +41,36 @@
       overflow:hidden;
       isolation:isolate;
       background:
-        linear-gradient(118deg,transparent 0 63%,rgba(75,0,215,.035) 63% 64%,transparent 64% 100%),
-        linear-gradient(62deg,transparent 0 76%,rgba(242,138,53,.045) 76% 77%,transparent 77% 100%);
+        radial-gradient(circle at 8% 32%, transparent 0 58px, rgba(75,0,215,.055) 59px 61px, transparent 62px 86px, rgba(75,0,215,.035) 87px 89px, transparent 90px),
+        radial-gradient(circle at 93% 58%, transparent 0 72px, rgba(242,138,53,.065) 73px 75px, transparent 76px 105px, rgba(242,138,53,.035) 106px 108px, transparent 109px),
+        repeating-linear-gradient(118deg, transparent 0 46px, rgba(75,0,215,.024) 47px 48px, transparent 49px 94px),
+        repeating-linear-gradient(62deg, transparent 0 72px, rgba(242,138,53,.028) 73px 74px, transparent 75px 142px);
     }
 
     .app::before{
       content:"";
       position:absolute;
-      width:210px;height:210px;
-      right:-78px;top:72px;
-      opacity:.22;
+      width:250px;height:250px;
+      right:-82px;top:62px;
+      opacity:.28;
       z-index:-1;
       background-image:radial-gradient(circle,var(--orange) 1px,transparent 1.2px);
       background-size:7px 7px;
       transform:rotate(11deg);
+      clip-path:polygon(18% 0,100% 0,100% 100%,0 84%);
     }
 
     .app::after{
       content:"";
       position:absolute;
-      left:-62px;bottom:82px;
-      width:170px;height:170px;
+      left:-72px;bottom:58px;
+      width:220px;height:220px;
       border:2px solid var(--violet);
       border-radius:50%;
-      opacity:.14;
+      opacity:.18;
+      box-shadow:
+        0 0 0 24px rgba(75,0,215,.025),
+        0 0 0 48px rgba(242,138,53,.022);
       z-index:-1;
     }
 
