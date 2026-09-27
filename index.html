@@ -89,12 +89,35 @@
       font-weight:900;
       letter-spacing:.02em;
     }
+    .top-actions{
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
     .mark{
       color:var(--orange);
       font-size:12px;
       line-height:1;
       font-weight:900;
       letter-spacing:.12em;
+    }
+    .sound{
+      width:34px;
+      height:34px;
+      border:2px solid var(--violet);
+      border-radius:50%;
+      background:transparent;
+      color:var(--violet);
+      font-size:17px;
+      line-height:1;
+      font-weight:900;
+      display:grid;
+      place-items:center;
+      padding:0;
+    }
+    .sound.off{
+      color:var(--orange);
+      border-color:var(--orange);
     }
 
     .hud{
@@ -299,7 +322,10 @@
   <main class="app">
     <header class="top">
       <h1 class="title">快速計算</h1>
-      <div class="mark">60 SEC</div>
+      <div class="top-actions">
+        <div class="mark">60 SEC</div>
+        <button id="soundBtn" class="sound" type="button" aria-label="聲音開關">♪</button>
+      </div>
     </header>
 
     <section class="hud" aria-label="狀態">
@@ -360,15 +386,88 @@
         submit:$('submitBtn'),start:$('startBtn'),
         restart:$('restartBtn'),clear:$('clearBtn'),back:$('backBtn'),
         resultBox:$('resultBox'),resultScore:$('resultScore'),resultText:$('resultText'),
-        playArea:$('playArea'),gameControls:$('gameControls')
+        playArea:$('playArea'),gameControls:$('gameControls'),sound:$('soundBtn')
       };
       const digitKeys=[...document.querySelectorAll('[data-key]')];
 
       let running=false,remaining=60,score=0,correct=0,wrong=0,streak=0,currentAnswer=0;
       let value='',timerId=null,nextId=null;
+      let audioCtx=null,masterGain=null,bgmTimer=null,bgmStep=0,muted=false;
 
       const rnd=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
       const level=()=>Math.min(8,1+Math.floor(correct/5));
+
+      function ensureAudio(){
+        const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+        if(!AudioContextClass) return false;
+        if(!audioCtx){
+          audioCtx=new AudioContextClass();
+          masterGain=audioCtx.createGain();
+          masterGain.gain.value=.72;
+          masterGain.connect(audioCtx.destination);
+        }
+        if(audioCtx.state==='suspended') audioCtx.resume();
+        return true;
+      }
+
+      function tone(freq,duration=.06,type='sine',volume=.025,delay=0){
+        if(muted||!ensureAudio()) return;
+        const now=audioCtx.currentTime+delay;
+        const osc=audioCtx.createOscillator();
+        const gain=audioCtx.createGain();
+        osc.type=type;
+        osc.frequency.setValueAtTime(freq,now);
+        gain.gain.setValueAtTime(.0001,now);
+        gain.gain.exponentialRampToValueAtTime(Math.max(.0002,volume),now+.008);
+        gain.gain.exponentialRampToValueAtTime(.0001,now+duration);
+        osc.connect(gain);
+        gain.connect(masterGain);
+        osc.start(now);
+        osc.stop(now+duration+.02);
+      }
+
+      function tapSound(){
+        tone(520,.028,'square',.010);
+      }
+
+      function correctSound(){
+        tone(660,.055,'sine',.024);
+        tone(880,.07,'sine',.018,.045);
+      }
+
+      function wrongSound(){
+        tone(185,.08,'triangle',.025);
+      }
+
+      function finishSound(){
+        tone(523.25,.10,'sine',.025);
+        tone(659.25,.10,'sine',.023,.10);
+        tone(783.99,.18,'sine',.026,.20);
+      }
+
+      function bgmTick(){
+        if(!running||muted) return;
+        const melody=[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23];
+        const bass=[130.81,146.83,164.81,146.83];
+        tone(melody[bgmStep%melody.length],.16,'triangle',.007);
+        if(bgmStep%2===0) tone(bass[(bgmStep/2)%bass.length|0],.22,'sine',.005);
+        bgmStep++;
+      }
+
+      function startBgm(){
+        stopBgm();
+        if(muted||!running||!ensureAudio()) return;
+        bgmStep=0;
+        bgmTick();
+        bgmTimer=setInterval(bgmTick,375);
+      }
+
+      function stopBgm(){
+        if(bgmTimer){
+          clearInterval(bgmTimer);
+          bgmTimer=null;
+        }
+      }
 
       function setValue(v){
         value=v.slice(0,6);
@@ -411,12 +510,14 @@
           streak++;
           score+=10+Math.min(streak,10);
           E.score.textContent=String(score);
+          correctSound();
           makeProblem();
         }else{
           wrong++;
           streak=0;
           score=Math.max(0,score-3);
           E.score.textContent=String(score);
+          wrongSound();
           setValue('');
           makeProblem();
         }
@@ -426,6 +527,7 @@
         running=false;
         clearInterval(timerId);
         clearTimeout(nextId);
+        stopBgm();
         E.timer.textContent='0';
 
         const tries=correct+wrong;
@@ -433,6 +535,7 @@
         E.resultScore.textContent=`${score} 分`;
         E.resultText.textContent=`答對 ${correct} 題 · 正確率 ${acc}%`;
         E.resultBox.classList.add('show');
+        finishSound();
       }
 
       function start(){
@@ -440,6 +543,7 @@
         clearTimeout(nextId);
 
         running=true;
+        ensureAudio();
         remaining=60;
         score=0;
         correct=0;
@@ -454,6 +558,7 @@
         E.resultBox.classList.remove('show');
 
         makeProblem();
+        startBgm();
 
         timerId=setInterval(()=>{
           remaining--;
@@ -467,10 +572,40 @@
         E.resultBox.classList.remove('show');
         start();
       });
-      E.submit.addEventListener('click',submit);
-      E.clear.addEventListener('click',()=>setValue(''));
-      E.back.addEventListener('click',()=>setValue(value.slice(0,-1)));
-      digitKeys.forEach(btn=>btn.addEventListener('click',()=>{if(running)setValue(value+btn.dataset.key)}));
+      E.submit.addEventListener('click',()=>{
+        if(running&&value!=='') submit();
+      });
+      E.clear.addEventListener('click',()=>{
+        if(running){
+          tapSound();
+          setValue('');
+        }
+      });
+      E.back.addEventListener('click',()=>{
+        if(running){
+          tapSound();
+          setValue(value.slice(0,-1));
+        }
+      });
+      digitKeys.forEach(btn=>btn.addEventListener('click',()=>{
+        if(running){
+          tapSound();
+          setValue(value+btn.dataset.key);
+        }
+      }));
+      E.sound.addEventListener('click',()=>{
+        muted=!muted;
+        E.sound.textContent=muted?'×':'♪';
+        E.sound.classList.toggle('off',muted);
+        E.sound.setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');
+        if(muted){
+          stopBgm();
+        }else{
+          ensureAudio();
+          tone(660,.06,'sine',.02);
+          if(running) startBgm();
+        }
+      });
     })();
   </script>
 </body>
