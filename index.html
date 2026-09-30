@@ -169,15 +169,26 @@
     .key.special:active{background:var(--orange);color:white}
     .submit:active{transform:scale(.98)}
     .result{
-      position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:24px;
-      background:rgba(235,232,255,.98);z-index:10;
+      position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:20px 18px;
+      background:rgba(235,232,255,.98);z-index:10;overflow:auto;
     }
     .result.show{display:flex}
-    .result-card{width:min(100%,360px);text-align:left;border-top:6px solid var(--orange);padding-top:18px}
+    .result-card{width:min(100%,390px);text-align:left;border-top:6px solid var(--orange);padding-top:16px}
+    .result-label{display:block;font-size:10px;font-weight:950;letter-spacing:.18em;opacity:.55;margin-bottom:6px}
     .result-card strong{
-      display:block;color:var(--violet);font-size:54px;line-height:.9;letter-spacing:-.06em;margin-bottom:12px;
+      display:block;color:var(--violet);font-size:54px;line-height:.9;letter-spacing:-.06em;margin-bottom:8px;
     }
-    .result-card p{margin:0 0 24px;color:var(--orange);font-size:15px;line-height:1.5;font-weight:900}
+    .result-type{margin:0 0 16px;color:var(--orange);font-size:17px;line-height:1.3;font-weight:950}
+    .result-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+    .result-stat{border:2px solid rgba(75,0,215,.18);padding:10px 11px;background:rgba(244,241,255,.55)}
+    .result-stat span{display:block;font-size:9px;font-weight:950;letter-spacing:.11em;opacity:.58;margin-bottom:4px}
+    .result-stat b{display:block;font-size:22px;line-height:1;font-weight:950;font-variant-numeric:tabular-nums}
+    .result-section{border-top:1.5px solid rgba(75,0,215,.32);padding-top:11px;margin-bottom:13px}
+    .result-section-title{font-size:10px;font-weight:950;letter-spacing:.12em;opacity:.58;margin-bottom:8px}
+    .operation-stats{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px}
+    .operation-row{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:900}
+    .operation-row span:first-child{color:var(--orange);font-size:17px}
+    .result-note{margin:0 0 16px;font-size:12px;line-height:1.5;font-weight:850;opacity:.72}
     .result-card .start{width:100%;box-shadow:none}
     @media(min-height:780px){
       .keypad{grid-template-rows:repeat(4,minmax(92px,1fr))}
@@ -243,8 +254,20 @@
   </main>
   <section id="resultBox" class="result" aria-live="polite">
     <div class="result-card">
-      <strong id="resultScore">0 分</strong>
-      <p id="resultText">—</p>
+      <span class="result-label">RESULT</span>
+      <strong id="resultScore">LV 1</strong>
+      <p id="resultType" class="result-type">—</p>
+      <div class="result-grid">
+        <div class="result-stat"><span>總分</span><b id="resultTotalScore">0</b></div>
+        <div class="result-stat"><span>正確率</span><b id="resultAccuracy">0%</b></div>
+        <div class="result-stat"><span>平均反應</span><b id="resultAvgTime">—</b></div>
+        <div class="result-stat"><span>最高連對</span><b id="resultMaxStreak">0</b></div>
+      </div>
+      <div class="result-section">
+        <div class="result-section-title">四則表現</div>
+        <div id="operationStats" class="operation-stats"></div>
+      </div>
+      <p id="resultText" class="result-note">—</p>
       <button id="restartBtn" class="start" type="button">再玩一次</button>
     </div>
   </section>
@@ -254,7 +277,9 @@
       const E={
         timer:$('timer'),score:$('score'),problem:$('problem'),answer:$('answer'),
         submit:$('submitBtn'),start:$('startBtn'),restart:$('restartBtn'),clear:$('clearBtn'),back:$('backBtn'),
-        resultBox:$('resultBox'),resultScore:$('resultScore'),resultText:$('resultText'),
+        resultBox:$('resultBox'),resultScore:$('resultScore'),resultText:$('resultText'),resultType:$('resultType'),
+        resultTotalScore:$('resultTotalScore'),resultAccuracy:$('resultAccuracy'),resultAvgTime:$('resultAvgTime'),
+        resultMaxStreak:$('resultMaxStreak'),operationStats:$('operationStats'),
         playArea:$('playArea'),gameControls:$('gameControls'),sound:$('soundBtn'),levelMark:$('levelMark'),rules:$('rules')
       };
       const digitKeys=[...document.querySelectorAll('[data-key]')];
@@ -263,9 +288,10 @@
       const LEVEL_SECONDS=60;
 
       let running=false,transitioning=false,remaining=LEVEL_SECONDS;
-      let score=0,totalCorrect=0,totalWrong=0,streak=0,currentAnswer=0;
+      let score=0,totalCorrect=0,totalWrong=0,streak=0,maxStreak=0,currentAnswer=0;
       let currentLevel=1,levelCorrect=0,value='',timerId=null,transitionId=null;
-      let seenProblems=new Set();
+      let seenProblems=new Set(),currentOps=[],questionStartedAt=0,totalResponseMs=0,responseCount=0;
+      let operationStats={'+':{tries:0,correct:0},'-':{tries:0,correct:0},'×':{tries:0,correct:0},'÷':{tries:0,correct:0}};
       let audioCtx=null,masterGain=null,bgmBuffer=null,bgmSource=null,bgmGain=null,bgmToken=0,muted=false;
       const BGM_URL='assets/rag-time-on-the-rag-loop.m4a';
       const bgmDataPromise=fetch(BGM_URL,{cache:'force-cache'}).then(r=>{if(!r.ok) throw new Error('BGM load failed');return r.arrayBuffer()}).catch(()=>null);
@@ -649,6 +675,8 @@
 
         seenProblems.add(p.key);
         currentAnswer=p.ans;
+        currentOps=['+','-','×','÷'].filter(op=>p.text.includes(` ${op} `));
+        questionStartedAt=performance.now();
         E.problem.textContent=p.text;
         E.problem.classList.toggle('compact',p.text.length>10);
         setValue('');
@@ -692,11 +720,17 @@
       function submit(){
         if(!running||transitioning||value==='') return;
         const val=Number(value);
+        const responseMs=Math.max(0,performance.now()-questionStartedAt);
+        totalResponseMs+=responseMs;
+        responseCount++;
+        currentOps.forEach(op=>operationStats[op].tries++);
 
         if(val===currentAnswer){
+          currentOps.forEach(op=>operationStats[op].correct++);
           totalCorrect++;
           levelCorrect++;
           streak++;
+          maxStreak=Math.max(maxStreak,streak);
           score+=10+Math.min(streak,10)+currentLevel;
           E.score.textContent=String(score);
           correctSound();
@@ -728,8 +762,28 @@
 
         const tries=totalCorrect+totalWrong;
         const acc=tries?Math.round(totalCorrect/tries*100):0;
+        const avgSec=responseCount?totalResponseMs/responseCount/1000:0;
+        let type='挑戰進階型';
+        if(acc>=92&&avgSec>0&&avgSec<=5) type='高速穩定型';
+        else if(acc>=92) type='精準穩定型';
+        else if(acc>=78&&avgSec>0&&avgSec<=4.5) type='快速反應型';
+        else if(acc>=82&&avgSec>0&&avgSec<=7) type='均衡型';
+
         E.resultScore.textContent=`LV ${currentLevel}`;
-        E.resultText.textContent=`總分 ${score} · 答對 ${totalCorrect} 題 · 正確率 ${acc}%`;
+        E.resultType.textContent=type;
+        E.resultTotalScore.textContent=String(score);
+        E.resultAccuracy.textContent=`${acc}%`;
+        E.resultAvgTime.textContent=responseCount?`${avgSec.toFixed(1)}s`:'—';
+        E.resultMaxStreak.textContent=String(maxStreak);
+        E.resultText.textContent=`答對 ${totalCorrect} 題 · 答錯 ${totalWrong} 題 · 共作答 ${tries} 題`;
+
+        const labels={'+':'加','-':'減','×':'乘','÷':'除'};
+        E.operationStats.innerHTML=['+','-','×','÷'].map(op=>{
+          const stat=operationStats[op];
+          const pct=stat.tries?Math.round(stat.correct/stat.tries*100):null;
+          return `<div class="operation-row"><span>${labels[op]}</span><span>${pct===null?'—':`${stat.correct}/${stat.tries} · ${pct}%`}</span></div>`;
+        }).join('');
+
         E.resultBox.classList.add('show');
         finishSound();
       }
@@ -746,9 +800,15 @@
         totalCorrect=0;
         totalWrong=0;
         streak=0;
+        maxStreak=0;
         currentLevel=1;
         levelCorrect=0;
         seenProblems=new Set();
+        currentOps=[];
+        questionStartedAt=0;
+        totalResponseMs=0;
+        responseCount=0;
+        operationStats={'+':{tries:0,correct:0},'-':{tries:0,correct:0},'×':{tries:0,correct:0},'÷':{tries:0,correct:0}};
 
         E.timer.textContent=String(LEVEL_SECONDS);
         E.score.textContent='0';
