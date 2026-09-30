@@ -138,6 +138,10 @@
       font-size:clamp(48px,15vw,74px);
       letter-spacing:-.04em;
     }
+    .problem.compact{
+      font-size:clamp(42px,12vw,72px);
+      letter-spacing:-.055em;
+    }
     .game-controls{display:none;min-height:0}
     .game-controls.show{display:grid;grid-template-rows:auto minmax(0,1fr);gap:9px}
     .answer-row{display:grid;grid-template-columns:minmax(0,1fr) 102px;gap:9px}
@@ -379,132 +383,274 @@
       }
 
       function generateProblem(lv){
-        let a,b,op,ans;
+        const make=(text,ans)=>({text,ans,key:text});
+        let a,b,d,q,c1,c2,mode;
 
         if(lv===1){
-          const mode=rnd(0,3);
-
+          mode=rnd(0,1);
           if(mode===0){
-            op=Math.random()<.5?'+':'-';
-            if(op==='+'){
-              a=rnd(2,9); b=rnd(2,9); ans=a+b;
-            }else{
-              a=rnd(5,18); b=rnd(1,a); ans=a-b;
-            }
-          }else if(mode===1){
-            op='+';
-            a=rnd(10,49); b=rnd(2,9); ans=a+b;
-          }else if(mode===2){
-            op=Math.random()<.5?'+':'-';
-            if(op==='+'){
-              a=rnd(12,69); b=rnd(11,59); ans=a+b;
-            }else{
-              a=rnd(25,89); b=rnd(10,a-1); ans=a-b;
-            }
-          }else{
-            op='×';
-            a=rnd(2,9); b=rnd(2,9); ans=a*b;
+            a=rnd(2,30); b=rnd(1,20);
+            return make(`${a} + ${b}`,a+b);
           }
-
-        }else if(lv===2){
-          const pool=['+','-','×','÷'];
-          op=pool[rnd(0,pool.length-1)];
-
-          if(op==='×'){
-            a=rnd(3,12); b=rnd(3,12); ans=a*b;
-          }else if(op==='÷'){
-            b=rnd(2,9); ans=rnd(2,9); a=b*ans;
-          }else if(op==='+'){
-            a=rnd(25,89); b=rnd(15,79); ans=a+b;
-          }else{
-            a=rnd(45,119); b=rnd(12,a-1); ans=a-b;
-          }
-
-        }else if(lv===3){
-          const pool=['+','-','×','÷'];
-          op=pool[rnd(0,pool.length-1)];
-
-          if(op==='×'){
-            a=rnd(4,12); b=rnd(4,12); ans=a*b;
-          }else if(op==='÷'){
-            b=rnd(3,12); ans=rnd(3,12); a=b*ans;
-          }else if(op==='+'){
-            a=rnd(55,149); b=rnd(35,99); ans=a+b;
-          }else{
-            a=rnd(80,179); b=rnd(25,a-1); ans=a-b;
-          }
-
-        }else if(lv===4){
-          const mode=rnd(0,3);
-
-          if(mode===0){
-            op='+';
-            a=rnd(110,299); b=rnd(45,189); ans=a+b;
-          }else if(mode===1){
-            op='-';
-            a=rnd(150,349); b=rnd(40,a-1); ans=a-b;
-          }else if(mode===2){
-            op='×';
-            a=rnd(11,19); b=rnd(3,9); ans=a*b;
-          }else{
-            op='÷';
-            b=rnd(4,12); ans=rnd(5,15); a=b*ans;
-          }
-
-        }else if(lv===5){
-          const pool=['+','-','×','÷'];
-          op=pool[rnd(0,pool.length-1)];
-
-          if(op==='×'){
-            a=rnd(12,20); b=rnd(4,12); ans=a*b;
-          }else if(op==='÷'){
-            b=rnd(4,15); ans=rnd(5,16); a=b*ans;
-          }else if(op==='+'){
-            a=rnd(150,399); b=rnd(80,249); ans=a+b;
-          }else{
-            a=rnd(220,499); b=rnd(70,a-1); ans=a-b;
-          }
-
-        }else{
-          const pool=['+','-','×','÷'];
-          op=pool[rnd(0,pool.length-1)];
-
-          const extra=lv-6;
-          const addMax=lv===6?800:lv===7?900:lv===8?999:Math.min(9999,1999+(lv-9)*1000);
-          const multMax=lv===6?30:lv===7?60:lv===8?90:Math.min(999,120+(lv-9)*80);
-
-          if(op==='×'){
-            a=rnd(lv>=9?20:10,multMax); b=rnd(lv>=9?10:6,multMax); ans=a*b;
-          }else if(op==='÷'){
-            b=rnd(lv>=9?10:4,multMax); ans=rnd(lv>=9?10:5,multMax); a=b*ans;
-          }else if(op==='+'){
-            const addMin=lv>=9?1000:180;
-            a=rnd(addMin,addMax); b=rnd(lv>=9?500:90,Math.max(lv>=9?999:100,addMax-60)); ans=a+b;
-          }else{
-            const subMin=lv>=9?1000:260;
-            a=rnd(subMin,addMax); b=rnd(lv>=9?100:80,a-1); ans=a-b;
-          }
+          a=rnd(8,40); b=rnd(1,a-1);
+          return make(`${a} - ${b}`,a-b);
         }
 
-        return {a,b,op,ans};
+        if(lv===2){
+          mode=rnd(0,4);
+          if(mode<=1){
+            a=rnd(10,69); b=rnd(2,30);
+            return make(`${a} + ${b}`,a+b);
+          }
+          if(mode===2){
+            a=rnd(20,99); b=rnd(1,a-1);
+            return make(`${a} - ${b}`,a-b);
+          }
+          if(mode===3){
+            a=rnd(2,9); b=rnd(2,9);
+            return make(`${a} × ${b}`,a*b);
+          }
+          d=rnd(2,9); q=rnd(2,9); a=d*q;
+          return make(`${a} ÷ ${d}`,q);
+        }
+
+        if(lv===3){
+          mode=rnd(0,3);
+          if(mode===0){
+            a=rnd(20,99); b=rnd(10,99);
+            return make(`${a} + ${b}`,a+b);
+          }
+          if(mode===1){
+            a=rnd(30,120); b=rnd(10,a-1);
+            return make(`${a} - ${b}`,a-b);
+          }
+          if(mode===2){
+            a=rnd(3,12); b=rnd(3,12);
+            return make(`${a} × ${b}`,a*b);
+          }
+          d=rnd(2,12); q=rnd(3,12); a=d*q;
+          return make(`${a} ÷ ${d}`,q);
+        }
+
+        if(lv===4){
+          mode=rnd(0,3);
+          if(mode===0){
+            a=rnd(100,299); b=rnd(20,199);
+            return make(`${a} + ${b}`,a+b);
+          }
+          if(mode===1){
+            a=rnd(120,399); b=rnd(20,a-1);
+            return make(`${a} - ${b}`,a-b);
+          }
+          if(mode===2){
+            a=rnd(11,25); b=rnd(2,9);
+            return make(`${a} × ${b}`,a*b);
+          }
+          d=rnd(2,12); q=rnd(10,30); a=d*q;
+          return make(`${a} ÷ ${d}`,q);
+        }
+
+        if(lv===5){
+          mode=rnd(0,5);
+          if(mode===0){
+            a=rnd(150,499); b=rnd(50,299);
+            return make(`${a} + ${b}`,a+b);
+          }
+          if(mode===1){
+            a=rnd(200,599); b=rnd(50,a-1);
+            return make(`${a} - ${b}`,a-b);
+          }
+          if(mode===2){
+            a=rnd(12,35); b=rnd(3,12);
+            return make(`${a} × ${b}`,a*b);
+          }
+          if(mode===3){
+            d=rnd(3,15); q=rnd(10,35); a=d*q;
+            return make(`${a} ÷ ${d}`,q);
+          }
+          if(mode===4){
+            a=rnd(40,199); b=rnd(20,99); c1=rnd(5,50);
+            return make(`${a} + ${b} - ${c1}`,a+b-c1);
+          }
+          a=rnd(100,299); b=rnd(20,a-1); c1=rnd(5,60);
+          return make(`${a} - ${b} + ${c1}`,a-b+c1);
+        }
+
+        if(lv===6){
+          mode=rnd(0,5);
+          if(mode===0){
+            a=rnd(250,800); b=rnd(80,399);
+            return make(`${a} + ${b}`,a+b);
+          }
+          if(mode===1){
+            a=rnd(300,800); b=rnd(80,a-1);
+            return make(`${a} - ${b}`,a-b);
+          }
+          if(mode===2){
+            a=rnd(15,30); b=rnd(4,15);
+            return make(`${a} × ${b}`,a*b);
+          }
+          if(mode===3){
+            d=rnd(4,15); q=rnd(10,30); a=d*q;
+            return make(`${a} ÷ ${d}`,q);
+          }
+          if(mode===4){
+            a=rnd(180,500); b=rnd(80,250); c1=rnd(30,120);
+            return make(`${a} + ${b} - ${c1}`,a+b-c1);
+          }
+          a=rnd(15,30); b=rnd(3,12); c1=rnd(10,80);
+          return make(`${a} × ${b} + ${c1}`,a*b+c1);
+        }
+
+        if(lv===7){
+          mode=rnd(0,6);
+          if(mode===0){
+            a=rnd(300,900); b=rnd(120,499);
+            return make(`${a} + ${b}`,a+b);
+          }
+          if(mode===1){
+            a=rnd(350,900); b=rnd(100,a-1);
+            return make(`${a} - ${b}`,a-b);
+          }
+          if(mode===2){
+            a=rnd(20,60); b=rnd(4,15);
+            return make(`${a} × ${b}`,a*b);
+          }
+          if(mode===3){
+            d=rnd(4,20); q=rnd(12,60); a=d*q;
+            return make(`${a} ÷ ${d}`,q);
+          }
+          if(mode===4){
+            a=rnd(250,650); b=rnd(100,350); c1=rnd(50,180);
+            return make(`${a} + ${b} - ${c1}`,a+b-c1);
+          }
+          if(mode===5){
+            a=rnd(20,60); b=rnd(4,15); c1=rnd(20,120);
+            return make(`${a} × ${b} - ${c1}`,a*b-c1);
+          }
+          d=rnd(4,15); q=rnd(20,60); a=d*q; c1=rnd(20,120);
+          return make(`${a} ÷ ${d} + ${c1}`,q+c1);
+        }
+
+        if(lv===8){
+          mode=rnd(0,7);
+          if(mode===0){
+            a=rnd(400,999); b=rnd(150,599);
+            return make(`${a} + ${b}`,a+b);
+          }
+          if(mode===1){
+            a=rnd(450,999); b=rnd(120,a-1);
+            return make(`${a} - ${b}`,a-b);
+          }
+          if(mode===2){
+            a=rnd(30,90); b=rnd(5,18);
+            return make(`${a} × ${b}`,a*b);
+          }
+          if(mode===3){
+            d=rnd(5,20); q=rnd(20,90); a=d*q;
+            return make(`${a} ÷ ${d}`,q);
+          }
+          if(mode===4){
+            a=rnd(350,750); b=rnd(150,450); c1=rnd(80,260);
+            return make(`${a} + ${b} - ${c1}`,a+b-c1);
+          }
+          if(mode===5){
+            a=rnd(30,90); b=rnd(5,18); c1=rnd(30,180);
+            return make(`${a} × ${b} + ${c1}`,a*b+c1);
+          }
+          if(mode===6){
+            d=rnd(5,18); q=rnd(30,90); a=d*q; c1=rnd(30,180);
+            return make(`${a} ÷ ${d} + ${c1}`,q+c1);
+          }
+          a=rnd(250,600); b=rnd(120,300); c1=rnd(50,160); c2=rnd(20,100);
+          return make(`${a} + ${b} - ${c1} + ${c2}`,a+b-c1+c2);
+        }
+
+        if(lv===9){
+          mode=rnd(0,7);
+          if(mode===0){
+            a=rnd(1000,1999); b=rnd(100,999);
+            return make(`${a} + ${b}`,a+b);
+          }
+          if(mode===1){
+            a=rnd(1200,1999); b=rnd(100,a-1);
+            return make(`${a} - ${b}`,a-b);
+          }
+          if(mode===2){
+            a=rnd(100,299); b=rnd(2,12);
+            return make(`${a} × ${b}`,a*b);
+          }
+          if(mode===3){
+            do{
+              d=rnd(3,18); q=rnd(10,99); a=d*q;
+            }while(a<100||a>999);
+            return make(`${a} ÷ ${d}`,q);
+          }
+          if(mode===4){
+            a=rnd(1000,1800); b=rnd(200,800); c1=rnd(80,350);
+            return make(`${a} + ${b} - ${c1}`,a+b-c1);
+          }
+          if(mode===5){
+            a=rnd(100,299); b=rnd(2,12); c1=rnd(20,150);
+            return make(`${a} × ${b} + ${c1}`,a*b+c1);
+          }
+          if(mode===6){
+            do{
+              d=rnd(3,18); q=rnd(10,99); a=d*q;
+            }while(a<100||a>999);
+            c1=rnd(20,150);
+            return make(`${a} ÷ ${d} + ${c1}`,q+c1);
+          }
+          a=rnd(1000,1600); b=rnd(200,700); c1=rnd(100,400); c2=rnd(30,180);
+          return make(`${a} + ${b} - ${c1} + ${c2}`,a+b-c1+c2);
+        }
+
+        const extra=lv-10;
+        const addMax=Math.min(9999,2999+extra*1000);
+        const mulMax=Math.min(999,399+extra*100);
+        mode=rnd(0,5);
+
+        if(mode===0){
+          a=rnd(1200,addMax); b=rnd(300,Math.max(500,addMax-500));
+          return make(`${a} + ${b}`,a+b);
+        }
+        if(mode===1){
+          a=rnd(1500,addMax); b=rnd(200,a-1);
+          return make(`${a} - ${b}`,a-b);
+        }
+        if(mode===2){
+          a=rnd(100,mulMax); b=rnd(3,20);
+          return make(`${a} × ${b}`,a*b);
+        }
+        if(mode===3){
+          do{
+            d=rnd(3,25); q=rnd(20,Math.min(199,mulMax)); a=d*q;
+          }while(a<100||a>9999);
+          return make(`${a} ÷ ${d}`,q);
+        }
+        if(mode===4){
+          a=rnd(1200,addMax); b=rnd(300,900); c1=rnd(100,500);
+          return make(`${a} + ${b} - ${c1}`,a+b-c1);
+        }
+        a=rnd(100,mulMax); b=rnd(3,20); c1=rnd(50,250);
+        return make(`${a} × ${b} + ${c1}`,a*b+c1);
       }
 
       function makeProblem(){
         transitioning=false;
-        E.problem.classList.remove('level-up');
+        E.problem.classList.remove('level-up','compact');
 
         let p=null;
-        let key='';
 
         for(let attempt=0;attempt<200;attempt++){
           p=generateProblem(currentLevel);
-          key=problemKey(p.a,p.b,p.op);
-          if(!seenProblems.has(key)) break;
+          if(!seenProblems.has(p.key)) break;
         }
 
-        seenProblems.add(key);
+        seenProblems.add(p.key);
         currentAnswer=p.ans;
-        E.problem.textContent=`${p.a} ${p.op} ${p.b}`;
+        E.problem.textContent=p.text;
+        E.problem.classList.toggle('compact',p.text.length>10);
         setValue('');
       }
 
