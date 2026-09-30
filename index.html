@@ -470,17 +470,19 @@
           op=pool[rnd(0,pool.length-1)];
 
           const extra=lv-6;
-          const addMax=Math.min(9999,800+extra*110);
-          const multMax=Math.min(35,30+extra*2);
+          const addMax=lv===6?800:lv===7?900:lv===8?999:Math.min(9999,1999+(lv-9)*1000);
+          const multMax=lv===6?30:lv===7?60:lv===8?90:Math.min(999,120+(lv-9)*80);
 
           if(op==='×'){
-            a=rnd(10,multMax); b=rnd(6,multMax); ans=a*b;
+            a=rnd(lv>=9?20:10,multMax); b=rnd(lv>=9?10:6,multMax); ans=a*b;
           }else if(op==='÷'){
-            b=rnd(4,multMax); ans=rnd(5,multMax); a=b*ans;
+            b=rnd(lv>=9?10:4,multMax); ans=rnd(lv>=9?10:5,multMax); a=b*ans;
           }else if(op==='+'){
-            a=rnd(180,addMax); b=rnd(90,Math.max(100,addMax-60)); ans=a+b;
+            const addMin=lv>=9?1000:180;
+            a=rnd(addMin,addMax); b=rnd(lv>=9?500:90,Math.max(lv>=9?999:100,addMax-60)); ans=a+b;
           }else{
-            a=rnd(260,addMax); b=rnd(80,a-1); ans=a-b;
+            const subMin=lv>=9?1000:260;
+            a=rnd(subMin,addMax); b=rnd(lv>=9?100:80,a-1); ans=a-b;
           }
         }
 
