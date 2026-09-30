@@ -6,32 +6,432 @@
   <meta name="theme-color" content="#f3f0ff">
   <title>大人的腦部鍛鍊</title>
   <style>
-    :root{--bg:#f3f0ff;--ink:#4b00d7;--accent:#f28a35;--card:#fbfaff;--line:rgba(75,0,215,.18)}
-    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}
-    main{width:min(100%,620px);margin:0 auto;padding:24px 18px 36px}
-    .top{padding:12px 0 18px;border-bottom:2px solid var(--ink)}
-    h1{margin:0;font-size:32px;letter-spacing:-.03em}
-    .sub{margin:8px 0 0;font-weight:800;opacity:.7}
-    .grid{display:grid;gap:14px;margin-top:22px}
-    .card{background:var(--card);border:2px solid var(--line);border-radius:22px;padding:20px}
-    .tag{font-size:12px;font-weight:900;letter-spacing:.12em;color:var(--accent)}
-    h2{margin:6px 0 8px;font-size:24px}
-    p{margin:0;line-height:1.7;font-weight:700;opacity:.76}
-    .status{margin-top:24px;padding:16px 18px;border:2px dashed var(--accent);border-radius:18px;font-weight:900;color:var(--accent);text-align:center}
+    :root{
+      --bg:#f3f0ff;--paper:#fbfaff;--ink:#4b00d7;--accent:#f28a35;
+      --line:rgba(75,0,215,.18);--soft:rgba(75,0,215,.08);--muted:rgba(75,0,215,.65);
+      --good:#198754;--bad:#c43d39
+    }
+    *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+    html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}
+    button,input{font:inherit}
+    button{touch-action:manipulation}
+    .app{width:min(100%,680px);margin:0 auto;padding:18px 16px 36px}
+    .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:10px 2px 15px;border-bottom:2px solid var(--ink)}
+    .brand h1{margin:0;font-size:28px;line-height:1;font-weight:950;letter-spacing:-.04em}
+    .brand p{margin:7px 0 0;font-size:12px;font-weight:850;letter-spacing:.08em;color:var(--muted)}
+    .sound{width:40px;height:40px;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);font-weight:950}
+    .screen{display:none;padding-top:18px}.screen.active{display:block}
+    .hero{padding:10px 2px 6px}
+    .eyebrow{font-size:11px;font-weight:950;letter-spacing:.14em;color:var(--accent)}
+    .hero h2{margin:7px 0 8px;font-size:38px;line-height:1.05;letter-spacing:-.05em}
+    .hero p{margin:0;color:var(--muted);font-weight:750;line-height:1.7}
+    .primary,.secondary,.choice,.key{
+      min-height:52px;border-radius:16px;font-weight:950;border:2px solid var(--ink);
+    }
+    .primary{background:var(--accent);border-color:var(--accent);color:#fff;padding:0 20px}
+    .secondary{background:transparent;color:var(--ink);padding:0 18px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+    .actions>*{flex:1 1 170px}
+    .modes{display:grid;gap:12px;margin-top:22px}
+    .mode{
+      width:100%;text-align:left;background:var(--paper);border:2px solid var(--line);
+      border-radius:22px;padding:18px;color:var(--ink)
+    }
+    .mode:active{transform:translateY(1px)}
+    .mode-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .mode-num{font-size:12px;font-weight:950;letter-spacing:.13em;color:var(--accent)}
+    .mode-arrow{font-size:24px;font-weight:950}
+    .mode h3{margin:7px 0 5px;font-size:24px}.mode p{margin:0;color:var(--muted);font-weight:750;line-height:1.55}
+    .note{margin-top:18px;padding:13px 15px;border-left:4px solid var(--accent);background:rgba(242,138,53,.08);font-size:12px;line-height:1.55;font-weight:750;color:var(--muted)}
+    .gamehead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+    .back{border:0;background:transparent;color:var(--ink);padding:5px 0;font-weight:950}
+    .gamehead h2{margin:4px 0 0;font-size:27px;letter-spacing:-.04em}
+    .pill{border:2px solid var(--line);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:950;white-space:nowrap}
+    .panel{background:var(--paper);border:2px solid var(--line);border-radius:24px;padding:18px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+    .stat{padding:11px 9px;border-bottom:2px solid var(--line)}
+    .stat span{display:block;font-size:9px;font-weight:950;letter-spacing:.12em;color:var(--muted)}
+    .stat strong{display:block;margin-top:5px;font-size:25px;line-height:1;font-variant-numeric:tabular-nums}
+    .big-problem{text-align:center;font-size:clamp(52px,16vw,88px);font-weight:950;letter-spacing:-.07em;padding:26px 0 20px}
+    .answer-wrap{display:grid;grid-template-columns:1fr 96px;gap:9px}
+    .answer-input{
+      width:100%;min-width:0;height:56px;background:transparent;border:0;border-bottom:4px solid var(--ink);
+      color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none
+    }
+    .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
+    .key{background:var(--paper);color:var(--ink);font-size:28px;min-height:62px}
+    .key.special{color:var(--accent);border-color:var(--accent);font-size:14px}
+    .memory-stage{text-align:center;padding:16px 0}
+    .memory-label{font-size:12px;font-weight:950;letter-spacing:.12em;color:var(--muted)}
+    .memory-number{font-size:clamp(48px,16vw,82px);font-weight:950;letter-spacing:.12em;margin:32px 0;word-break:break-all}
+    .memory-input{width:100%;height:62px;border:0;border-bottom:4px solid var(--ink);background:transparent;color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
+    .logic-progress{display:flex;gap:5px;margin-bottom:16px}.logic-progress i{height:5px;flex:1;background:var(--line);border-radius:99px}.logic-progress i.on{background:var(--accent)}
+    .logic-q{font-size:23px;line-height:1.45;font-weight:950;margin:4px 0 15px}
+    .clues{display:grid;gap:8px;margin-bottom:15px}.clue{padding:12px 13px;border-left:4px solid var(--ink);background:var(--soft);font-weight:800;line-height:1.55}
+    .choices{display:grid;gap:9px}.choice{background:var(--paper);color:var(--ink);text-align:left;padding:0 15px}
+    .choice.selected{background:var(--soft);border-color:var(--accent)}
+    .feedback{display:none;margin-top:14px;padding:14px;border-radius:16px;font-weight:800;line-height:1.6}.feedback.show{display:block}.feedback.good{background:rgba(25,135,84,.10);color:var(--good)}.feedback.bad{background:rgba(196,61,57,.10);color:var(--bad)}
+    .result{text-align:center;padding:14px 0}.result-score{font-size:72px;line-height:1;font-weight:950;letter-spacing:-.06em}.result-unit{font-size:14px;font-weight:950;color:var(--muted);margin-top:4px}
+    .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}.result-box{padding:14px 8px;background:var(--soft);border-radius:16px}.result-box span{display:block;font-size:10px;font-weight:950;color:var(--muted)}.result-box strong{display:block;margin-top:6px;font-size:22px}
+    .daily-summary{display:grid;gap:12px;margin-top:18px}.summary-row{display:grid;grid-template-columns:90px 1fr 42px;gap:10px;align-items:center}.summary-row span{font-size:13px;font-weight:900}.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.bar b{display:block;height:100%;background:var(--accent);border-radius:99px;width:0}.summary-row strong{text-align:right}
+    .hidden{display:none!important}
+    @media(min-width:600px){.modes{grid-template-columns:repeat(3,1fr)}.mode{min-height:190px}.hero h2{font-size:46px}}
   </style>
 </head>
 <body>
-  <main>
-    <header class="top">
+<main class="app">
+  <header class="top">
+    <div class="brand">
       <h1>大人的腦部鍛鍊</h1>
-      <p class="sub">每日短時間 · 計算 · 記憶 · 邏輯</p>
-    </header>
-    <section class="grid">
-      <article class="card"><div class="tag">01 / SPEED</div><h2>快速心算</h2><p>速度、正確率與難度逐階提升。</p></article>
-      <article class="card"><div class="tag">02 / MEMORY</div><h2>瞬間記憶</h2><p>短時間記住數字、位置與順序，再立即回想。</p></article>
-      <article class="card"><div class="tag">03 / LOGIC</div><h2>邏輯推理</h2><p>真假、排列、條件排除與短篇推理。</p></article>
-    </section>
-    <div class="status">新版本建置入口</div>
-  </main>
+      <p>DAILY BRAIN TRAINING</p>
+    </div>
+    <button id="soundBtn" class="sound" type="button" aria-label="聲音開關">♪</button>
+  </header>
+
+  <section id="home" class="screen active">
+    <div class="hero">
+      <div class="eyebrow">TODAY'S TRAINING</div>
+      <h2>每天幾分鐘，<br>快速動動腦。</h2>
+      <p>一次練習計算速度、瞬間記憶與條件推理。每個模式都能單獨玩，也可以直接完成今日腦訓。</p>
+      <div class="actions"><button id="dailyBtn" class="primary" type="button">開始今日腦訓</button></div>
+    </div>
+
+    <div class="modes">
+      <button class="mode" type="button" data-mode="math">
+        <div class="mode-top"><span class="mode-num">01 / SPEED</span><span class="mode-arrow">→</span></div>
+        <h3>快速心算</h3><p>30 秒連續作答，依表現逐步提高數字範圍。</p>
+      </button>
+      <button class="mode" type="button" data-mode="memory">
+        <div class="mode-top"><span class="mode-num">02 / MEMORY</span><span class="mode-arrow">→</span></div>
+        <h3>瞬間記憶</h3><p>數字短暫出現後消失，從 4 位逐步增加。</p>
+      </button>
+      <button class="mode" type="button" data-mode="logic">
+        <div class="mode-top"><span class="mode-num">03 / LOGIC</span><span class="mode-arrow">→</span></div>
+        <h3>邏輯推理</h3><p>讀取條件、排除矛盾，在有限線索中找唯一答案。</p>
+      </button>
+    </div>
+    <div class="note">這是娛樂與練習用途的遊戲表現，不是 IQ、醫療或認知功能診斷。</div>
+  </section>
+
+  <section id="math" class="screen">
+    <div class="gamehead">
+      <div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div>
+      <div class="pill">30 秒</div>
+    </div>
+    <div class="panel">
+      <div class="stats">
+        <div class="stat"><span>TIME</span><strong id="mathTime">30</strong></div>
+        <div class="stat"><span>CORRECT</span><strong id="mathCorrect">0</strong></div>
+        <div class="stat"><span>LEVEL</span><strong id="mathLevel">1</strong></div>
+      </div>
+      <div id="mathProblem" class="big-problem">準備</div>
+      <div class="answer-wrap">
+        <input id="mathAnswer" class="answer-input" inputmode="numeric" autocomplete="off" aria-label="答案">
+        <button id="mathSubmit" class="primary" type="button">送出</button>
+      </div>
+      <div id="mathKeys" class="keypad"></div>
+    </div>
+  </section>
+
+  <section id="memory" class="screen">
+    <div class="gamehead">
+      <div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div>
+      <div id="memoryRoundPill" class="pill">1 / 6</div>
+    </div>
+    <div class="panel">
+      <div class="stats">
+        <div class="stat"><span>ROUND</span><strong id="memoryRound">1</strong></div>
+        <div class="stat"><span>DIGITS</span><strong id="memoryDigits">4</strong></div>
+        <div class="stat"><span>CORRECT</span><strong id="memoryCorrect">0</strong></div>
+      </div>
+      <div class="memory-stage">
+        <div id="memoryLabel" class="memory-label">記住這串數字</div>
+        <div id="memoryNumber" class="memory-number">••••</div>
+        <div id="memoryEntry" class="hidden">
+          <input id="memoryAnswer" class="memory-input" inputmode="numeric" autocomplete="off" aria-label="輸入剛才的數字">
+          <div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div>
+        </div>
+        <button id="memoryStart" class="primary" type="button">開始</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="logic" class="screen">
+    <div class="gamehead">
+      <div><button class="back" type="button">← 首頁</button><h2>邏輯推理</h2></div>
+      <div id="logicPill" class="pill">1 / 5</div>
+    </div>
+    <div class="panel">
+      <div id="logicProgress" class="logic-progress"></div>
+      <div id="logicQuestion" class="logic-q"></div>
+      <div id="logicClues" class="clues"></div>
+      <div id="logicChoices" class="choices"></div>
+      <div id="logicFeedback" class="feedback"></div>
+      <div class="actions">
+        <button id="logicSubmit" class="primary" type="button">確認答案</button>
+        <button id="logicNext" class="secondary hidden" type="button">下一題</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="result" class="screen">
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2 id="resultTitle">訓練完成</h2></div></div>
+    <div class="panel result">
+      <div class="eyebrow">TRAINING SCORE</div>
+      <div id="resultScore" class="result-score">0</div>
+      <div class="result-unit">遊戲表現分數</div>
+      <div id="resultGrid" class="result-grid"></div>
+      <div id="resultActions" class="actions"></div>
+    </div>
+  </section>
+
+  <section id="dailyResult" class="screen">
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>今日腦訓完成</h2></div></div>
+    <div class="panel result">
+      <div class="eyebrow">DAILY SCORE</div>
+      <div id="dailyScore" class="result-score">0</div>
+      <div class="result-unit">三項平均</div>
+      <div id="dailySummary" class="daily-summary"></div>
+      <div class="actions"><button id="dailyAgain" class="primary" type="button">再練一次</button></div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var screens=[].slice.call(document.querySelectorAll('.screen'));
+  var dailyMode=false,dailyQueue=[],dailyScores={};
+  var muted=false,audioCtx=null;
+  var mathTimer=null,mathTime=30,mathCorrect=0,mathWrong=0,mathStreak=0,mathAnswerValue=0,mathLevel=1;
+  var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null;
+  var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
+
+  var logicBank=[
+    {q:'三人中只有一人拿了鑰匙，而且只有一句話是真的。誰拿了？',
+     clues:['阿明：不是我拿的。','小美：是阿哲拿的。','阿哲：小美沒有拿。'],
+     choices:['阿明','小美','阿哲'],answer:0,
+     explain:'如果阿明拿了：阿明是假、小美是假、阿哲是真，剛好只有一句真話。'},
+    {q:'A、B、C 三人排隊。誰一定站在中間？',
+     clues:['A 不站第一個。','C 站在 A 的前面。'],
+     choices:['A','B','C'],answer:0,
+     explain:'C 必須在 A 前面，而 A 又不能第一，因此唯一排列是 C－A－B。'},
+    {q:'密碼是三位數。哪一個符合所有條件？',
+     clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。'],
+     choices:['213','325','426'],answer:1,
+     explain:'325：3 > 2，而且 3 + 2 = 5，三個數字也都不同。'},
+    {q:'四個盒子只有一個有獎品。哪個盒子最合理？',
+     clues:['獎品不在 1 號。','若不在 2 號，就一定在 4 號。','獎品也不在 4 號。'],
+     choices:['1 號','2 號','3 號','4 號'],answer:1,
+     explain:'1 號與 4 號已排除；若不在 2 號，依第二條必須在 4 號，但 4 號又被排除，所以只能在 2 號。'},
+    {q:'小王、小李、小陳各養一種不同寵物：貓、狗、魚。小李養什麼？',
+     clues:['小王不養狗。','小陳養魚。','小王不養魚。'],
+     choices:['貓','狗','魚'],answer:1,
+     explain:'小陳是魚；小王既不是狗也不是魚，所以是貓；剩下的小李只能是狗。'}
+  ];
+
+  function $(id){return document.getElementById(id)}
+  function show(id){
+    screens.forEach(function(s){s.classList.toggle('active',s.id===id)});
+    window.scrollTo(0,0);
+  }
+  function tone(freq,dur){
+    if(muted) return;
+    var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    if(!audioCtx)audioCtx=new AC();
+    if(audioCtx.state==='suspended')audioCtx.resume();
+    var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;
+    o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur);
+  }
+  function correctTone(){tone(680,.08);setTimeout(function(){tone(900,.1)},60)}
+  function wrongTone(){tone(190,.12)}
+  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪'});
+
+  document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();dailyMode=false;show('home')})});
+  document.querySelectorAll('.mode').forEach(function(b){b.addEventListener('click',function(){dailyMode=false;startMode(this.dataset.mode)})});
+  $('dailyBtn').addEventListener('click',startDaily);
+  $('dailyAgain').addEventListener('click',startDaily);
+
+  function stopAll(){
+    clearInterval(mathTimer);mathTimer=null;
+    clearTimeout(memoryTimeout);memoryTimeout=null;
+  }
+  function startDaily(){
+    stopAll();dailyMode=true;dailyQueue=['math','memory','logic'];dailyScores={};startNextDaily();
+  }
+  function startNextDaily(){
+    if(!dailyQueue.length){showDailyResult();return}
+    startMode(dailyQueue.shift());
+  }
+  function startMode(mode){
+    stopAll();
+    if(mode==='math')startMath();
+    if(mode==='memory')startMemory();
+    if(mode==='logic')startLogic();
+  }
+  function finishMode(mode,score,stats){
+    dailyScores[mode]=score;
+    if(dailyMode){startNextDaily();return}
+    showResult(mode,score,stats);
+  }
+
+  function buildMathKeys(){
+    var box=$('mathKeys');box.innerHTML='';
+    ['1','2','3','4','5','6','7','8','9','清除','0','←'].forEach(function(k){
+      var b=document.createElement('button');b.type='button';b.textContent=k;b.className='key'+((k==='清除'||k==='←')?' special':'');
+      b.addEventListener('click',function(){
+        var input=$('mathAnswer');
+        if(k==='清除')input.value='';
+        else if(k==='←')input.value=input.value.slice(0,-1);
+        else input.value=(input.value+k).slice(0,7);
+        input.focus();
+      });
+      box.appendChild(b);
+    });
+  }
+  buildMathKeys();
+
+  function makeMath(){
+    mathLevel=1+Math.floor(mathCorrect/5);
+    $('mathLevel').textContent=mathLevel;
+    var opPool=mathLevel<3?['+','-']:mathLevel<5?['+','-','×']:['+','-','×','÷'];
+    var op=opPool[Math.floor(Math.random()*opPool.length)],a,b;
+    if(op==='+'){a=rand(6,20+mathLevel*15);b=rand(3,18+mathLevel*12);mathAnswerValue=a+b}
+    if(op==='-'){a=rand(15,35+mathLevel*18);b=rand(2,a-1);mathAnswerValue=a-b}
+    if(op==='×'){a=rand(3,Math.min(12+mathLevel,25));b=rand(2,Math.min(10+mathLevel,18));mathAnswerValue=a*b}
+    if(op==='÷'){b=rand(2,Math.min(12,5+mathLevel));mathAnswerValue=rand(2,Math.min(15,7+mathLevel));a=b*mathAnswerValue}
+    $('mathProblem').textContent=a+' '+op+' '+b;
+    $('mathAnswer').value='';
+    $('mathAnswer').focus();
+  }
+  function startMath(){
+    show('math');mathTime=30;mathCorrect=0;mathWrong=0;mathStreak=0;mathLevel=1;
+    $('mathTime').textContent='30';$('mathCorrect').textContent='0';$('mathLevel').textContent='1';
+    makeMath();
+    mathTimer=setInterval(function(){
+      mathTime--;$('mathTime').textContent=Math.max(0,mathTime);
+      if(mathTime<=0){clearInterval(mathTimer);mathTimer=null;endMath()}
+    },1000);
+  }
+  function submitMath(){
+    if(!mathTimer)return;
+    var v=$('mathAnswer').value.trim();if(v==='')return;
+    if(Number(v)===mathAnswerValue){mathCorrect++;mathStreak++;correctTone()}else{mathWrong++;mathStreak=0;wrongTone()}
+    $('mathCorrect').textContent=mathCorrect;makeMath();
+  }
+  $('mathSubmit').addEventListener('click',submitMath);
+  $('mathAnswer').addEventListener('keydown',function(e){if(e.key==='Enter')submitMath()});
+  function endMath(){
+    var attempts=mathCorrect+mathWrong;
+    var acc=attempts?Math.round(mathCorrect/attempts*100):0;
+    var score=Math.min(100,Math.round(mathCorrect*5+acc*.45));
+    finishMode('math',score,{a:mathCorrect,b:acc+'%',c:'LV '+mathLevel});
+  }
+
+  function startMemory(){
+    show('memory');memoryRound=0;memoryCorrect=0;memoryValue='';
+    $('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');
+    $('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';
+    $('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 6';
+  }
+  $('memoryStart').addEventListener('click',nextMemoryRound);
+  function nextMemoryRound(){
+    if(memoryRound>=6){endMemory();return}
+    memoryRound++;
+    var digits=3+memoryRound;
+    $('memoryRound').textContent=memoryRound;$('memoryDigits').textContent=digits;$('memoryRoundPill').textContent=memoryRound+' / 6';
+    $('memoryStart').classList.add('hidden');$('memoryEntry').classList.add('hidden');
+    $('memoryLabel').textContent='記住這串數字';
+    memoryValue='';for(var i=0;i<digits;i++)memoryValue+=String(rand(i===0?1:0,9));
+    $('memoryNumber').textContent=memoryValue;
+    clearTimeout(memoryTimeout);
+    memoryTimeout=setTimeout(function(){
+      $('memoryNumber').textContent='••••••••••'.slice(0,digits);
+      $('memoryLabel').textContent='把剛才的數字輸入回來';
+      $('memoryEntry').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus();
+    },Math.max(1400,2600-memoryRound*140));
+  }
+  function submitMemory(){
+    if($('memoryEntry').classList.contains('hidden'))return;
+    var ok=$('memoryAnswer').value.trim()===memoryValue;
+    if(ok){memoryCorrect++;correctTone()}else{wrongTone()}
+    $('memoryCorrect').textContent=memoryCorrect;
+    $('memoryEntry').classList.add('hidden');$('memoryNumber').textContent=ok?'正確':'答案 '+memoryValue;
+    $('memoryLabel').textContent=ok?'記憶成功':'這回合再加油';
+    setTimeout(function(){
+      if(memoryRound>=6)endMemory();else nextMemoryRound();
+    },700);
+  }
+  $('memorySubmit').addEventListener('click',submitMemory);
+  $('memoryAnswer').addEventListener('keydown',function(e){if(e.key==='Enter')submitMemory()});
+  function endMemory(){
+    var score=Math.round(memoryCorrect/6*100);
+    finishMode('memory',score,{a:memoryCorrect+'/6',b:(3+Math.min(6,memoryRound))+' 位',c:score+'%'});
+  }
+
+  function startLogic(){
+    show('logic');logicIndex=0;logicCorrect=0;renderLogic();
+  }
+  function renderLogic(){
+    logicSelected=null;logicAnswered=false;
+    var q=logicBank[logicIndex];
+    $('logicPill').textContent=(logicIndex+1)+' / '+logicBank.length;
+    var prog=$('logicProgress');prog.innerHTML='';
+    logicBank.forEach(function(_,i){var d=document.createElement('i');if(i<=logicIndex)d.className='on';prog.appendChild(d)});
+    $('logicQuestion').textContent=q.q;
+    var clues=$('logicClues');clues.innerHTML='';q.clues.forEach(function(c){var d=document.createElement('div');d.className='clue';d.textContent=c;clues.appendChild(d)});
+    var choices=$('logicChoices');choices.innerHTML='';q.choices.forEach(function(c,i){
+      var b=document.createElement('button');b.type='button';b.className='choice';b.textContent=c;
+      b.addEventListener('click',function(){if(logicAnswered)return;logicSelected=i;choices.querySelectorAll('.choice').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')});
+      choices.appendChild(b);
+    });
+    $('logicFeedback').className='feedback';$('logicFeedback').textContent='';
+    $('logicSubmit').classList.remove('hidden');$('logicNext').classList.add('hidden');
+  }
+  $('logicSubmit').addEventListener('click',function(){
+    if(logicSelected===null||logicAnswered)return;
+    logicAnswered=true;var q=logicBank[logicIndex],ok=logicSelected===q.answer;
+    if(ok){logicCorrect++;correctTone()}else wrongTone();
+    var f=$('logicFeedback');f.className='feedback show '+(ok?'good':'bad');f.textContent=(ok?'✓ 正確。':'✗ 正確答案：'+q.choices[q.answer]+'。')+' '+q.explain;
+    $('logicSubmit').classList.add('hidden');$('logicNext').classList.remove('hidden');
+    $('logicNext').textContent=logicIndex===logicBank.length-1?'看結果':'下一題';
+  });
+  $('logicNext').addEventListener('click',function(){
+    logicIndex++;if(logicIndex>=logicBank.length)endLogic();else renderLogic();
+  });
+  function endLogic(){
+    var score=Math.round(logicCorrect/logicBank.length*100);
+    finishMode('logic',score,{a:logicCorrect+'/'+logicBank.length,b:score+'%',c:'完成'});
+  }
+
+  function showResult(mode,score,stats){
+    show('result');
+    var names={math:'快速心算',memory:'瞬間記憶',logic:'邏輯推理'};
+    $('resultTitle').textContent=names[mode]+'完成';$('resultScore').textContent=score;
+    $('resultGrid').innerHTML=
+      '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div>'+
+      '<div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div>'+
+      '<div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
+    var a=$('resultActions');a.innerHTML='';
+    var retry=document.createElement('button');retry.className='primary';retry.type='button';retry.textContent='再玩一次';retry.addEventListener('click',function(){dailyMode=false;startMode(mode)});
+    var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='回首頁';home.addEventListener('click',function(){show('home')});
+    a.appendChild(retry);a.appendChild(home);
+  }
+  function showDailyResult(){
+    show('dailyResult');dailyMode=false;
+    var avg=Math.round(((dailyScores.math||0)+(dailyScores.memory||0)+(dailyScores.logic||0))/3);
+    $('dailyScore').textContent=avg;
+    var names=[['math','快速心算'],['memory','瞬間記憶'],['logic','邏輯推理']];
+    $('dailySummary').innerHTML='';
+    names.forEach(function(item){
+      var s=dailyScores[item[0]]||0,d=document.createElement('div');d.className='summary-row';
+      d.innerHTML='<span>'+item[1]+'</span><div class="bar"><b style="width:'+s+'%"></b></div><strong>'+s+'</strong>';
+      $('dailySummary').appendChild(d);
+    });
+  }
+  function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+})();
+</script>
 </body>
 </html>
