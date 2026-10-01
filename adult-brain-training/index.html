@@ -83,10 +83,44 @@
     .logic-q{font-size:clamp(23px,5vw,32px);line-height:1.3;font-weight:900;letter-spacing:-.03em;margin:6px 0 18px}.clues{display:grid;gap:8px;margin-bottom:16px}.clue{padding:13px 14px;border-left:3px solid var(--acid);background:var(--surface2);font-weight:760;line-height:1.55;color:var(--ink)}
     .choices{display:grid;gap:9px}.choice{background:var(--surface2);color:var(--ink);text-align:left;padding:0 15px}.choice:hover{border-color:var(--line-strong)}.choice.selected{background:#fff7dc;border-color:var(--acid)}
     .feedback{display:none;margin-top:14px;padding:14px;border-radius:12px;font-weight:760;line-height:1.6}.feedback.show{display:block}.feedback.good{background:rgba(102,213,163,.10);color:#147a55}.feedback.bad{background:rgba(255,123,114,.10);color:#b52f2f}
-    .exec-rule{padding:18px 18px;border:1px solid rgba(185,232,0,.75);background:rgba(185,232,0,.11);border-radius:14px;text-align:center;font-size:clamp(18px,3vw,23px);line-height:1.35;font-weight:950;color:var(--acid-text)}
-    .exec-number{text-align:center;font-size:clamp(132px,32vw,220px);line-height:.88;font-weight:950;letter-spacing:-.075em;padding:46px 0 38px;font-variant-numeric:tabular-nums;color:var(--ink)}
-    .exec-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}.exec-choices .choice{text-align:center;font-size:clamp(19px,3vw,24px);font-weight:900;min-height:68px}
-    .exec-hint,.mini-instruction{text-align:center;margin-top:12px;font-size:13px;font-weight:780;color:var(--muted);line-height:1.6}
+    .exec-theme{--exec-stage:#ffe36d;--exec-rule:#d8ff4f;--exec-rule-ink:#243100}
+    .exec-theme.rule-size{--exec-stage:#a9e7ff;--exec-rule:#73d2ff;--exec-rule-ink:#092f4a}
+    .exec-theme.is-switch{--exec-stage:#ffb09c;--exec-rule:#ff715b;--exec-rule-ink:#3b120b}
+    .exec-stats{gap:8px;background:transparent;border:0;overflow:visible}
+    .exec-stats .stat{border:1px solid var(--line-strong);border-radius:13px;padding:14px 13px}
+    .exec-stats .stat:nth-child(1){background:#fff0a6}
+    .exec-stats .stat:nth-child(2){background:#d9f8c4}
+    .exec-stats .stat:nth-child(3){background:#d9eaff}
+    .exec-stats .stat span{font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;font-size:11px;letter-spacing:.04em;color:#353535;font-weight:900}
+    .exec-stats .stat strong{font-size:clamp(25px,4vw,32px);color:#111}
+    .exec-instruction{margin:18px auto 14px;max-width:720px;font-size:clamp(16px,2.3vw,18px);line-height:1.65;color:#353535;font-weight:720}
+    .exec-instruction strong{font-size:1.08em;color:#111;font-weight:950}
+    .exec-stage{margin:16px 0 18px;border:2px solid #171717;border-radius:22px;overflow:hidden;background:var(--exec-stage);box-shadow:0 9px 0 rgba(23,23,23,.12);transition:background 160ms var(--ease-out),transform 160ms var(--ease-out)}
+    .exec-rule{padding:20px 18px;border:0;border-bottom:2px solid #171717;background:var(--exec-rule);border-radius:0;text-align:center;font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;font-size:clamp(21px,3.2vw,28px);line-height:1.3;font-weight:950;color:var(--exec-rule-ink);letter-spacing:.01em}
+    .exec-number{text-align:center;font-family:"Arial Black","Avenir Next Condensed",Impact,"Arial Narrow",sans-serif;font-size:clamp(170px,38vw,280px);line-height:.82;font-weight:950;letter-spacing:-.055em;padding:54px 8px 48px;font-variant-numeric:tabular-nums;color:#111;text-shadow:0 2px 0 rgba(255,255,255,.18)}
+    .exec-choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .exec-choices .choice{text-align:center;font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;font-size:clamp(22px,3.2vw,27px);font-weight:950;min-height:78px;border:2px solid #171717;color:#111;box-shadow:0 5px 0 rgba(23,23,23,.12);transition:transform 100ms var(--ease-out),box-shadow 100ms var(--ease-out)}
+    .exec-choices .choice:first-child{background:#8edcff}
+    .exec-choices .choice:last-child{background:#ffbd69}
+    .exec-choices .choice:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(23,23,23,.12)}
+    .exec-hint{font-size:clamp(15px,2.2vw,17px);font-weight:800;color:#3f3f3f;line-height:1.6;margin-top:18px;text-align:center}
+    .mini-instruction{text-align:center;margin-top:12px;font-size:13px;font-weight:780;color:var(--muted);line-height:1.6}
+    @media(prefers-reduced-motion:no-preference){
+      .exec-theme.is-switch .exec-stage{animation:exec-switch-pop 260ms var(--ease-out)}
+      @keyframes exec-switch-pop{0%{transform:scale(.985)}55%{transform:scale(1.008)}100%{transform:scale(1)}}
+    }
+    @media(max-width:679px){
+      .exec-stats .stat{padding:12px 8px}
+      .exec-stats .stat span{font-size:10px}
+      .exec-stats .stat strong{font-size:23px}
+      .exec-instruction{font-size:16px;margin-top:15px}
+      .exec-stage{border-radius:18px;margin-top:14px}
+      .exec-rule{font-size:21px;padding:17px 12px}
+      .exec-number{font-size:clamp(164px,48vw,210px);padding:44px 6px 40px}
+      .exec-choices{gap:9px}
+      .exec-choices .choice{font-size:21px;min-height:72px;padding:0 8px}
+      .exec-hint{font-size:15px;margin-top:15px}
+    }
     .schulte-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}.schulte-cell{min-height:58px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);color:var(--ink);font-size:22px;font-weight:900;transition:transform 110ms var(--ease-out),opacity 140ms var(--ease-out)}.schulte-cell:hover{border-color:var(--acid)}.schulte-cell.done{opacity:.18;border-color:transparent}
     .stroop-word{text-align:center;font-size:clamp(66px,18vw,108px);font-weight:950;letter-spacing:.03em;padding:34px 0 24px}
     .stroop-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.stroop-choices .choice{text-align:center}
@@ -249,11 +283,11 @@
     <div class="panel"><div class="mini-instruction">每次 10 題，由排序、真假話、配對、位置與數字條件重新組題；每題只有一個答案。</div><div id="logicProgress" class="logic-progress"></div><div id="logicQuestion" class="logic-q"></div><div id="logicClues" class="clues"></div><div id="logicChoices" class="choices"></div><div id="logicFeedback" class="feedback"></div><div class="actions"><button id="logicSubmit" class="primary" type="button">確認答案</button><button id="logicNext" class="secondary hidden" type="button">下一題</button></div></div>
   </section>
 
-  <section id="executive" class="screen">
+  <section id="executive" class="screen exec-theme rule-parity">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>規則切換</h2></div><div id="execRoundPill" class="pill">1 / 18 · 熟悉 A</div></div>
     <div class="panel">
-      <div class="stats"><div class="stat"><span>正確題數</span><strong id="execCorrect">0</strong></div><div class="stat"><span>切換命中</span><strong id="execSwitch">0/0</strong></div><div class="stat"><span>平均反應</span><strong id="execRt">—</strong></div></div>
-      <div class="mini-instruction">先看規則，再看數字。後半段切換會變得更頻繁，且混入左右答案相反的衝突題。</div><div id="execRule" class="exec-rule">準備</div><div id="execNumber" class="exec-number">—</div>
+      <div class="stats exec-stats"><div class="stat"><span>正確題數</span><strong id="execCorrect">0</strong></div><div class="stat"><span>切換命中</span><strong id="execSwitch">0/0</strong></div><div class="stat"><span>平均反應</span><strong id="execRt">—</strong></div></div>
+      <div class="mini-instruction exec-instruction"><strong>先看規則，再判斷數字。</strong><br>後半段規則會更頻繁切換，不要沿用上一題的反應。</div><div class="exec-stage"><div id="execRule" class="exec-rule">準備</div><div id="execNumber" class="exec-number">—</div></div>
       <div class="exec-choices"><button id="execLeft" class="choice" type="button">左</button><button id="execRight" class="choice" type="button">右</button></div>
       <div id="execHint" class="exec-hint">依照目前規則作答；規則切換時不要沿用上一題。</div>
     </div>
@@ -985,7 +1019,7 @@
     return value
   }
   function startExecutive(){
-    show('executive');execRound=0;execCorrect=0;execSwitchCorrect=0;execSwitchTotal=0;execRuleType='parity';execPrevRule=null;execRtTotal=0;execAnswered=false;
+    show('executive');$('executive').classList.remove('is-switch','rule-size');$('executive').classList.add('rule-parity');execRound=0;execCorrect=0;execSwitchCorrect=0;execSwitchTotal=0;execRuleType='parity';execPrevRule=null;execRtTotal=0;execAnswered=false;
     execSwitchRtTotal=0;execSwitchRtCount=0;execRepeatRtTotal=0;execRepeatRtCount=0;execConflictCorrect=0;execConflictTotal=0;execSchedule=buildExecutiveSchedule();
     $('execCorrect').textContent='0';$('execSwitch').textContent='0/0';$('execRt').textContent='—';nextExecutive()
   }
@@ -993,6 +1027,10 @@
     if(execRound>=EXEC_TOTAL_ROUNDS){endExecutive();return}
     execRound++;execPrevRule=execRound===1?null:execRuleType;execRuleType=execSchedule[execRound-1];
     var switched=execRound>1&&execRuleType!==execPrevRule;if(switched)execSwitchTotal++;
+    var execScreen=$('executive');
+    execScreen.classList.toggle('rule-parity',execRuleType==='parity');
+    execScreen.classList.toggle('rule-size',execRuleType==='size');
+    execScreen.classList.toggle('is-switch',switched);
     $('execRoundPill').textContent=execRound+' / '+EXEC_TOTAL_ROUNDS+' · '+execPhase(execRound);
     execValue=pickExecutiveValue(execRound);
     if(execRuleType==='parity'){
