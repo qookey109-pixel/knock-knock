@@ -35,6 +35,14 @@ async function runViewport(browser, viewport, name) {
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
   await assertA11y(page, `${name} home`);
 
+  // Daily Training contract: the public session must run all seven games in sequence.
+  assert((await page.locator('#home .hero p').innerText()).includes('完整跑完 7 個'), `${name}: home copy must describe the seven-game session`);
+  await page.locator('#dailyBtn').click();
+  await page.locator('#math.active').waitFor();
+  assert((await page.locator('#math .gamehead h2').innerText()) === '快速心算', `${name}: Daily Training must start with Quick Math`);
+  await page.locator('.back:visible').click();
+
+
   // Math: solve one generated question and verify score increments.
   await page.locator('[data-mode="math"]').click();
   const problem = await page.locator('#mathProblem').innerText();
