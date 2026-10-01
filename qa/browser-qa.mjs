@@ -6,13 +6,29 @@ function assert(condition, message) {
 }
 
 function solveMath(text) {
-  const m = text.trim().match(/^(\d+)\s*([+\-×÷])\s*(\d+)$/);
-  if (!m) throw new Error('Could not parse math problem: ' + text);
-  const a = Number(m[1]), b = Number(m[3]);
-  if (m[2] === '+') return a + b;
-  if (m[2] === '-') return a - b;
-  if (m[2] === '×') return a * b;
-  if (m[2] === '÷') return a / b;
+  const tokens = text.trim().split(/\s+/);
+  if (tokens.length < 3 || tokens.length % 2 === 0) throw new Error('Could not parse math problem: ' + text);
+  let total = 0;
+  let sign = 1;
+  let term = Number(tokens[0]);
+  for (let i = 1; i < tokens.length; i += 2) {
+    const op = tokens[i], value = Number(tokens[i + 1]);
+    if (op === '×') term *= value;
+    else if (op === '÷') term /= value;
+    else {
+      total += sign * term;
+      sign = op === '+' ? 1 : -1;
+      term = value;
+    }
+  }
+  return total + sign * term;
+}
+
+async function answerCurrentMath(page) {
+  const problem = (await page.locator('#mathProblem').innerText()).trim();
+  const answer = solveMath(problem);
+  await page.locator('#mathAnswer').fill(String(answer));
+  await page.locator('#mathSubmit').click();
 }
 
 async function assertA11y(page, label) {
@@ -60,16 +76,27 @@ async function runViewport(browser, viewport, name) {
   await page.locator('.back:visible').click();
 
 
-  // Math: solve one generated question and verify score increments.
+  // Math: root Quick Math rules — 60 sec per level, 8 correct to advance, score + streak.
   await page.locator('[data-mode="math"]').click();
   // Full-screen radial transition should exist during animated entry.
   assert(await page.locator('#transitionBurst .burst-rays').count() === 1, `${name}: full-screen radial transition should render on game entry`);
   await page.locator('#math.active').waitFor();
-  const problem = await page.locator('#mathProblem').innerText();
-  const answer = solveMath(problem);
-  await page.locator('#mathAnswer').fill(String(answer));
-  await page.locator('#mathSubmit').click();
-  await page.waitForFunction(() => document.getElementById('mathCorrect')?.textContent === '1');
+  assert((await page.locator('#mathTime').innerText()).trim() === '60', `${name}: Quick Math should start each level at 60 seconds`);
+  assert((await page.locator('#mathLevelMark').innerText()).trim() === 'LV 1 · 0/8', `${name}: Quick Math should require 8 correct answers per level`);
+  for (let i = 1; i <= 8; i++) {
+    await answerCurrentMath(page);
+    if (i < 8) {
+      await page.waitForFunction(n => document.getElementById('mathLevelMark')?.textContent === 'LV 1 · ' + n + '/8', i);
+    }
+  }
+  await page.waitForFunction(() => document.getElementById('mathLevelMark')?.textContent === 'LV 2 · 0/8');
+  await page.waitForFunction(() => !document.getElementById('mathProblem')?.textContent.startsWith('LEVEL'));
+  assert(Number(await page.locator('#mathScore').innerText()) > 0, `${name}: Quick Math score should increase`);
+  assert((await page.locator('#mathStreak').innerText()).trim() === '8', `${name}: Quick Math streak should track consecutive correct answers`);
+  const source = await page.locator('html').evaluate(el => el.innerHTML);
+  assert(source.includes("if(lv===5)") && source.includes("' × '+b+' + '+c1"), `${name}: LV5+ must include multi-step arithmetic`);
+  assert(source.includes("if(lv===9)") && source.includes("a=rand(1000,1999)"), `${name}: LV9 must include four-digit arithmetic`);
+  assert(source.includes("MATH_MAX_LEVEL=10"), `${name}: Quick Math should cap at LV10`);
   await assertA11y(page, `${name} math`);
 
   // Memory: capture the shown digits, then submit the same digits after they disappear.
@@ -88,7 +115,6 @@ async function runViewport(browser, viewport, name) {
   // Logic: answer the first formally verified puzzle.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="logic"]').click();
-  assert(await page.locator('#transitionBurst .burst-rays').count() === 0, 'reduced motion should skip radial rays');
   await page.locator('#logic.active').waitFor();
   const choices = page.locator('#logicChoices .choice');
   assert(await choices.count() === 3, `${name}: puzzle 1 should have three choices`);
@@ -172,6 +198,7 @@ async function runReducedMotion(browser) {
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
   await page.locator('[data-mode="logic"]').click();
+  assert(await page.locator('#transitionBurst .burst-rays').count() === 0, 'reduced motion should skip radial rays');
   await page.locator('#logic.active').waitFor();
   const duration = await page.evaluate(() => getComputedStyle(document.querySelector('.mode')).transitionDuration);
   assert(duration === '0s' || duration === '1e-06s' || duration === '0.001ms', `reduced motion transition not reduced: ${duration}`);
