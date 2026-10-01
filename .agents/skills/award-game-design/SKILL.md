@@ -75,3 +75,22 @@ Before declaring the project competition-ready:
 - verify the public build and same-SHA deployment evidence.
 
 Do not call the product award-ready merely because it is technically complete.
+
+
+## Supporting project skills
+
+Use the project skill stack deliberately:
+
+- `karpathy-guidelines`: constrain implementation scope, avoid speculative abstractions, and require verifiable success criteria.
+- `brain7-ui-design`: define and review visual hierarchy, continuity, and award-oriented interface quality.
+- `ui-motion` plus vendored motion skills: implement restrained transitions and interaction feedback.
+- `brain7-dynamic-2d`: govern motion-heavy 2D gameplay such as Dynamic Schulte and future moving-object challenges.
+- `brain-game-qa`: preserve unique solutions, browser flow, accessibility, performance, and deployment gates.
+
+For a visual gameplay change, preferred sequence is:
+
+1. Define the game/design contract.
+2. Make the smallest implementation that satisfies it.
+3. Review visual continuity and game feel.
+4. Verify motion/performance if applicable.
+5. Run cloud QA and only promote when the same SHA passes.
