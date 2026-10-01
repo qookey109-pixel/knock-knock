@@ -222,7 +222,7 @@
         </div>
       </aside>
     </div>
-    <div class="note">這是娛樂與練習用途的遊戲表現，不是 IQ、醫療或認知功能診斷。</div>
+    <div class="note">♪ 首頁使用輕量背景音樂；進入任何關卡後統一切換為 Rag Time。瀏覽器會在第一次點擊／按鍵後啟用音訊。<br>這是娛樂與練習用途的遊戲表現，不是 IQ、醫療或認知功能診斷。</div>
   </section>
 
   <section id="math" class="screen">
@@ -328,9 +328,10 @@
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null;
   var stroopRound=0,stroopCorrect=0,stroopWrong=0,stroopRtTotal=0,stroopStartedAt=0,stroopColor='red',stroopLocked=false;
   var oddRound=0,oddCorrect=0,oddWrong=0,oddRtTotal=0,oddStartedAt=0,oddLocked=false;
-  var mathBgmBuffer=null,mathBgmSource=null,mathBgmGain=null,mathBgmToken=0;
-  var MATH_BGM_URL='../assets/rag-time-on-the-rag-loop.m4a';
-  var mathBgmDataPromise=null;
+  var gameBgmBuffer=null,gameBgmSource=null,gameBgmGain=null,gameBgmToken=0;
+  var homeBgmTimer=null,homeBgmUnlocked=false;
+  var GAME_BGM_URL='../assets/rag-time-on-the-rag-loop.m4a';
+  var gameBgmDataPromise=null;
 
   var logicBank=[
     {q:'三人中只有一人拿了鑰匙，而且只有一句話是真的。誰拿了？',clues:['阿明：是小美拿的。','小美：不是小美拿的。','阿哲：不是阿明拿的。'],choices:['阿明','小美','阿哲'],answer:0,explain:'如果阿明拿了：阿明是假、小美是真、阿哲是假，剛好只有一句真話。'},
@@ -359,24 +360,54 @@
   }
   function correctTone(){tone(680,.08);setTimeout(function(){tone(900,.1)},60)}
   function wrongTone(){tone(190,.12)}
-  async function loadMathBgm(){
-    if(mathBgmBuffer)return mathBgmBuffer;
+  async function loadGameBgm(){
+    if(gameBgmBuffer)return gameBgmBuffer;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
     if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
-    if(!mathBgmDataPromise)mathBgmDataPromise=fetch(MATH_BGM_URL,{cache:'force-cache'}).then(function(r){if(!r.ok)throw new Error('BGM load failed');return r.arrayBuffer()}).catch(function(){return null});
-    var data=await mathBgmDataPromise;if(!data)return null;
-    try{mathBgmBuffer=await audioCtx.decodeAudioData(data.slice(0));return mathBgmBuffer}catch(e){return null}
+    if(!gameBgmDataPromise)gameBgmDataPromise=fetch(GAME_BGM_URL,{cache:'force-cache'}).then(function(r){if(!r.ok)throw new Error('BGM load failed');return r.arrayBuffer()}).catch(function(){return null});
+    var data=await gameBgmDataPromise;if(!data)return null;
+    try{gameBgmBuffer=await audioCtx.decodeAudioData(data.slice(0));return gameBgmBuffer}catch(e){return null}
   }
-  function stopMathBgm(){
-    mathBgmToken++;
-    if(mathBgmSource){try{mathBgmSource.stop()}catch(e){}try{mathBgmSource.disconnect()}catch(e){}mathBgmSource=null}
-    if(mathBgmGain){try{mathBgmGain.disconnect()}catch(e){}mathBgmGain=null}
+  function stopGameBgm(){
+    gameBgmToken++;
+    if(gameBgmSource){try{gameBgmSource.stop()}catch(e){}try{gameBgmSource.disconnect()}catch(e){}gameBgmSource=null}
+    if(gameBgmGain){try{gameBgmGain.disconnect()}catch(e){}gameBgmGain=null}
   }
-  async function startMathBgm(){
-    stopMathBgm();if(muted)return;
-    var token=mathBgmToken,buffer=await loadMathBgm();if(!buffer||muted||token!==mathBgmToken||!$('math').classList.contains('active'))return;
-    var src=audioCtx.createBufferSource(),g=audioCtx.createGain();src.buffer=buffer;src.loop=true;g.gain.value=.38;
-    src.connect(g);g.connect(audioCtx.destination);src.start(0);mathBgmSource=src;mathBgmGain=g;
+  function gameFlowActive(){
+    return ['math','memory','logic','executive','schulte','stroop','odd','sessionBreak','result','dailyResult'].some(function(id){return $(id)&&$(id).classList.contains('active')});
+  }
+  async function startGameBgm(){
+    if(muted||gameBgmSource)return;
+    var token=gameBgmToken,buffer=await loadGameBgm();
+    if(!buffer||muted||token!==gameBgmToken||!gameFlowActive())return;
+    var src=audioCtx.createBufferSource(),g=audioCtx.createGain();
+    src.buffer=buffer;src.loop=true;g.gain.value=.38;
+    src.connect(g);g.connect(audioCtx.destination);src.start(0);
+    gameBgmSource=src;gameBgmGain=g;
+  }
+  function stopHomeBgm(){
+    if(homeBgmTimer){clearInterval(homeBgmTimer);homeBgmTimer=null}
+  }
+  function scheduleHomePhrase(){
+    if(muted||!homeBgmUnlocked||!$('home').classList.contains('active'))return;
+    var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
+    var now=audioCtx.currentTime;
+    var notes=[261.63,329.63,392.00,329.63,293.66,349.23,440.00,349.23];
+    notes.forEach(function(freq,i){
+      var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=now+i*.46;
+      o.type=i%2===0?'sine':'triangle';o.frequency.setValueAtTime(freq,t);
+      g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.008,t+.035);g.gain.exponentialRampToValueAtTime(.0001,t+.36);
+      o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+.4);
+    })
+  }
+  function startHomeBgm(){
+    if(muted||!homeBgmUnlocked||!$('home').classList.contains('active')||homeBgmTimer)return;
+    stopGameBgm();scheduleHomePhrase();homeBgmTimer=setInterval(scheduleHomePhrase,3900)
+  }
+  function unlockHomeBgm(){
+    homeBgmUnlocked=true;
+    if($('home').classList.contains('active')&&!muted)startHomeBgm()
   }
   function mathTapTone(){tone(520,.035)}
   function transitionClick(){
@@ -439,7 +470,7 @@
   }
   function enterModeWithBurst(mode,source){
     if(!mode)return;
-    transitionClick();
+    stopHomeBgm();transitionClick();
     if(reduceMotion){
       setTimeout(function(){transitionThump();startMode(mode)},35);
       return;
@@ -454,8 +485,10 @@
     },650);
   }
 
-  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪';if(muted)stopMathBgm();else if($('math').classList.contains('active'))startMathBgm()});
-  document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();dailyMode=false;show('home')})});
+  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪';this.setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');homeBgmUnlocked=true;if(muted){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else if(gameFlowActive())startGameBgm()});
+  document.addEventListener('pointerdown',unlockHomeBgm,{once:true});
+  document.addEventListener('keydown',unlockHomeBgm,{once:true});
+  document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm()})});
   var homeModeButtons=[].slice.call(document.querySelectorAll('.mode'));
   function previewMode(mode){
     var b=document.querySelector('.mode[data-mode="'+mode+'"]');if(!b)return;
@@ -514,7 +547,7 @@
   homeModeButtons.forEach(function(b){b.addEventListener('click',function(){dailyMode=false;enterModeWithBurst(this.dataset.mode,this)})});
   $('dailyBtn').addEventListener('click',function(){
     var source=this;
-    transitionClick();
+    stopHomeBgm();transitionClick();
     if(reduceMotion){setTimeout(function(){transitionThump();startDaily()},35);return}
     burstTransitionActive=true;
     var layer=prepareFullScreenBurst('schulte',source);
@@ -525,13 +558,14 @@
   });
   $('dailyAgain').addEventListener('click',startDaily);
 
-  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;stopMathBgm();clearTimeout(memoryTimeout);memoryTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
+  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;clearTimeout(memoryTimeout);memoryTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
   function startDaily(){stopAll();dailyMode=true;dailyScores={};dailySelection=allModes.slice();dailyQueue=dailySelection.slice();startNextDaily()}
   function startNextDaily(){if(!dailyQueue.length){showDailyResult();return}startMode(dailyQueue.shift())}
   function startMode(mode){
-    stopAll();
+    stopAll();stopHomeBgm();
     if(mode==='math')startMath();if(mode==='memory')startMemory();if(mode==='logic')startLogic();if(mode==='executive')startExecutive();
-    if(mode==='schulte')startSchulte();if(mode==='stroop')startStroop();if(mode==='odd')startOdd()
+    if(mode==='schulte')startSchulte();if(mode==='stroop')startStroop();if(mode==='odd')startOdd();
+    startGameBgm()
   }
   function finishMode(mode,score,stats){dailyScores[mode]=score;if(dailyMode){showDailyBreak(mode,score,stats);return}showResult(mode,score,stats)}
 
@@ -685,7 +719,7 @@
   function startMath(){
     show('math');clearInterval(mathTimer);clearTimeout(mathTransitionTimer);
     mathTime=MATH_LEVEL_SECONDS;mathCorrect=0;mathWrong=0;mathLevel=1;mathLevelCorrect=0;mathScore=0;mathStreak=0;mathMaxStreak=0;mathSeen=new Set();mathOps=[];mathStepCount=1;mathQuestionStartedAt=0;mathTotalResponseMs=0;mathResponseCount=0;mathGameStartedAt=performance.now();mathTransitioning=false;
-    $('mathTime').textContent='60';$('mathScore').textContent='0';$('mathStreak').textContent='0';updateMathLevelMark();makeMath();startMathLevelTimer();startMathBgm()
+    $('mathTime').textContent='60';$('mathScore').textContent='0';$('mathStreak').textContent='0';updateMathLevelMark();makeMath();startMathLevelTimer()
   }
   function submitMath(){
     if(!mathTimer||mathTransitioning)return;
@@ -713,7 +747,7 @@
   });
   function endMath(completed){
     if(!mathGameStartedAt)return;
-    clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;stopMathBgm();
+    clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;
     var tries=mathCorrect+mathWrong,acc=tries?Math.round(mathCorrect/tries*100):0,avgSec=mathResponseCount?mathTotalResponseMs/mathResponseCount/1000:0;
     var elapsedSec=Math.max(0,Math.round((performance.now()-mathGameStartedAt)/1000)),minutes=Math.floor(elapsedSec/60),seconds=elapsedSec%60,totalTime=minutes+':'+String(seconds).padStart(2,'0');
     // BRAIN/7 needs a 0–100 comparable score; raw Quick Math score remains visible to the player.
@@ -833,7 +867,7 @@
       ? stats.items.map(function(item){return '<div class="result-box"><span>'+item[0]+'</span><strong>'+item[1]+'</strong></div>'}).join('')
       : '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div><div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div><div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
     var a=$('resultActions');a.innerHTML='';var retry=document.createElement('button');retry.className='primary';retry.type='button';retry.textContent='再玩一次';retry.addEventListener('click',function(){dailyMode=false;startMode(mode)});
-    var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='回首頁';home.addEventListener('click',function(){show('home')});a.appendChild(retry);a.appendChild(home)
+    var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='回首頁';home.addEventListener('click',function(){stopAll();stopGameBgm();show('home');startHomeBgm()});a.appendChild(retry);a.appendChild(home)
   }
   function showDailyResult(){
     show('dailyResult');dailyMode=false;var total=0;dailySelection.forEach(function(m){total+=(dailyScores[m]||0)});$('dailyScore').textContent=Math.round(total/dailySelection.length);
