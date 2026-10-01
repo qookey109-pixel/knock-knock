@@ -19,7 +19,7 @@ Treat this as a designed game, not a collection of web utilities. Every decision
 6. Stroop 顏色衝突 — interference control
 7. 表裡不一 — selective attention under conflict
 
-Daily Training selects four games from the seven.
+Daily Training runs all seven games as one complete session.
 
 ## Design priorities
 
@@ -42,7 +42,7 @@ Daily Training selects four games from the seven.
 
 ### Replayability
 - Randomization must preserve fairness and solvability.
-- Daily Training should vary the session without creating impossible combinations.
+- Daily Training should preserve a coherent seven-game sequence while each individual game still contains fair randomized variation.
 - Avoid repeating identical first-round states too often.
 
 ### Product identity
