@@ -36,7 +36,7 @@ async function runViewport(browser, viewport, name) {
   await assertA11y(page, `${name} home`);
 
   // Daily Training contract: the public session must run all seven games in sequence.
-  assert((await page.locator('#home .hero p').innerText()).includes('完整跑完 7 個'), `${name}: home copy must describe the seven-game session`);
+  assert((await page.locator('#home .hero p').innerText()).includes('7 關腦力挑戰'), `${name}: home copy must describe the seven-game session`);
   await page.locator('#dailyBtn').click();
   await page.locator('#math.active').waitFor();
   assert((await page.locator('#math .gamehead h2').innerText()) === '快速心算', `${name}: Daily Training must start with Quick Math`);
