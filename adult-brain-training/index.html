@@ -154,7 +154,18 @@
     .stroop-choices .choice{text-align:center;min-height:68px;font-size:clamp(20px,3vw,24px);font-weight:950;border:2px solid #171717;color:#111;box-shadow:0 4px 0 rgba(23,23,23,.10)}
     .stroop-red{background:#ff8c80}.stroop-blue{background:#9fc8ff}.stroop-green{background:#9be6bd}.stroop-yellow{background:#ffe173}
     @media(max-width:560px){.stroop-word{font-size:clamp(104px,35vw,150px);padding:46px 0 42px}.stroop-choices .choice{min-height:64px;font-size:20px}.stroop-stats .stat{padding:11px 7px}.stroop-stats .stat strong{font-size:22px}}
-    .odd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}.odd-cell{min-height:78px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--ink);font-weight:950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.odd-cell:hover{border-color:var(--acid)}.odd-arrow{font-size:32px;line-height:1}.odd-label{font-size:11px;color:var(--muted)}
+    .odd-stats{gap:7px;background:transparent;border:0;overflow:visible}
+    .odd-stats .stat{border:1px solid var(--line);border-radius:12px;padding:12px 10px}
+    .odd-stats .stat:nth-child(1){background:#d9f8c4}.odd-stats .stat:nth-child(2){background:#ffd4c8}.odd-stats .stat:nth-child(3){background:#d9eaff}
+    .odd-stats .stat span{font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;font-size:10px;letter-spacing:.04em;color:#333;font-weight:900}
+    .odd-instruction{font-size:clamp(16px,2.3vw,18px);line-height:1.65;color:#353535;font-weight:730}
+    .odd-instruction strong{font-size:1.05em;color:#111;font-weight:950}
+    .odd-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:18px}
+    .odd-cell{min-width:0;min-height:78px;border:1.5px solid #171717;border-radius:12px;background:var(--odd-bg,#fff0a6);color:#171717;font-weight:950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;box-shadow:0 3px 0 rgba(23,23,23,.10);transition:transform 100ms var(--ease-out),box-shadow 100ms var(--ease-out)}
+    .odd-cell:hover{border-color:#171717;filter:brightness(.98)}.odd-cell:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(23,23,23,.10)}
+    .odd-arrow{font-size:clamp(32px,7vw,42px);line-height:.9}.odd-label{font-size:clamp(13px,2.4vw,16px);font-weight:900;color:#303030}
+    @media(min-width:720px){.odd-grid.density-20{grid-template-columns:repeat(5,minmax(0,1fr))}.odd-grid.density-24{grid-template-columns:repeat(6,minmax(0,1fr))}.odd-cell{min-height:84px}}
+    @media(max-width:560px){.odd-grid{gap:6px}.odd-cell{min-height:70px;border-radius:10px}.odd-arrow{font-size:31px}.odd-label{font-size:13px}.odd-stats .stat{padding:11px 7px}.odd-stats .stat strong{font-size:22px}}
     .result{text-align:center;padding:26px 18px}.panel.result{background:#fffdf8}.result-score{font-size:clamp(92px,24vw,160px);line-height:.85;font-weight:950;letter-spacing:-.085em;color:var(--acid)}.result-unit{font:850 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:var(--muted);margin-top:10px;text-transform:uppercase}
     .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:24px}.result-box{padding:15px 8px;background:var(--surface2);border:1px solid var(--line);border-radius:10px}.result-box span{display:block;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:var(--muted)}.result-box strong{display:block;margin-top:7px;font-size:22px}
     .session-dots{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:22px 0}.session-dots i{height:5px;border-radius:99px;background:var(--line-strong)}.session-dots i.done{background:var(--acid)}.session-next-name{margin-top:12px;font:800 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;color:var(--muted)}
@@ -274,7 +285,7 @@
         <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標起跳。四種搜尋模式，每答對一次，剩餘數字全部重新排位。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、四種模式；每答對一次，全場重新排位。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#a62b74" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="16 個訊號裡只有 1 個說謊。把它抓出來。"><span class="mode-index">07</span><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>16 個訊號裡只有 1 個說謊。把它抓出來。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="從 16 格一路增加到 24 格。每回合只有 1 個箭頭與文字不一致。"><span class="mode-index">07</span><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>從 16 到 24 格，找出唯一一個箭頭與文字不一致的訊號。</p></span><span class="mode-arrow">→</span></button>
       </div>
       <aside id="homePreview" class="home-preview" aria-live="polite" tabindex="0" aria-label="目前選擇的訓練關卡，可左右滑動切換">
         <div class="home-preview-kicker"><span id="previewIndex">01</span> / <span id="previewLabel">SPEED</span></div>
@@ -354,11 +365,11 @@
   </section>
 
   <section id="odd" class="screen">
-    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>表裡不一</h2></div><div id="oddPill" class="pill">1 / 10</div></div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>表裡不一</h2></div><div id="oddPill" class="pill">1 / 16 · 16 格</div></div>
     <div class="panel">
-      <div class="stats"><div class="stat"><span>CORRECT</span><strong id="oddCorrect">0</strong></div><div class="stat"><span>ERROR</span><strong id="oddWrong">0</strong></div><div class="stat"><span>AVG RT</span><strong id="oddRt">—</strong></div></div>
-      <div class="mini-instruction">找出唯一一個「箭頭方向」與「文字方向」不一致的格子。</div>
-      <div id="oddGrid" class="odd-grid" aria-label="表裡不一選項"></div>
+      <div class="stats odd-stats"><div class="stat"><span>首擊命中</span><strong id="oddCorrect">0/0</strong></div><div class="stat"><span>錯誤點擊</span><strong id="oddWrong">0</strong></div><div class="stat"><span>平均搜尋</span><strong id="oddRt">—</strong></div></div>
+      <div class="mini-instruction odd-instruction"><strong>找出唯一一個「箭頭方向」與「文字方向」不一致的格子。</strong><br>色塊只是視覺干擾，不代表答案。</div>
+      <div id="oddGrid" class="odd-grid density-16" aria-label="表裡不一選項"></div>
     </div>
   </section>
 
@@ -399,7 +410,7 @@
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false,execSchedule=[],execSwitchRtTotal=0,execSwitchRtCount=0,execRepeatRtTotal=0,execRepeatRtCount=0,execConflictCorrect=0,execConflictTotal=0;
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null,schulteSequence=[],schulteIndex=0,schulteMode='A',schulteModeDetail='',schulteFinished=false;
   var stroopRound=0,stroopCorrect=0,stroopWrong=0,stroopRtTotal=0,stroopStartedAt=0,stroopColor='red',stroopLocked=false,stroopSchedule=[],stroopCurrentType='conflict',stroopConflictCorrect=0,stroopConflictTotal=0,stroopConflictRt=0,stroopCongruentRt=0,stroopCongruentCount=0;
-  var oddRound=0,oddCorrect=0,oddWrong=0,oddRtTotal=0,oddStartedAt=0,oddLocked=false;
+  var oddRound=0,oddCorrect=0,oddWrong=0,oddRtTotal=0,oddStartedAt=0,oddLocked=false,oddFirstHit=0,oddRoundHadError=false,oddDenseRtTotal=0,oddDenseCount=0,oddCurrentCells=16;
   var gameBgmBuffer=null,gameBgmSource=null,gameBgmGain=null,gameBgmToken=0;
   var homeBgmTimer=null,homeBgmUnlocked=false;
   var GAME_BGM_URL='../assets/rag-time-on-the-rag-loop.m4a';
@@ -1274,15 +1285,67 @@
     })
   }
 
-  var dirs=[{arrow:'←',label:'左',opp:'右'},{arrow:'→',label:'右',opp:'左'},{arrow:'↑',label:'上',opp:'下'},{arrow:'↓',label:'下',opp:'上'}];
-  function startOdd(){show('odd');oddRound=0;oddCorrect=0;oddWrong=0;oddRtTotal=0;$('oddCorrect').textContent='0';$('oddWrong').textContent='0';$('oddRt').textContent='—';nextOdd()}
+  var ODD_TOTAL=16;
+  var dirs=[
+    {key:'left',arrow:'←',label:'左'},
+    {key:'right',arrow:'→',label:'右'},
+    {key:'up',arrow:'↑',label:'上'},
+    {key:'down',arrow:'↓',label:'下'}
+  ];
+  function oddCellCountForRound(round){return round<=4?16:round<=10?20:24}
+  function startOdd(){
+    show('odd');oddRound=0;oddCorrect=0;oddWrong=0;oddRtTotal=0;oddFirstHit=0;oddRoundHadError=false;oddDenseRtTotal=0;oddDenseCount=0;oddCurrentCells=16;
+    $('oddCorrect').textContent='0/0';$('oddWrong').textContent='0';$('oddRt').textContent='—';nextOdd()
+  }
   function nextOdd(){
-    if(oddRound>=10){endOdd();return}oddRound++;oddLocked=false;$('oddPill').textContent=oddRound+' / 10';var base=dirs[rand(0,dirs.length-1)],oddIndex=rand(0,15),grid=$('oddGrid');grid.innerHTML='';
-    for(var i=0;i<16;i++){var d=dirs[rand(0,dirs.length-1)],mismatch=i===oddIndex,label=mismatch?d.opp:d.label,b=document.createElement('button');b.type='button';b.className='odd-cell';b.dataset.odd=mismatch?'true':'false';b.innerHTML='<span class="odd-arrow">'+d.arrow+'</span><span class="odd-label">'+label+'</span>';b.addEventListener('click',(function(isOdd){return function(){answerOdd(isOdd)}})(mismatch));grid.appendChild(b)}
+    if(oddRound>=ODD_TOTAL){endOdd();return}
+    oddRound++;oddLocked=false;oddRoundHadError=false;oddCurrentCells=oddCellCountForRound(oddRound);
+    $('oddPill').textContent=oddRound+' / '+ODD_TOTAL+' · '+oddCurrentCells+' 格';
+    var oddIndex=rand(0,oddCurrentCells-1),grid=$('oddGrid'),colors=['#fff0a6','#bfe9ff','#d6f5bd','#ffd0be','#e7dcff','#ffdf88'];
+    grid.innerHTML='';grid.className='odd-grid density-'+oddCurrentCells;
+    for(var i=0;i<oddCurrentCells;i++){
+      var d=dirs[rand(0,dirs.length-1)],mismatch=i===oddIndex,labelDir=d;
+      if(mismatch){
+        var wrongDirs=dirs.filter(function(x){return x.key!==d.key});
+        labelDir=wrongDirs[rand(0,wrongDirs.length-1)]
+      }
+      var b=document.createElement('button');b.type='button';b.className='odd-cell';b.dataset.odd=mismatch?'true':'false';b.dataset.arrow=d.key;b.dataset.label=labelDir.key;
+      b.style.setProperty('--odd-bg',colors[(i+oddRound)%colors.length]);
+      b.innerHTML='<span class="odd-arrow">'+d.arrow+'</span><span class="odd-label">'+labelDir.label+'</span>';
+      b.addEventListener('click',(function(isOdd){return function(){answerOdd(isOdd)}})(mismatch));grid.appendChild(b)
+    }
     oddStartedAt=performance.now()
   }
-  function answerOdd(isOdd){if(oddLocked)return;if(!isOdd){oddWrong++;$('oddWrong').textContent=oddWrong;wrongTone();return}oddLocked=true;oddCorrect++;oddRtTotal+=performance.now()-oddStartedAt;$('oddCorrect').textContent=oddCorrect;$('oddRt').textContent=Math.round(oddRtTotal/oddCorrect)+'ms';correctTone();setTimeout(nextOdd,180)}
-  function endOdd(){var avg=oddCorrect?Math.round(oddRtTotal/oddCorrect):0,acc=Math.round(oddCorrect/(oddCorrect+oddWrong||1)*100),score=Math.max(0,Math.min(100,Math.round(acc*.75+Math.max(0,25-Math.max(0,avg-900)/80))));finishMode('odd',score,{a:oddCorrect+'/10',b:oddWrong+' 錯',c:avg+'ms'})}
+  function answerOdd(isOdd){
+    if(oddLocked)return;
+    if(!isOdd){
+      oddWrong++;oddRoundHadError=true;$('oddWrong').textContent=oddWrong;wrongTone();return
+    }
+    oddLocked=true;var rt=performance.now()-oddStartedAt;oddCorrect++;oddRtTotal+=rt;
+    if(!oddRoundHadError)oddFirstHit++;
+    if(oddCurrentCells===24){oddDenseRtTotal+=rt;oddDenseCount++}
+    $('oddCorrect').textContent=oddFirstHit+'/'+oddCorrect;
+    $('oddRt').textContent=(oddRtTotal/oddCorrect/1000).toFixed(2)+' 秒';
+    correctTone();setTimeout(nextOdd,180)
+  }
+  function endOdd(){
+    var avg=oddCorrect?oddRtTotal/oddCorrect:0;
+    var firstHitRate=Math.round(oddFirstHit/ODD_TOTAL*100);
+    var accuracy=Math.round(ODD_TOTAL/(ODD_TOTAL+oddWrong||1)*100);
+    var denseAvg=oddDenseCount?oddDenseRtTotal/oddDenseCount:0;
+    var speed=Math.max(0,Math.min(100,Math.round((4500-avg)/35)));
+    var score=Math.max(0,Math.min(100,Math.round(accuracy*.45+firstHitRate*.35+speed*.20)));
+    finishMode('odd',score,{
+      a:oddFirstHit+'/'+ODD_TOTAL,b:oddWrong+' 錯',c:(avg/1000).toFixed(2)+' 秒',
+      items:[
+        ['首擊命中',oddFirstHit+'/'+ODD_TOTAL],
+        ['正確率',accuracy+'%'],
+        ['錯誤點擊',String(oddWrong)],
+        ['平均搜尋',(avg/1000).toFixed(2)+' 秒'],
+        ['24 格平均',denseAvg?(denseAvg/1000).toFixed(2)+' 秒':'—']
+      ]
+    })
+  }
 
   function showDailyBreak(mode,score,stats){
     var completed=dailySelection.length-dailyQueue.length;
