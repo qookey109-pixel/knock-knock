@@ -9,12 +9,16 @@ on:
       - 'qa/**'
       - '.github/workflows/adult-brain-qa.yml'
       - '.agents/skills/brain-game-qa/**'
+      - '.agents/skills/ui-motion/**'
+      - 'docs/ADULT_BRAIN_TRAINING_AWARD_BAR.md'
   pull_request:
     paths:
       - 'adult-brain-training/**'
       - 'qa/**'
       - '.github/workflows/adult-brain-qa.yml'
       - '.agents/skills/brain-game-qa/**'
+      - '.agents/skills/ui-motion/**'
+      - 'docs/ADULT_BRAIN_TRAINING_AWARD_BAR.md'
 
 permissions:
   contents: read
@@ -66,7 +70,7 @@ jobs:
   lighthouse-qa:
     name: Lighthouse Quality Gate
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -84,15 +88,17 @@ jobs:
           done
           cat /tmp/adult-brain-server.log
           exit 1
-      - name: Run Lighthouse audit
+      - name: Run Lighthouse audit three times
         run: |
-          npx lighthouse http://127.0.0.1:4173/adult-brain-training/             --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage"             --only-categories=performance,accessibility,best-practices,seo             --output=json             --output-path=/tmp/lighthouse.json
-      - name: Enforce Lighthouse thresholds
-        run: node qa/lighthouse-qa.mjs /tmp/lighthouse.json
-      - name: Upload Lighthouse report
+          for i in 1 2 3; do
+            npx lighthouse http://127.0.0.1:4173/adult-brain-training/               --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage"               --only-categories=performance,accessibility,best-practices,seo               --output=json               --output-path="/tmp/lighthouse-$i.json"
+          done
+      - name: Enforce Lighthouse median thresholds
+        run: node qa/lighthouse-qa.mjs /tmp/lighthouse-1.json /tmp/lighthouse-2.json /tmp/lighthouse-3.json
+      - name: Upload Lighthouse reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: adult-brain-lighthouse
-          path: /tmp/lighthouse.json
+          path: /tmp/lighthouse-*.json
           if-no-files-found: error
