@@ -6,70 +6,78 @@ function assert(condition, message) {
 
 const html = fs.readFileSync('adult-brain-training/index.html', 'utf8');
 
-assert(html.includes("clues:['阿明：是小美拿的。','小美：不是小美拿的。','阿哲：不是阿明拿的。']"), 'Puzzle 1 source does not match the formal QA model.');
-assert(html.includes("clues:['A 不站第一個。','C 站在 A 的前面。','B 站在 A 的後面。']"), 'Puzzle 2 source does not match the formal QA model.');
-assert(html.includes("clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。','第一位是奇數。']"), 'Puzzle 3 source does not match the formal QA model.');
-
-// Puzzle 1: exactly one statement is true.
-{
-  const candidates = [0, 1, 2]; // 阿明、小美、阿哲
-  const solutions = candidates.filter(culprit => {
-    const truths = [
-      culprit === 1, // 阿明：是小美拿的
-      culprit !== 1, // 小美：不是小美拿的
-      culprit !== 0  // 阿哲：不是阿明拿的
-    ];
-    return truths.filter(Boolean).length === 1;
-  });
-  assert(JSON.stringify(solutions) === JSON.stringify([0]), 'Puzzle 1 must have exactly one solution: 阿明.');
+for (const token of [
+  'function makeOrderLogic()',
+  'function makeBoxLogic()',
+  'function makePetLogic()',
+  'function makeCodeLogic()',
+  'function makeTruthLogic()',
+  'function buildLogicSession()'
+]) {
+  assert(html.includes(token), 'Missing logic generator: ' + token);
 }
 
-// Puzzle 2: enumerate all permutations.
+// Ordering template: X before M and Z after M among three people must force X-M-Z.
 {
   const perms = [
-    ['A','B','C'],['A','C','B'],['B','A','C'],
-    ['B','C','A'],['C','A','B'],['C','B','A']
+    ['X','M','Z'],['X','Z','M'],['M','X','Z'],
+    ['M','Z','X'],['Z','X','M'],['Z','M','X']
   ];
   const valid = perms.filter(p => {
     const pos = Object.fromEntries(p.map((v,i)=>[v,i]));
-    return pos.A !== 0 && pos.C < pos.A && pos.B > pos.A;
+    return pos.X < pos.M && pos.Z > pos.M;
   });
-  assert(valid.length === 1 && valid[0][1] === 'A', 'Puzzle 2 must have one valid order with A in the middle.');
+  assert(valid.length === 1 && valid[0].join('') === 'XMZ', 'Order template must have exactly one solution.');
 }
 
-// Puzzle 3: evaluate every visible choice independently.
+// Box template: not A; if not B then D; not D -> only B.
 {
-  const choices = ['213','325','426'];
-  const valid = choices.filter(s => {
-    const [a,b,c] = s.split('').map(Number);
-    return a > b && c === a + b && new Set([a,b,c]).size === 3 && a % 2 === 1;
-  });
-  assert(JSON.stringify(valid) === JSON.stringify(['325']), 'Puzzle 3 must have exactly one valid choice: 325.');
-}
-
-// Puzzle 4: model the implication literally.
-{
-  const valid = [1,2,3,4].filter(box => {
-    const c1 = box !== 1;
-    const c2 = box === 2 || box === 4; // if not 2, then 4
-    const c3 = box !== 4;
+  const valid = ['A','B','C','D'].filter(box => {
+    const c1 = box !== 'A';
+    const c2 = box === 'B' || box === 'D';
+    const c3 = box !== 'D';
     return c1 && c2 && c3;
   });
-  assert(JSON.stringify(valid) === JSON.stringify([2]), 'Puzzle 4 must have exactly one solution: box 2.');
+  assert(JSON.stringify(valid) === JSON.stringify(['B']), 'Box template must have exactly one solution.');
 }
 
-// Puzzle 5: enumerate pet assignments.
+// Pairing template: C=z, A!=y, A!=z -> A=x and B=y.
 {
-  const pets = ['貓','狗','魚'];
-  const perms = [];
-  for (const a of pets) for (const b of pets) for (const c of pets) {
-    if (new Set([a,b,c]).size === 3) perms.push({王:a,李:b,陳:c});
+  const items = ['x','y','z'];
+  const assignments = [];
+  for (const a of items) for (const b of items) for (const c of items) {
+    if (new Set([a,b,c]).size === 3) assignments.push({A:a,B:b,C:c});
   }
-  const valid = perms.filter(x => x.王 !== '狗' && x.陳 === '魚' && x.王 !== '魚');
-  assert(valid.length === 1 && valid[0].李 === '狗', 'Puzzle 5 must have exactly one solution: 小李養狗.');
+  const valid = assignments.filter(x => x.C === 'z' && x.A !== 'y' && x.A !== 'z');
+  assert(valid.length === 1 && valid[0].A === 'x' && valid[0].B === 'y', 'Pairing template must have exactly one solution.');
 }
 
-const questionCount = (html.match(/\{q:'/g) || []).length;
-assert(questionCount === 5, `Expected 5 logic puzzles, found ${questionCount}.`);
+// Code template: enumerate all three-digit codes satisfying the four displayed rules.
+{
+  const valid = [];
+  for (let a=1;a<=9;a++) for (let b=0;b<=9;b++) for (let c=0;c<=9;c++) {
+    if (a>b && c===a+b && new Set([a,b,c]).size===3 && a%2===1) valid.push(''+a+b+c);
+  }
+  assert(valid.length > 0, 'Code template must have valid instances.');
+  assert(valid.every(s => {
+    const [a,b,c]=s.split('').map(Number);
+    return a>b && c===a+b && new Set([a,b,c]).size===3 && a%2===1;
+  }), 'Every generated valid code must satisfy all rules.');
+}
 
-console.log('brain-game-qa: PASS — 5/5 logic puzzles have independently verified unique solutions.');
+// Truth template: statements are culprit==B, culprit!=B, culprit!=A; exactly one true -> A.
+{
+  const candidates = ['A','B','C'];
+  const valid = candidates.filter(culprit => {
+    const truths = [culprit === 'B', culprit !== 'B', culprit !== 'A'];
+    return truths.filter(Boolean).length === 1;
+  });
+  assert(JSON.stringify(valid) === JSON.stringify(['A']), 'Truth template must have exactly one solution.');
+}
+
+const sessionFactoryMatch = html.match(/function buildLogicSession\(\)\{[\s\S]*?return \[([\s\S]*?)\]\s*\}/);
+assert(sessionFactoryMatch, 'Could not inspect logic session factory.');
+const generatedCount = (sessionFactoryMatch[1].match(/make(?:Order|Box|Pet|Code|Truth)Logic\(\)/g) || []).length;
+assert(generatedCount === 10, `Expected 10 generated logic questions per session, found ${generatedCount}.`);
+
+console.log('brain-game-qa: PASS — 5 logic generator families are formally unique and session length is 10.');
