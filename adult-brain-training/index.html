@@ -237,10 +237,10 @@
   </section>
 
   <section id="memory" class="screen">
-    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div><div id="memoryRoundPill" class="pill">1 / 6</div></div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div><div id="memoryRoundPill" class="pill">1 / 10 · NORMAL</div></div>
     <div class="panel">
       <div class="stats"><div class="stat"><span>ROUND</span><strong id="memoryRound">1</strong></div><div class="stat"><span>DIGITS</span><strong id="memoryDigits">4</strong></div><div class="stat"><span>CORRECT</span><strong id="memoryCorrect">0</strong></div></div>
-      <div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" inputmode="numeric" autocomplete="off" aria-label="輸入剛才的數字"><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
+      <div class="mini-instruction">看一眼後作答。後段會加入遮罩與倒序輸入，不只增加位數。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" inputmode="numeric" autocomplete="off" aria-label="輸入剛才的數字"><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
     </div>
   </section>
 
@@ -322,7 +322,7 @@
   var dailyMode=false,dailyQueue=[],dailySelection=[],dailyScores={};
   var muted=false,audioCtx=null;
   var mathTimer=null,mathTime=60,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1,mathLevelCorrect=0,mathScore=0,mathStreak=0,mathMaxStreak=0,mathSeen=new Set(),mathOps=[],mathStepCount=1,mathQuestionStartedAt=0,mathTotalResponseMs=0,mathResponseCount=0,mathGameStartedAt=0,mathTransitioning=false,mathTransitionTimer=null;
-  var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null;
+  var memoryRound=0,memoryCorrect=0,memoryValue='',memoryExpected='',memoryMode='normal',memoryTimeout=null,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryScorePoints=0,memoryMaxDigits=0;
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false;
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null;
@@ -767,17 +767,96 @@
     mathGameStartedAt=0
   }
 
-  function startMemory(){show('memory');memoryRound=0;memoryCorrect=0;$('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');$('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';$('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 6'}
+  var MEMORY_ROUNDS=[
+    {digits:4,show:2200,mode:'normal',points:6},
+    {digits:5,show:2000,mode:'normal',points:7},
+    {digits:6,show:1800,mode:'normal',points:8},
+    {digits:6,show:1600,mode:'mask',points:9},
+    {digits:7,show:1500,mode:'normal',points:10},
+    {digits:7,show:1700,mode:'reverse',points:11},
+    {digits:8,show:1400,mode:'mask',points:12},
+    {digits:8,show:1600,mode:'reverse',points:13},
+    {digits:9,show:1250,mode:'mask',points:14},
+    {digits:10,show:1450,mode:'reverse',points:15}
+  ];
+  var MEMORY_TOTAL_POINTS=MEMORY_ROUNDS.reduce(function(sum,r){return sum+r.points},0);
+
+  function memoryModeLabel(mode){
+    return mode==='reverse'?'REVERSE':mode==='mask'?'MASK':'NORMAL'
+  }
+  function generateMemoryDigits(count){
+    var value='',tries=0;
+    do{
+      value='';
+      for(var i=0;i<count;i++)value+=String(rand(i===0?1:0,9));
+      tries++;
+    }while(tries<80&&(/(\d)\1\1/.test(value)||/0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210/.test(value)));
+    return value
+  }
+  function memoryMask(count){
+    var chars=['◆','●','■','▲','✦','◇','□','△'],out='';
+    for(var i=0;i<count;i++)out+=chars[rand(0,chars.length-1)];
+    return out
+  }
+  function startMemory(){
+    show('memory');memoryRound=0;memoryCorrect=0;memoryValue='';memoryExpected='';memoryMode='normal';memoryRtTotal=0;memoryScorePoints=0;memoryMaxDigits=0;
+    $('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');
+    $('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';
+    $('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 10 · NORMAL'
+  }
   $('memoryStart').addEventListener('click',nextMemoryRound);
   function nextMemoryRound(){
-    if(memoryRound>=6){endMemory();return}memoryRound++;var digits=3+memoryRound;
-    $('memoryRound').textContent=memoryRound;$('memoryDigits').textContent=digits;$('memoryRoundPill').textContent=memoryRound+' / 6';$('memoryStart').classList.add('hidden');$('memoryEntry').classList.add('hidden');$('memoryLabel').textContent='記住這串數字';
-    memoryValue='';for(var i=0;i<digits;i++)memoryValue+=String(rand(i===0?1:0,9));$('memoryNumber').textContent=memoryValue;
-    memoryTimeout=setTimeout(function(){$('memoryNumber').textContent='••••••••••'.slice(0,digits);$('memoryLabel').textContent='把剛才的數字輸入回來';$('memoryEntry').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus()},Math.max(1400,2600-memoryRound*140))
+    if(memoryRound>=MEMORY_ROUNDS.length){endMemory();return}
+    var cfg=MEMORY_ROUNDS[memoryRound];memoryRound++;
+    memoryMode=cfg.mode;memoryMaxDigits=Math.max(memoryMaxDigits,cfg.digits);
+    $('memoryRound').textContent=memoryRound;$('memoryDigits').textContent=cfg.digits;
+    $('memoryRoundPill').textContent=memoryRound+' / '+MEMORY_ROUNDS.length+' · '+memoryModeLabel(cfg.mode);
+    $('memoryStart').classList.add('hidden');$('memoryEntry').classList.add('hidden');
+    $('memoryLabel').textContent=cfg.mode==='reverse'?'記住數字，等等倒序輸入':'記住這串數字';
+    memoryValue=generateMemoryDigits(cfg.digits);
+    memoryExpected=cfg.mode==='reverse'?memoryValue.split('').reverse().join(''):memoryValue;
+    $('memoryNumber').textContent=memoryValue;
+    clearTimeout(memoryTimeout);
+    memoryTimeout=setTimeout(function(){
+      if(cfg.mode==='mask'){
+        $('memoryNumber').textContent=memoryMask(cfg.digits);$('memoryLabel').textContent='遮罩中…';
+        memoryTimeout=setTimeout(function(){revealMemoryEntry(cfg)},260)
+      }else revealMemoryEntry(cfg)
+    },cfg.show)
   }
-  function submitMemory(){if($('memoryEntry').classList.contains('hidden'))return;var ok=$('memoryAnswer').value.trim()===memoryValue;if(ok){memoryCorrect++;correctTone()}else wrongTone();$('memoryCorrect').textContent=memoryCorrect;$('memoryEntry').classList.add('hidden');$('memoryNumber').textContent=ok?'正確':'答案 '+memoryValue;$('memoryLabel').textContent=ok?'記憶成功':'這回合再加油';setTimeout(function(){if(memoryRound>=6)endMemory();else nextMemoryRound()},700)}
-  $('memorySubmit').addEventListener('click',submitMemory);$('memoryAnswer').addEventListener('keydown',function(e){if(e.key==='Enter')submitMemory()});
-  function endMemory(){var score=Math.round(memoryCorrect/6*100);finishMode('memory',score,{a:memoryCorrect+'/6',b:(3+Math.min(6,memoryRound))+' 位',c:score+'%'})}
+  function revealMemoryEntry(cfg){
+    $('memoryNumber').textContent='•'.repeat(cfg.digits);
+    $('memoryLabel').textContent=cfg.mode==='reverse'?'倒序輸入剛才的數字':'把剛才的數字輸入回來';
+    $('memoryEntry').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus();memoryAnswerStartedAt=performance.now()
+  }
+  function submitMemory(){
+    if($('memoryEntry').classList.contains('hidden'))return;
+    var answer=$('memoryAnswer').value.trim();if(answer==='')return;
+    var cfg=MEMORY_ROUNDS[memoryRound-1],ok=answer===memoryExpected;
+    memoryRtTotal+=Math.max(0,performance.now()-memoryAnswerStartedAt);
+    if(ok){memoryCorrect++;memoryScorePoints+=cfg.points;correctTone()}else wrongTone();
+    $('memoryCorrect').textContent=memoryCorrect;$('memoryEntry').classList.add('hidden');
+    $('memoryNumber').textContent=ok?'正確':'答案 '+memoryExpected;
+    $('memoryLabel').textContent=ok?'記憶成功':(cfg.mode==='reverse'?'正確倒序如下':'這回合的答案如下');
+    memoryTimeout=setTimeout(function(){if(memoryRound>=MEMORY_ROUNDS.length)endMemory();else nextMemoryRound()},760)
+  }
+  $('memorySubmit').addEventListener('click',submitMemory);
+  $('memoryAnswer').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();submitMemory()}});
+  function endMemory(){
+    clearTimeout(memoryTimeout);memoryTimeout=null;
+    var score=Math.round(memoryScorePoints/MEMORY_TOTAL_POINTS*100);
+    var avgRt=memoryRound?memoryRtTotal/memoryRound/1000:0;
+    finishMode('memory',score,{
+      a:memoryCorrect+'/'+MEMORY_ROUNDS.length,b:score+'%',c:memoryMaxDigits+' 位',
+      items:[
+        ['正確',memoryCorrect+'/'+MEMORY_ROUNDS.length],
+        ['加權分數',score],
+        ['最高位數',memoryMaxDigits+' 位'],
+        ['平均作答',avgRt?avgRt.toFixed(1)+'s':'—'],
+        ['最終模式',memoryModeLabel(memoryMode)]
+      ]
+    })
+  }
 
   function startLogic(){show('logic');logicIndex=0;logicCorrect=0;renderLogic()}
   function renderLogic(){
