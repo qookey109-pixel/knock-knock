@@ -94,3 +94,12 @@ For a visual gameplay change, preferred sequence is:
 3. Review visual continuity and game feel.
 4. Verify motion/performance if applicable.
 5. Run cloud QA and only promote when the same SHA passes.
+
+
+### Hallmark anti-slop gate
+
+Before promoting a major homepage, navigation, visual-system, typography, or transition redesign, run the project skill `brain7-hallmark`.
+
+Its role is to catch generic AI-generated UI tells, structural sameness, excessive cardification, scattered motion, mobile-only failures, and weak interaction states. It must preserve BRAIN/7 mechanics and brand rather than replacing them.
+
+A visual change that passes gameplay QA but still looks templated is not considered submission-ready.
