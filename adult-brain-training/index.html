@@ -76,6 +76,8 @@
     .answer-wrap{display:grid;grid-template-columns:1fr 104px;gap:9px}
     .answer-input{width:100%;min-width:0;height:58px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
     .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.key{background:var(--surface2);color:var(--ink);font-size:28px;min-height:62px}.key.special{color:var(--acid-text);border-color:rgba(185,232,0,.58);font-size:13px}
+    .math-desktop-hint{display:none;margin-top:12px;text-align:center;font-size:13px;line-height:1.5;font-weight:780;color:var(--muted)}
+    @media(hover:hover) and (pointer:fine){.math-desktop-hint{display:block}}
     .memory-stage{text-align:center;padding:18px 0}.memory-label{font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;color:var(--muted)}
     .memory-number{font-size:clamp(56px,16vw,96px);font-weight:950;letter-spacing:.14em;margin:34px 0;word-break:break-all}
     .memory-input{width:100%;height:62px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
@@ -306,8 +308,9 @@
       <div class="stats"><div class="stat"><span>TIME</span><strong id="mathTime">60</strong></div><div class="stat"><span>SCORE</span><strong id="mathScore">0</strong></div><div class="stat"><span>STREAK</span><strong id="mathStreak">0</strong></div></div>
       <div class="mini-instruction">每級 60 秒 · 8 題正確升級 · LV5 起加入多步驟運算 · 最高 LV10</div>
       <div id="mathProblem" class="big-problem">準備</div>
-      <div class="answer-wrap"><input id="mathAnswer" class="answer-input" inputmode="numeric" autocomplete="off" aria-label="答案"><button id="mathSubmit" class="primary" type="button">送出</button></div>
+      <div class="answer-wrap"><input id="mathAnswer" class="answer-input" inputmode="none" autocomplete="off" readonly aria-label="答案；手機使用畫面數字鍵盤，電腦可直接使用數字鍵盤輸入"><button id="mathSubmit" class="primary" type="button">送出</button></div>
       <div id="mathKeys" class="keypad"></div>
+      <div class="math-desktop-hint">電腦鍵盤：0–9 輸入 · Backspace 刪除 · Delete 清除 · Enter 送出</div>
     </div>
   </section>
 
@@ -751,8 +754,7 @@
         var input=$('mathAnswer');mathTapTone();
         if(k==='清除')input.value='';
         else if(k==='←')input.value=input.value.slice(0,-1);
-        else input.value=(input.value+k).slice(0,7);
-        input.focus()
+        else input.value=(input.value+k).slice(0,7)
       });box.appendChild(b)
     })
   }
@@ -856,7 +858,7 @@
     mathQuestionStartedAt=performance.now();
     $('mathProblem').textContent=p.text;
     $('mathProblem').style.fontSize=p.text.length>12?'clamp(38px,10vw,68px)':'';
-    $('mathAnswer').value='';$('mathAnswer').focus();
+    $('mathAnswer').value='';
   }
 
   function startMathLevelTimer(){
@@ -901,15 +903,21 @@
     }
   }
   $('mathSubmit').addEventListener('click',submitMath);
-  $('mathAnswer').addEventListener('keydown',function(e){
-    if(e.key==='Enter'){e.preventDefault();submitMath()}
-    if(e.key==='Delete'){e.preventDefault();mathTapTone();this.value=''}
-  });
   document.addEventListener('keydown',function(e){
     if(!$('math').classList.contains('active')||mathTransitioning||e.ctrlKey||e.metaKey||e.altKey)return;
-    var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();
-    if(/^\d$/.test(e.key)&&tag!=='input'){e.preventDefault();mathTapTone();$('mathAnswer').value=($('mathAnswer').value+e.key).slice(0,7);$('mathAnswer').focus()}
-    if(e.key==='Backspace'&&tag!=='input'){e.preventDefault();mathTapTone();$('mathAnswer').value=$('mathAnswer').value.slice(0,-1);$('mathAnswer').focus()}
+    var input=$('mathAnswer'),digit=/^\d$/.test(e.key)?e.key:(/^Numpad\d$/.test(e.code)?e.code.slice(-1):null);
+    if(digit!==null){
+      e.preventDefault();mathTapTone();input.value=(input.value+digit).slice(0,7);return
+    }
+    if(e.key==='Backspace'){
+      e.preventDefault();mathTapTone();input.value=input.value.slice(0,-1);return
+    }
+    if(e.key==='Delete'){
+      e.preventDefault();mathTapTone();input.value='';return
+    }
+    if(e.key==='Enter'){
+      e.preventDefault();submitMath()
+    }
   });
   function endMath(completed){
     if(!mathGameStartedAt)return;
