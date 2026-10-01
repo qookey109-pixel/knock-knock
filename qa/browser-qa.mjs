@@ -35,6 +35,15 @@ async function runViewport(browser, viewport, name) {
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
   await assertA11y(page, `${name} home`);
 
+  // Home interactive circuit preview
+  assert(await page.locator('[data-preview-mode]').count() === 7, `${name}: expected seven circuit preview controls`);
+  await page.locator('[data-preview-mode="schulte"]').click();
+  assert((await page.locator('#previewIndex').innerText()).trim() === '05', `${name}: preview index should switch to 05`);
+  assert((await page.locator('#previewLabel').innerText()).trim() === 'SEARCH', `${name}: preview label should switch to SEARCH`);
+  assert((await page.locator('#previewTitle').innerText()).trim() === '舒爾特方格', `${name}: preview title should switch to Schulte`);
+  await page.locator('[data-preview-mode="math"]').click();
+
+
   // Daily Training contract: the public session must run all seven games in sequence.
   assert((await page.locator('#home .hero p').innerText()).includes('7 關腦力挑戰'), `${name}: home copy must describe the seven-game session`);
   await page.locator('#dailyBtn').click();
