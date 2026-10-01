@@ -62,6 +62,7 @@ async function runViewport(browser, viewport, name) {
 
   // Math: solve one generated question and verify score increments.
   await page.locator('[data-mode="math"]').click();
+  await page.locator('#math.active').waitFor();
   const problem = await page.locator('#mathProblem').innerText();
   const answer = solveMath(problem);
   await page.locator('#mathAnswer').fill(String(answer));
@@ -72,6 +73,7 @@ async function runViewport(browser, viewport, name) {
   // Memory: capture the shown digits, then submit the same digits after they disappear.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="memory"]').click();
+  await page.locator('#memory.active').waitFor();
   await page.locator('#memoryStart').click();
   const shown = (await page.locator('#memoryNumber').innerText()).trim();
   assert(/^\d{4}$/.test(shown), `${name}: first memory round should show 4 digits`);
@@ -84,6 +86,7 @@ async function runViewport(browser, viewport, name) {
   // Logic: answer the first formally verified puzzle.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="logic"]').click();
+  await page.locator('#logic.active').waitFor();
   const choices = page.locator('#logicChoices .choice');
   assert(await choices.count() === 3, `${name}: puzzle 1 should have three choices`);
   await choices.nth(0).click();
@@ -95,6 +98,7 @@ async function runViewport(browser, viewport, name) {
   // Executive function: follow the visible rule and verify the first answer is accepted.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="executive"]').click();
+  await page.locator('#executive.active').waitFor();
   const rule = (await page.locator('#execRule').innerText()).trim();
   const value = Number((await page.locator('#execNumber').innerText()).trim());
   assert(Number.isFinite(value), `${name}: executive stimulus should be numeric`);
@@ -109,6 +113,7 @@ async function runViewport(browser, viewport, name) {
   // Schulte
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="schulte"]').click();
+  await page.locator('#schulte.active').waitFor();
   assert(await page.locator('#schulteGrid .schulte-cell').count() === 25, `${name}: Schulte grid should contain 25 cells`);
   await page.locator('#schulteGrid .schulte-cell').filter({ hasText: /^1$/ }).click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '2');
@@ -117,6 +122,7 @@ async function runViewport(browser, viewport, name) {
   // Stroop
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="stroop"]').click();
+  await page.locator('#stroop.active').waitFor();
   const stroopColor = await page.locator('#stroopWord').getAttribute('data-color');
   assert(['red','blue','green','yellow'].includes(stroopColor), `${name}: invalid Stroop color`);
   await page.locator(`#stroopChoices [data-color="${stroopColor}"]`).click();
@@ -126,6 +132,7 @@ async function runViewport(browser, viewport, name) {
   // 表裡不一
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="odd"]').click();
+  await page.locator('#odd.active').waitFor();
   assert(await page.locator('#oddGrid .odd-cell').count() === 16, `${name}: odd grid should contain 16 cells`);
   assert(await page.locator('#oddGrid .odd-cell[data-odd="true"]').count() === 1, `${name}: odd grid must have exactly one mismatch`);
   await page.locator('#oddGrid .odd-cell[data-odd="true"]').click();
