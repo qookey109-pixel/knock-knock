@@ -62,6 +62,8 @@ async function runViewport(browser, viewport, name) {
 
   // Math: solve one generated question and verify score increments.
   await page.locator('[data-mode="math"]').click();
+  // Full-screen radial transition should exist during animated entry.
+  assert(await page.locator('#transitionBurst .burst-rays').count() === 1, `${name}: full-screen radial transition should render on game entry`);
   await page.locator('#math.active').waitFor();
   const problem = await page.locator('#mathProblem').innerText();
   const answer = solveMath(problem);
@@ -86,6 +88,7 @@ async function runViewport(browser, viewport, name) {
   // Logic: answer the first formally verified puzzle.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="logic"]').click();
+  assert(await page.locator('#transitionBurst .burst-rays').count() === 0, 'reduced motion should skip radial rays');
   await page.locator('#logic.active').waitFor();
   const choices = page.locator('#logicChoices .choice');
   assert(await choices.count() === 3, `${name}: puzzle 1 should have three choices`);
