@@ -110,6 +110,7 @@ async function runViewport(browser, viewport, name) {
   assert(source.includes("if(lv===5)") && source.includes("' × '+b+' + '+c1"), `${name}: LV5+ must include multi-step arithmetic`);
   assert(source.includes("if(lv===9)") && source.includes("a=rand(1000,1999)"), `${name}: LV9 must include four-digit arithmetic`);
   assert(source.includes("MATH_MAX_LEVEL=10"), `${name}: Quick Math should cap at LV10`);
+  assert(source.includes('#math{--chapter:#ff6b4a}') && source.includes('#odd{--chapter:#a78bfa}'), `${name}: game screens should expose chapter colors`);
   await assertA11y(page, `${name} math`);
 
   // Memory: 10 rounds with fixed exposure time; difficulty rises only by digit count.
