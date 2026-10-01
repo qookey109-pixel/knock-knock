@@ -204,7 +204,7 @@
     </div>
     <div class="home-select">
       <div class="modes" aria-label="選擇單項訓練">
-        <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="30 秒壓力測試。越準、越快，題目越往上推。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>30 秒壓力測試。越準、越快，題目越往上推。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="只看一眼。數字消失後，把它完整抓回來。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>只看一眼。數字消失後，把它完整抓回來。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></span><span class="mode-arrow">→</span></button>
@@ -217,7 +217,7 @@
         <div id="previewNumber" class="home-preview-number" aria-hidden="true">01</div>
         <div class="home-preview-copy">
           <h3 id="previewTitle">快速心算</h3>
-          <p id="previewText">30 秒壓力測試。越準、越快，題目越往上推。</p>
+          <p id="previewText">每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。</p>
           <div class="home-preview-foot"><span class="preview-dot"></span><span>選擇關卡 · 手機可左右滑動</span></div><button id="previewPlay" class="secondary" type="button">進入這一關 →</button>
         </div>
       </aside>
@@ -226,9 +226,9 @@
   </section>
 
   <section id="math" class="screen">
-    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div><div class="pill">30 秒</div></div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div><div id="mathLevelMark" class="pill">LV 1 · 0/8</div></div>
     <div class="panel">
-      <div class="stats"><div class="stat"><span>TIME</span><strong id="mathTime">30</strong></div><div class="stat"><span>CORRECT</span><strong id="mathCorrect">0</strong></div><div class="stat"><span>LEVEL</span><strong id="mathLevel">1</strong></div></div>
+      <div class="stats"><div class="stat"><span>TIME</span><strong id="mathTime">60</strong></div><div class="stat"><span>SCORE</span><strong id="mathScore">0</strong></div><div class="stat"><span>STREAK</span><strong id="mathStreak">0</strong></div></div>
       <div id="mathProblem" class="big-problem">準備</div>
       <div class="answer-wrap"><input id="mathAnswer" class="answer-input" inputmode="numeric" autocomplete="off" aria-label="答案"><button id="mathSubmit" class="primary" type="button">送出</button></div>
       <div id="mathKeys" class="keypad"></div>
@@ -320,13 +320,16 @@
   var screens=[].slice.call(document.querySelectorAll('.screen'));
   var dailyMode=false,dailyQueue=[],dailySelection=[],dailyScores={};
   var muted=false,audioCtx=null;
-  var mathTimer=null,mathTime=30,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1;
+  var mathTimer=null,mathTime=60,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1,mathLevelCorrect=0,mathScore=0,mathStreak=0,mathMaxStreak=0,mathSeen=new Set(),mathOps=[],mathStepCount=1,mathQuestionStartedAt=0,mathTotalResponseMs=0,mathResponseCount=0,mathGameStartedAt=0,mathTransitioning=false,mathTransitionTimer=null;
   var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null;
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false;
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null;
   var stroopRound=0,stroopCorrect=0,stroopWrong=0,stroopRtTotal=0,stroopStartedAt=0,stroopColor='red',stroopLocked=false;
   var oddRound=0,oddCorrect=0,oddWrong=0,oddRtTotal=0,oddStartedAt=0,oddLocked=false;
+  var mathBgmBuffer=null,mathBgmSource=null,mathBgmGain=null,mathBgmToken=0;
+  var MATH_BGM_URL='../assets/rag-time-on-the-rag-loop.m4a';
+  var mathBgmDataPromise=fetch(MATH_BGM_URL,{cache:'force-cache'}).then(function(r){if(!r.ok)throw new Error('BGM load failed');return r.arrayBuffer()}).catch(function(){return null});
 
   var logicBank=[
     {q:'三人中只有一人拿了鑰匙，而且只有一句話是真的。誰拿了？',clues:['阿明：是小美拿的。','小美：不是小美拿的。','阿哲：不是阿明拿的。'],choices:['阿明','小美','阿哲'],answer:0,explain:'如果阿明拿了：阿明是假、小美是真、阿哲是假，剛好只有一句真話。'},
@@ -355,6 +358,25 @@
   }
   function correctTone(){tone(680,.08);setTimeout(function(){tone(900,.1)},60)}
   function wrongTone(){tone(190,.12)}
+  async function loadMathBgm(){
+    if(mathBgmBuffer)return mathBgmBuffer;
+    var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
+    if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
+    var data=await mathBgmDataPromise;if(!data)return null;
+    try{mathBgmBuffer=await audioCtx.decodeAudioData(data.slice(0));return mathBgmBuffer}catch(e){return null}
+  }
+  function stopMathBgm(){
+    mathBgmToken++;
+    if(mathBgmSource){try{mathBgmSource.stop()}catch(e){}try{mathBgmSource.disconnect()}catch(e){}mathBgmSource=null}
+    if(mathBgmGain){try{mathBgmGain.disconnect()}catch(e){}mathBgmGain=null}
+  }
+  async function startMathBgm(){
+    stopMathBgm();if(muted)return;
+    var token=mathBgmToken,buffer=await loadMathBgm();if(!buffer||muted||token!==mathBgmToken||!$('math').classList.contains('active'))return;
+    var src=audioCtx.createBufferSource(),g=audioCtx.createGain();src.buffer=buffer;src.loop=true;g.gain.value=.38;
+    src.connect(g);g.connect(audioCtx.destination);src.start(0);mathBgmSource=src;mathBgmGain=g;
+  }
+  function mathTapTone(){tone(520,.035)}
   function transitionClick(){
     if(muted)return;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
@@ -430,7 +452,7 @@
     },650);
   }
 
-  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪'});
+  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪';if(muted)stopMathBgm();else if($('math').classList.contains('active'))startMathBgm()});
   document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();dailyMode=false;show('home')})});
   var homeModeButtons=[].slice.call(document.querySelectorAll('.mode'));
   function previewMode(mode){
@@ -501,7 +523,7 @@
   });
   $('dailyAgain').addEventListener('click',startDaily);
 
-  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(memoryTimeout);memoryTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
+  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;stopMathBgm();clearTimeout(memoryTimeout);memoryTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
   function startDaily(){stopAll();dailyMode=true;dailyScores={};dailySelection=allModes.slice();dailyQueue=dailySelection.slice();startNextDaily()}
   function startNextDaily(){if(!dailyQueue.length){showDailyResult();return}startMode(dailyQueue.shift())}
   function startMode(mode){
@@ -511,27 +533,193 @@
   }
   function finishMode(mode,score,stats){dailyScores[mode]=score;if(dailyMode){showDailyBreak(mode,score,stats);return}showResult(mode,score,stats)}
 
+  var MATH_TARGET_PER_LEVEL=8;
+  var MATH_LEVEL_SECONDS=60;
+  var MATH_MAX_LEVEL=10;
+
+  function updateMathLevelMark(){
+    $('mathLevelMark').textContent='LV '+mathLevel+' · '+mathLevelCorrect+'/'+MATH_TARGET_PER_LEVEL;
+  }
   function buildMathKeys(){
     var box=$('mathKeys');box.innerHTML='';
     ['1','2','3','4','5','6','7','8','9','清除','0','←'].forEach(function(k){
       var b=document.createElement('button');b.type='button';b.textContent=k;b.className='key'+((k==='清除'||k==='←')?' special':'');
-      b.addEventListener('click',function(){var input=$('mathAnswer');if(k==='清除')input.value='';else if(k==='←')input.value=input.value.slice(0,-1);else input.value=(input.value+k).slice(0,7);input.focus()});box.appendChild(b)
+      b.addEventListener('click',function(){
+        if(mathTransitioning||!mathTimer)return;
+        var input=$('mathAnswer');mathTapTone();
+        if(k==='清除')input.value='';
+        else if(k==='←')input.value=input.value.slice(0,-1);
+        else input.value=(input.value+k).slice(0,7);
+        input.focus()
+      });box.appendChild(b)
     })
   }
   buildMathKeys();
-  function makeMath(){
-    mathLevel=1+Math.floor(mathCorrect/5);$('mathLevel').textContent=mathLevel;
-    var pool=mathLevel<3?['+','-']:mathLevel<5?['+','-','×']:['+','-','×','÷'],op=pool[Math.floor(Math.random()*pool.length)],a,b;
-    if(op==='+'){a=rand(6,20+mathLevel*15);b=rand(3,18+mathLevel*12);mathAnswerValue=a+b}
-    if(op==='-'){a=rand(15,35+mathLevel*18);b=rand(2,a-1);mathAnswerValue=a-b}
-    if(op==='×'){a=rand(3,Math.min(12+mathLevel,25));b=rand(2,Math.min(10+mathLevel,18));mathAnswerValue=a*b}
-    if(op==='÷'){b=rand(2,Math.min(12,5+mathLevel));mathAnswerValue=rand(2,Math.min(15,7+mathLevel));a=b*mathAnswerValue}
-    $('mathProblem').textContent=a+' '+op+' '+b;$('mathAnswer').value='';$('mathAnswer').focus()
+
+  function generateMathProblem(lv){
+    var make=function(text,ans){return {text:text,ans:ans,key:text}},a,b,d,q,c1,c2,mode;
+    if(lv===1){
+      mode=rand(0,1);
+      if(mode===0){a=rand(2,30);b=rand(1,20);return make(a+' + '+b,a+b)}
+      a=rand(8,40);b=rand(1,a-1);return make(a+' - '+b,a-b)
+    }
+    if(lv===2){
+      mode=rand(0,4);
+      if(mode<=1){a=rand(10,69);b=rand(2,30);return make(a+' + '+b,a+b)}
+      if(mode===2){a=rand(20,99);b=rand(1,a-1);return make(a+' - '+b,a-b)}
+      if(mode===3){a=rand(2,9);b=rand(2,9);return make(a+' × '+b,a*b)}
+      d=rand(2,9);q=rand(2,9);a=d*q;return make(a+' ÷ '+d,q)
+    }
+    if(lv===3){
+      mode=rand(0,3);
+      if(mode===0){a=rand(20,99);b=rand(10,99);return make(a+' + '+b,a+b)}
+      if(mode===1){a=rand(30,120);b=rand(10,a-1);return make(a+' - '+b,a-b)}
+      if(mode===2){a=rand(3,12);b=rand(3,12);return make(a+' × '+b,a*b)}
+      d=rand(2,12);q=rand(3,12);a=d*q;return make(a+' ÷ '+d,q)
+    }
+    if(lv===4){
+      mode=rand(0,3);
+      if(mode===0){a=rand(100,299);b=rand(20,199);return make(a+' + '+b,a+b)}
+      if(mode===1){a=rand(120,399);b=rand(20,a-1);return make(a+' - '+b,a-b)}
+      if(mode===2){a=rand(11,25);b=rand(2,9);return make(a+' × '+b,a*b)}
+      d=rand(2,12);q=rand(10,30);a=d*q;return make(a+' ÷ '+d,q)
+    }
+    if(lv===5){
+      mode=rand(0,5);
+      if(mode===0){a=rand(150,499);b=rand(50,299);return make(a+' + '+b,a+b)}
+      if(mode===1){a=rand(200,599);b=rand(50,a-1);return make(a+' - '+b,a-b)}
+      if(mode===2){a=rand(12,35);b=rand(3,12);return make(a+' × '+b,a*b)}
+      if(mode===3){d=rand(3,15);q=rand(10,35);a=d*q;return make(a+' ÷ '+d,q)}
+      if(mode===4){a=rand(40,199);b=rand(20,99);c1=rand(5,50);return make(a+' + '+b+' - '+c1,a+b-c1)}
+      a=rand(100,299);b=rand(20,a-1);c1=rand(5,60);return make(a+' - '+b+' + '+c1,a-b+c1)
+    }
+    if(lv===6){
+      mode=rand(0,5);
+      if(mode===0){a=rand(250,800);b=rand(80,399);return make(a+' + '+b,a+b)}
+      if(mode===1){a=rand(300,800);b=rand(80,a-1);return make(a+' - '+b,a-b)}
+      if(mode===2){a=rand(15,30);b=rand(4,15);return make(a+' × '+b,a*b)}
+      if(mode===3){d=rand(4,15);q=rand(10,30);a=d*q;return make(a+' ÷ '+d,q)}
+      if(mode===4){a=rand(180,500);b=rand(80,250);c1=rand(30,120);return make(a+' + '+b+' - '+c1,a+b-c1)}
+      a=rand(15,30);b=rand(3,12);c1=rand(10,80);return make(a+' × '+b+' + '+c1,a*b+c1)
+    }
+    if(lv===7){
+      mode=rand(0,6);
+      if(mode===0){a=rand(300,900);b=rand(120,499);return make(a+' + '+b,a+b)}
+      if(mode===1){a=rand(350,900);b=rand(100,a-1);return make(a+' - '+b,a-b)}
+      if(mode===2){a=rand(20,60);b=rand(4,15);return make(a+' × '+b,a*b)}
+      if(mode===3){d=rand(4,20);q=rand(12,60);a=d*q;return make(a+' ÷ '+d,q)}
+      if(mode===4){a=rand(250,650);b=rand(100,350);c1=rand(50,180);return make(a+' + '+b+' - '+c1,a+b-c1)}
+      if(mode===5){a=rand(20,60);b=rand(4,15);c1=rand(20,120);return make(a+' × '+b+' - '+c1,a*b-c1)}
+      d=rand(4,15);q=rand(20,60);a=d*q;c1=rand(20,120);return make(a+' ÷ '+d+' + '+c1,q+c1)
+    }
+    if(lv===8){
+      mode=rand(0,7);
+      if(mode===0){a=rand(400,999);b=rand(150,599);return make(a+' + '+b,a+b)}
+      if(mode===1){a=rand(450,999);b=rand(120,a-1);return make(a+' - '+b,a-b)}
+      if(mode===2){a=rand(30,90);b=rand(5,18);return make(a+' × '+b,a*b)}
+      if(mode===3){d=rand(5,20);q=rand(20,90);a=d*q;return make(a+' ÷ '+d,q)}
+      if(mode===4){a=rand(350,750);b=rand(150,450);c1=rand(80,260);return make(a+' + '+b+' - '+c1,a+b-c1)}
+      if(mode===5){a=rand(30,90);b=rand(5,18);c1=rand(30,180);return make(a+' × '+b+' + '+c1,a*b+c1)}
+      if(mode===6){d=rand(5,18);q=rand(30,90);a=d*q;c1=rand(30,180);return make(a+' ÷ '+d+' + '+c1,q+c1)}
+      a=rand(250,600);b=rand(120,300);c1=rand(50,160);c2=rand(20,100);return make(a+' + '+b+' - '+c1+' + '+c2,a+b-c1+c2)
+    }
+    if(lv===9){
+      mode=rand(0,7);
+      if(mode===0){a=rand(1000,1999);b=rand(100,999);return make(a+' + '+b,a+b)}
+      if(mode===1){a=rand(1200,1999);b=rand(100,a-1);return make(a+' - '+b,a-b)}
+      if(mode===2){a=rand(100,299);b=rand(2,12);return make(a+' × '+b,a*b)}
+      if(mode===3){do{d=rand(3,18);q=rand(10,99);a=d*q}while(a<100||a>999);return make(a+' ÷ '+d,q)}
+      if(mode===4){a=rand(1000,1800);b=rand(200,800);c1=rand(80,350);return make(a+' + '+b+' - '+c1,a+b-c1)}
+      if(mode===5){a=rand(100,299);b=rand(2,12);c1=rand(20,150);return make(a+' × '+b+' + '+c1,a*b+c1)}
+      if(mode===6){do{d=rand(3,18);q=rand(10,99);a=d*q}while(a<100||a>999);c1=rand(20,150);return make(a+' ÷ '+d+' + '+c1,q+c1)}
+      a=rand(1000,1600);b=rand(200,700);c1=rand(100,400);c2=rand(30,180);return make(a+' + '+b+' - '+c1+' + '+c2,a+b-c1+c2)
+    }
+    // LV10: cap difficulty at the root Quick Math LV10 baseline.
+    mode=rand(0,5);
+    if(mode===0){a=rand(1200,2999);b=rand(300,2499);return make(a+' + '+b,a+b)}
+    if(mode===1){a=rand(1500,2999);b=rand(200,a-1);return make(a+' - '+b,a-b)}
+    if(mode===2){a=rand(100,399);b=rand(3,20);return make(a+' × '+b,a*b)}
+    if(mode===3){do{d=rand(3,25);q=rand(20,199);a=d*q}while(a<100||a>9999);return make(a+' ÷ '+d,q)}
+    if(mode===4){a=rand(1200,2999);b=rand(300,900);c1=rand(100,500);return make(a+' + '+b+' - '+c1,a+b-c1)}
+    a=rand(100,399);b=rand(3,20);c1=rand(50,250);return make(a+' × '+b+' + '+c1,a*b+c1)
   }
-  function startMath(){show('math');mathTime=30;mathCorrect=0;mathWrong=0;mathLevel=1;$('mathTime').textContent='30';$('mathCorrect').textContent='0';$('mathLevel').textContent='1';makeMath();mathTimer=setInterval(function(){mathTime--;$('mathTime').textContent=Math.max(0,mathTime);if(mathTime<=0){clearInterval(mathTimer);mathTimer=null;endMath()}},1000)}
-  function submitMath(){if(!mathTimer)return;var v=$('mathAnswer').value.trim();if(v==='')return;if(Number(v)===mathAnswerValue){mathCorrect++;correctTone()}else{mathWrong++;wrongTone()}$('mathCorrect').textContent=mathCorrect;makeMath()}
-  $('mathSubmit').addEventListener('click',submitMath);$('mathAnswer').addEventListener('keydown',function(e){if(e.key==='Enter')submitMath()});
-  function endMath(){var attempts=mathCorrect+mathWrong,acc=attempts?Math.round(mathCorrect/attempts*100):0,score=Math.min(100,Math.round(mathCorrect*5+acc*.45));finishMode('math',score,{a:mathCorrect,b:acc+'%',c:'LV '+mathLevel})}
+
+  function makeMath(){
+    mathTransitioning=false;
+    var p=null;
+    for(var attempt=0;attempt<200;attempt++){p=generateMathProblem(mathLevel);if(!mathSeen.has(p.key))break}
+    mathSeen.add(p.key);mathAnswerValue=p.ans;
+    mathOps=['+','-','×','÷'].filter(function(op){return p.text.indexOf(' '+op+' ')>=0});
+    mathStepCount=(p.text.match(/[+\-×÷]/g)||[]).length||1;
+    mathQuestionStartedAt=performance.now();
+    $('mathProblem').textContent=p.text;
+    $('mathProblem').style.fontSize=p.text.length>12?'clamp(38px,10vw,68px)':'';
+    $('mathAnswer').value='';$('mathAnswer').focus();
+  }
+
+  function startMathLevelTimer(){
+    clearInterval(mathTimer);mathTime=MATH_LEVEL_SECONDS;$('mathTime').textContent=String(mathTime);
+    mathTimer=setInterval(function(){
+      mathTime--;$('mathTime').textContent=String(Math.max(0,mathTime));
+      if(mathTime<=0)endMath(false)
+    },1000)
+  }
+  function mathQuestionBaseScore(){
+    if(mathStepCount>=3)return 24;
+    if(mathStepCount===2)return 18;
+    if(mathOps.indexOf('÷')>=0)return 14;
+    if(mathOps.indexOf('×')>=0)return 12;
+    return 10
+  }
+  function advanceMathLevel(){
+    mathTransitioning=true;clearInterval(mathTimer);mathTimer=null;
+    mathScore+=mathTime;$('mathScore').textContent=mathScore;
+    if(mathLevel>=MATH_MAX_LEVEL){endMath(true);return}
+    mathLevel++;mathLevelCorrect=0;updateMathLevelMark();
+    $('mathProblem').textContent='LEVEL '+mathLevel;$('mathAnswer').value='';
+    tone(523.25,.09);setTimeout(function(){tone(659.25,.09)},80);setTimeout(function(){tone(783.99,.15)},160);
+    mathTransitionTimer=setTimeout(function(){if(!$('math').classList.contains('active'))return;makeMath();startMathLevelTimer()},650)
+  }
+  function startMath(){
+    show('math');clearInterval(mathTimer);clearTimeout(mathTransitionTimer);
+    mathTime=MATH_LEVEL_SECONDS;mathCorrect=0;mathWrong=0;mathLevel=1;mathLevelCorrect=0;mathScore=0;mathStreak=0;mathMaxStreak=0;mathSeen=new Set();mathOps=[];mathStepCount=1;mathQuestionStartedAt=0;mathTotalResponseMs=0;mathResponseCount=0;mathGameStartedAt=performance.now();mathTransitioning=false;
+    $('mathTime').textContent='60';$('mathScore').textContent='0';$('mathStreak').textContent='0';updateMathLevelMark();makeMath();startMathLevelTimer();startMathBgm()
+  }
+  function submitMath(){
+    if(!mathTimer||mathTransitioning)return;
+    var v=$('mathAnswer').value.trim();if(v==='')return;
+    var responseMs=Math.max(0,performance.now()-mathQuestionStartedAt);mathTotalResponseMs+=responseMs;mathResponseCount++;
+    if(Number(v)===mathAnswerValue){
+      mathCorrect++;mathLevelCorrect++;mathStreak++;mathMaxStreak=Math.max(mathMaxStreak,mathStreak);
+      mathScore+=mathQuestionBaseScore()+Math.max(0,mathLevel-1)+Math.min(Math.max(0,mathStreak-1),10);
+      $('mathScore').textContent=mathScore;$('mathStreak').textContent=mathStreak;correctTone();updateMathLevelMark();
+      if(mathLevelCorrect>=MATH_TARGET_PER_LEVEL)advanceMathLevel();else makeMath()
+    }else{
+      mathWrong++;mathStreak=0;mathScore=Math.max(0,mathScore-3);$('mathScore').textContent=mathScore;$('mathStreak').textContent='0';wrongTone();makeMath()
+    }
+  }
+  $('mathSubmit').addEventListener('click',submitMath);
+  $('mathAnswer').addEventListener('keydown',function(e){
+    if(e.key==='Enter'){e.preventDefault();submitMath()}
+    if(e.key==='Delete'){e.preventDefault();mathTapTone();this.value=''}
+  });
+  document.addEventListener('keydown',function(e){
+    if(!$('math').classList.contains('active')||mathTransitioning||e.ctrlKey||e.metaKey||e.altKey)return;
+    var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();
+    if(/^\d$/.test(e.key)&&tag!=='input'){e.preventDefault();mathTapTone();$('mathAnswer').value=($('mathAnswer').value+e.key).slice(0,7);$('mathAnswer').focus()}
+    if(e.key==='Backspace'&&tag!=='input'){e.preventDefault();mathTapTone();$('mathAnswer').value=$('mathAnswer').value.slice(0,-1);$('mathAnswer').focus()}
+  });
+  function endMath(completed){
+    if(!mathGameStartedAt)return;
+    clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;stopMathBgm();
+    var tries=mathCorrect+mathWrong,acc=tries?Math.round(mathCorrect/tries*100):0,avgSec=mathResponseCount?mathTotalResponseMs/mathResponseCount/1000:0;
+    // BRAIN/7 needs a 0–100 comparable score; keep raw Quick Math score visible in stats.
+    var progress=((mathLevel-1)*MATH_TARGET_PER_LEVEL+mathLevelCorrect)/(MATH_MAX_LEVEL*MATH_TARGET_PER_LEVEL);
+    var normalized=Math.max(0,Math.min(100,Math.round(progress*55+acc*.30+Math.min(15,mathMaxStreak)*1)));
+    if(completed)normalized=Math.max(normalized,95);
+    finishMode('math',normalized,{a:String(mathScore),b:acc+'%',c:'LV '+mathLevel+' · '+(mathResponseCount?avgSec.toFixed(1)+'s':'—')});
+    mathGameStartedAt=0
+  }
 
   function startMemory(){show('memory');memoryRound=0;memoryCorrect=0;$('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');$('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';$('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 6'}
   $('memoryStart').addEventListener('click',nextMemoryRound);
