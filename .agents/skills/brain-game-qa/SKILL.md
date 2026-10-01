@@ -38,6 +38,7 @@ The browser QA must continue to cover:
 - Quick Math input and correct-answer progression
 - Memory display, hide, recall, and submission
 - Logic choice, submission, and feedback
+- Executive-function rule display, correct response handling, switching behavior, and result progression
 - critical/serious Axe accessibility violations
 
 Keep primary controls operable by click/tap and keyboard where applicable.
