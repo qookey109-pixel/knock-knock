@@ -266,6 +266,35 @@ async function runNarrowHome(browser) {
   await context.close();
 }
 
+async function runAwardResponsiveShell(browser, width, height, label) {
+  const context = await browser.newContext({ viewport: { width, height } });
+  const page = await context.newPage();
+  await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
+  const shell = await page.evaluate(() => {
+    const daily = document.getElementById('dailyBtn').getBoundingClientRect();
+    const sound = document.getElementById('soundBtn').getBoundingClientRect();
+    const circuits = [...document.querySelectorAll('.circuit-strip button')].map(x => x.getBoundingClientRect());
+    return {
+      overflow: document.documentElement.scrollWidth - window.innerWidth,
+      dailyHeight: daily.height,
+      soundWidth: sound.width,
+      soundHeight: sound.height,
+      circuitMin: Math.min(...circuits.map(r => Math.min(r.width, r.height))),
+      heroBadges: document.querySelectorAll('.hero-chip').length
+    };
+  });
+  assert(shell.overflow <= 1, `${label}: horizontal overflow detected (${shell.overflow}px)`);
+  assert(shell.dailyHeight >= 44, `${label}: primary action is too small`);
+  assert(shell.soundWidth >= 44 && shell.soundHeight >= 44, `${label}: sound control is below 44px`);
+  assert(shell.circuitMin >= 44, `${label}: circuit preview controls must be at least 44px`);
+  assert(shell.heroBadges === 0, `${label}: homepage should not regress to SaaS-style hero badges`);
+  await page.locator('[data-mode="math"]').click();
+  await page.locator('#math.active').waitFor();
+  assert((await page.locator('#math .stats').innerText()).includes('時間'), `${label}: math HUD should use localized labels`);
+  await assertA11y(page, `${label} responsive shell`);
+  await context.close();
+}
+
 async function runReducedMotion(browser) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await context.newPage();
@@ -283,6 +312,9 @@ try {
   await runViewport(browser, { width: 390, height: 844 }, 'mobile');
   await runViewport(browser, { width: 1280, height: 900 }, 'desktop');
   await runNarrowHome(browser);
+  await runAwardResponsiveShell(browser, 375, 812, '375px');
+  await runAwardResponsiveShell(browser, 414, 896, '414px');
+  await runAwardResponsiveShell(browser, 768, 1024, '768px');
   await runReducedMotion(browser);
   console.log('browser-qa: PASS — 7 games, mobile + desktop, accessibility, and reduced-motion checks passed.');
 } finally {
