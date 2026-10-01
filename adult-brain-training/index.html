@@ -4,93 +4,89 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f3f0ff">
-  <meta name="description" content="大人的腦部鍛鍊：快速心算、瞬間記憶、邏輯推理與執行功能規則切換的每日短時間腦力遊戲。">
+  <meta name="description" content="大人的腦部鍛鍊：7 種短時間腦力小遊戲，包含快速心算、瞬間記憶、邏輯推理、規則切換、舒爾特方格、Stroop 與視覺抗干擾。">
   <title>大人的腦部鍛鍊</title>
   <style>
     :root{
       --bg:#f3f0ff;--paper:#fbfaff;--ink:#4b00d7;--accent:#a94700;
       --line:rgba(75,0,215,.18);--soft:rgba(75,0,215,.08);--muted:rgba(75,0,215,.72);
-      --good:#146c43;--bad:#9f2724
+      --good:#146c43;--bad:#9f2724;--ease-out:cubic-bezier(.16,1,.3,1)
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
     body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}
-    button,input{font:inherit}
-    button{touch-action:manipulation}
+    button,input{font:inherit}button{touch-action:manipulation}
+    button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
     .app{width:min(100%,680px);margin:0 auto;padding:18px 16px 36px}
     .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:10px 2px 15px;border-bottom:2px solid var(--ink)}
     .brand h1{margin:0;font-size:28px;line-height:1;font-weight:950;letter-spacing:-.04em}
     .brand p{margin:7px 0 0;font-size:12px;font-weight:850;letter-spacing:.08em;color:var(--muted)}
     .sound{width:40px;height:40px;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);font-weight:950}
     .screen{display:none;padding-top:18px}.screen.active{display:block}
-    .hero{padding:10px 2px 6px}
-    .eyebrow{font-size:11px;font-weight:950;letter-spacing:.14em;color:var(--accent)}
+    .hero{padding:10px 2px 6px}.eyebrow{font-size:11px;font-weight:950;letter-spacing:.14em;color:var(--accent)}
     .hero h2{margin:7px 0 8px;font-size:38px;line-height:1.05;letter-spacing:-.05em}
     .hero p{margin:0;color:var(--muted);font-weight:750;line-height:1.7}
-    .primary,.secondary,.choice,.key{
-      min-height:52px;border-radius:16px;font-weight:950;border:2px solid var(--ink);
-    }
+    .primary,.secondary,.choice,.key{min-height:52px;border-radius:16px;font-weight:950;border:2px solid var(--ink)}
     .primary{background:var(--accent);border-color:var(--accent);color:#fff;padding:0 20px}
     .secondary{background:transparent;color:var(--ink);padding:0 18px}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
-    .actions>*{flex:1 1 170px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions>*{flex:1 1 170px}
     .modes{display:grid;gap:12px;margin-top:22px}
-    .mode{
-      width:100%;text-align:left;background:var(--paper);border:2px solid var(--line);
-      border-radius:22px;padding:18px;color:var(--ink)
-    }
-    .mode:active{transform:translateY(1px)}
+    .mode{width:100%;text-align:left;background:var(--paper);border:2px solid var(--line);border-radius:22px;padding:18px;color:var(--ink);transition:transform 140ms var(--ease-out),border-color 140ms var(--ease-out)}
+    .mode:active,.primary:active,.secondary:active,.choice:active,.key:active,.schulte-cell:active,.odd-cell:active{transform:scale(.98)}
     .mode-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .mode-num{font-size:12px;font-weight:950;letter-spacing:.13em;color:var(--accent)}
-    .mode-arrow{font-size:24px;font-weight:950}
+    .mode-num{font-size:12px;font-weight:950;letter-spacing:.13em;color:var(--accent)}.mode-arrow{font-size:24px;font-weight:950}
     .mode h3{margin:7px 0 5px;font-size:24px}.mode p{margin:0;color:var(--muted);font-weight:750;line-height:1.55}
-    .note{margin-top:18px;padding:13px 15px;border-left:4px solid var(--accent);background:rgba(242,138,53,.08);font-size:12px;line-height:1.55;font-weight:750;color:var(--muted)}
+    .note{margin-top:18px;padding:13px 15px;border-left:4px solid var(--accent);background:rgba(169,71,0,.08);font-size:12px;line-height:1.55;font-weight:750;color:var(--muted)}
     .gamehead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
-    .back{border:0;background:transparent;color:var(--ink);padding:5px 0;font-weight:950}
-    .gamehead h2{margin:4px 0 0;font-size:27px;letter-spacing:-.04em}
+    .back{border:0;background:transparent;color:var(--ink);padding:7px 0;font-weight:950}.gamehead h2{margin:4px 0 0;font-size:27px;letter-spacing:-.04em}
     .pill{border:2px solid var(--line);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:950;white-space:nowrap}
     .panel{background:var(--paper);border:2px solid var(--line);border-radius:24px;padding:18px}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
-    .stat{padding:11px 9px;border-bottom:2px solid var(--line)}
-    .stat span{display:block;font-size:9px;font-weight:950;letter-spacing:.12em;color:var(--muted)}
-    .stat strong{display:block;margin-top:5px;font-size:25px;line-height:1;font-variant-numeric:tabular-nums}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.stat{padding:11px 9px;border-bottom:2px solid var(--line)}
+    .stat span{display:block;font-size:9px;font-weight:950;letter-spacing:.12em;color:var(--muted)}.stat strong{display:block;margin-top:5px;font-size:25px;line-height:1;font-variant-numeric:tabular-nums}
     .big-problem{text-align:center;font-size:clamp(52px,16vw,88px);font-weight:950;letter-spacing:-.07em;padding:26px 0 20px}
     .answer-wrap{display:grid;grid-template-columns:1fr 96px;gap:9px}
-    .answer-input{
-      width:100%;min-width:0;height:56px;background:transparent;border:0;border-bottom:4px solid var(--ink);
-      color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none
-    }
-    .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}
-    .key{background:var(--paper);color:var(--ink);font-size:28px;min-height:62px}
-    .key.special{color:var(--accent);border-color:var(--accent);font-size:14px}
-    .memory-stage{text-align:center;padding:16px 0}
-    .memory-label{font-size:12px;font-weight:950;letter-spacing:.12em;color:var(--muted)}
+    .answer-input{width:100%;min-width:0;height:56px;background:transparent;border:0;border-bottom:4px solid var(--ink);color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
+    .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.key{background:var(--paper);color:var(--ink);font-size:28px;min-height:62px}.key.special{color:var(--accent);border-color:var(--accent);font-size:14px}
+    .memory-stage{text-align:center;padding:16px 0}.memory-label{font-size:12px;font-weight:950;letter-spacing:.12em;color:var(--muted)}
     .memory-number{font-size:clamp(48px,16vw,82px);font-weight:950;letter-spacing:.12em;margin:32px 0;word-break:break-all}
     .memory-input{width:100%;height:62px;border:0;border-bottom:4px solid var(--ink);background:transparent;color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
     .logic-progress{display:flex;gap:5px;margin-bottom:16px}.logic-progress i{height:5px;flex:1;background:var(--line);border-radius:99px}.logic-progress i.on{background:var(--accent)}
-    .logic-q{font-size:23px;line-height:1.45;font-weight:950;margin:4px 0 15px}
-    .clues{display:grid;gap:8px;margin-bottom:15px}.clue{padding:12px 13px;border-left:4px solid var(--ink);background:var(--soft);font-weight:800;line-height:1.55}
-    .choices{display:grid;gap:9px}.choice{background:var(--paper);color:var(--ink);text-align:left;padding:0 15px}
+    .logic-q{font-size:23px;line-height:1.45;font-weight:950;margin:4px 0 15px}.clues{display:grid;gap:8px;margin-bottom:15px}.clue{padding:12px 13px;border-left:4px solid var(--ink);background:var(--soft);font-weight:800;line-height:1.55}
+    .choices{display:grid;gap:9px}.choice{background:var(--paper);color:var(--ink);text-align:left;padding:0 15px;transition:transform 120ms var(--ease-out)}
     .choice.selected{background:var(--soft);border-color:var(--accent)}
-    .feedback{display:none;margin-top:14px;padding:14px;border-radius:16px;font-weight:800;line-height:1.6}.feedback.show{display:block}.feedback.good{background:rgba(25,135,84,.10);color:var(--good)}.feedback.bad{background:rgba(196,61,57,.10);color:var(--bad)}
-    .result{text-align:center;padding:14px 0}.result-score{font-size:72px;line-height:1;font-weight:950;letter-spacing:-.06em}.result-unit{font-size:14px;font-weight:950;color:var(--muted);margin-top:4px}
-    .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}.result-box{padding:14px 8px;background:var(--soft);border-radius:16px}.result-box span{display:block;font-size:10px;font-weight:950;color:var(--muted)}.result-box strong{display:block;margin-top:6px;font-size:22px}
+    .feedback{display:none;margin-top:14px;padding:14px;border-radius:16px;font-weight:800;line-height:1.6}.feedback.show{display:block}.feedback.good{background:rgba(20,108,67,.10);color:var(--good)}.feedback.bad{background:rgba(159,39,36,.10);color:var(--bad)}
     .exec-rule{padding:12px 14px;border:2px solid var(--accent);border-radius:16px;text-align:center;font-size:15px;font-weight:950;color:var(--accent)}
     .exec-number{text-align:center;font-size:clamp(86px,28vw,150px);line-height:1;font-weight:950;letter-spacing:-.06em;padding:30px 0 22px;font-variant-numeric:tabular-nums}
     .exec-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.exec-choices .choice{text-align:center;font-size:18px}
-    .exec-hint{text-align:center;margin-top:12px;font-size:12px;font-weight:800;color:var(--muted);line-height:1.5}
-    .daily-summary{display:grid;gap:12px;margin-top:18px}.summary-row{display:grid;grid-template-columns:90px 1fr 42px;gap:10px;align-items:center}.summary-row span{font-size:13px;font-weight:900}.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.bar b{display:block;height:100%;background:var(--accent);border-radius:99px;width:0}.summary-row strong{text-align:right}
+    .exec-hint,.mini-instruction{text-align:center;margin-top:12px;font-size:12px;font-weight:800;color:var(--muted);line-height:1.55}
+    .schulte-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
+    .schulte-cell{min-height:54px;border:2px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);font-size:22px;font-weight:950;transition:transform 110ms var(--ease-out),opacity 140ms var(--ease-out)}
+    .schulte-cell.done{opacity:.25;border-color:transparent}
+    .stroop-word{text-align:center;font-size:clamp(56px,18vw,96px);font-weight:950;letter-spacing:.04em;padding:30px 0 22px}
+    .stroop-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.stroop-choices .choice{text-align:center}
+    .odd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:16px}
+    .odd-cell{min-height:74px;border:2px solid var(--line);border-radius:16px;background:var(--paper);color:var(--ink);font-weight:950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform 110ms var(--ease-out)}
+    .odd-arrow{font-size:30px;line-height:1}.odd-label{font-size:12px;color:var(--muted)}
+    .result{text-align:center;padding:14px 0}.result-score{font-size:72px;line-height:1;font-weight:950;letter-spacing:-.06em}.result-unit{font-size:14px;font-weight:950;color:var(--muted);margin-top:4px}
+    .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}.result-box{padding:14px 8px;background:var(--soft);border-radius:16px}.result-box span{display:block;font-size:10px;font-weight:950;color:var(--muted)}.result-box strong{display:block;margin-top:6px;font-size:22px}
+    .daily-summary{display:grid;gap:12px;margin-top:18px}.summary-row{display:grid;grid-template-columns:100px 1fr 42px;gap:10px;align-items:center}.summary-row span{font-size:13px;font-weight:900}.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.bar b{display:block;height:100%;background:var(--accent);border-radius:99px;width:0}.summary-row strong{text-align:right}
     .hidden{display:none!important}
     @media(min-width:600px){.modes{grid-template-columns:repeat(2,1fr)}.mode{min-height:190px}.hero h2{font-size:46px}}
+    @media(prefers-reduced-motion:no-preference){
+      ::view-transition-old(root){animation:brain-out 100ms ease-in both}
+      ::view-transition-new(root){animation:brain-in 180ms var(--ease-out) both}
+      @keyframes brain-out{to{opacity:0}}
+      @keyframes brain-in{from{opacity:0;transform:translateY(6px)}}
+    }
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+    }
   </style>
 </head>
 <body>
 <main class="app">
   <header class="top">
-    <div class="brand">
-      <h1>大人的腦部鍛鍊</h1>
-      <p>DAILY BRAIN TRAINING</p>
-    </div>
+    <div class="brand"><h1>大人的腦部鍛鍊</h1><p>DAILY BRAIN TRAINING</p></div>
     <button id="soundBtn" class="sound" type="button" aria-label="聲音開關">♪</button>
   </header>
 
@@ -98,441 +94,254 @@
     <div class="hero">
       <div class="eyebrow">TODAY'S TRAINING</div>
       <h2>每天幾分鐘，<br>快速動動腦。</h2>
-      <p>一次練習計算速度、瞬間記憶、條件推理與執行功能規則切換。每個模式都能單獨玩，也可以直接完成今日腦訓。</p>
+      <p>7 種小遊戲可獨立練習；今日腦訓會隨機抽 4 個，混合速度、記憶、推理、視覺搜尋與執行功能。</p>
       <div class="actions"><button id="dailyBtn" class="primary" type="button">開始今日腦訓</button></div>
     </div>
-
     <div class="modes">
-      <button class="mode" type="button" data-mode="math">
-        <div class="mode-top"><span class="mode-num">01 / SPEED</span><span class="mode-arrow">→</span></div>
-        <h3>快速心算</h3><p>30 秒連續作答，依表現逐步提高數字範圍。</p>
-      </button>
-      <button class="mode" type="button" data-mode="memory">
-        <div class="mode-top"><span class="mode-num">02 / MEMORY</span><span class="mode-arrow">→</span></div>
-        <h3>瞬間記憶</h3><p>數字短暫出現後消失，從 4 位逐步增加。</p>
-      </button>
-      <button class="mode" type="button" data-mode="logic">
-        <div class="mode-top"><span class="mode-num">03 / LOGIC</span><span class="mode-arrow">→</span></div>
-        <h3>邏輯推理</h3><p>讀取條件、排除矛盾，在有限線索中找唯一答案。</p>
-      </button>
-      <button class="mode" type="button" data-mode="executive">
-        <div class="mode-top"><span class="mode-num">04 / EXECUTIVE</span><span class="mode-arrow">→</span></div>
-        <h3>前額葉挑戰</h3><p>規則會突然切換，練習抑制控制、注意切換與認知彈性。</p>
-      </button>
+      <button class="mode" type="button" data-mode="math"><div class="mode-top"><span class="mode-num">01 / SPEED</span><span class="mode-arrow">→</span></div><h3>快速心算</h3><p>30 秒連續作答，依表現逐步提高數字範圍。</p></button>
+      <button class="mode" type="button" data-mode="memory"><div class="mode-top"><span class="mode-num">02 / MEMORY</span><span class="mode-arrow">→</span></div><h3>瞬間記憶</h3><p>數字短暫出現後消失，從 4 位逐步增加。</p></button>
+      <button class="mode" type="button" data-mode="logic"><div class="mode-top"><span class="mode-num">03 / LOGIC</span><span class="mode-arrow">→</span></div><h3>邏輯推理</h3><p>讀取條件、排除矛盾，在有限線索中找唯一答案。</p></button>
+      <button class="mode" type="button" data-mode="executive"><div class="mode-top"><span class="mode-num">04 / EXECUTIVE</span><span class="mode-arrow">→</span></div><h3>規則切換</h3><p>規則突然改變，練習抑制控制、注意切換與認知彈性。</p></button>
+      <button class="mode" type="button" data-mode="schulte"><div class="mode-top"><span class="mode-num">05 / SEARCH</span><span class="mode-arrow">→</span></div><h3>舒爾特方格</h3><p>亂序方格中依序找出 1 → 25，挑戰視覺搜尋速度與持續注意。</p></button>
+      <button class="mode" type="button" data-mode="stroop"><div class="mode-top"><span class="mode-num">06 / INHIBITION</span><span class="mode-arrow">→</span></div><h3>Stroop 顏色衝突</h3><p>忽略文字內容，只回答字體顏色，練習抑制自動反應與抗干擾。</p></button>
+      <button class="mode" type="button" data-mode="odd"><div class="mode-top"><span class="mode-num">07 / INTERFERENCE</span><span class="mode-arrow">→</span></div><h3>表裡不一</h3><p>找出箭頭方向與文字標示不一致的唯一目標。</p></button>
     </div>
     <div class="note">這是娛樂與練習用途的遊戲表現，不是 IQ、醫療或認知功能診斷。</div>
   </section>
 
   <section id="math" class="screen">
-    <div class="gamehead">
-      <div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div>
-      <div class="pill">30 秒</div>
-    </div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div><div class="pill">30 秒</div></div>
     <div class="panel">
-      <div class="stats">
-        <div class="stat"><span>TIME</span><strong id="mathTime">30</strong></div>
-        <div class="stat"><span>CORRECT</span><strong id="mathCorrect">0</strong></div>
-        <div class="stat"><span>LEVEL</span><strong id="mathLevel">1</strong></div>
-      </div>
+      <div class="stats"><div class="stat"><span>TIME</span><strong id="mathTime">30</strong></div><div class="stat"><span>CORRECT</span><strong id="mathCorrect">0</strong></div><div class="stat"><span>LEVEL</span><strong id="mathLevel">1</strong></div></div>
       <div id="mathProblem" class="big-problem">準備</div>
-      <div class="answer-wrap">
-        <input id="mathAnswer" class="answer-input" inputmode="numeric" autocomplete="off" aria-label="答案">
-        <button id="mathSubmit" class="primary" type="button">送出</button>
-      </div>
+      <div class="answer-wrap"><input id="mathAnswer" class="answer-input" inputmode="numeric" autocomplete="off" aria-label="答案"><button id="mathSubmit" class="primary" type="button">送出</button></div>
       <div id="mathKeys" class="keypad"></div>
     </div>
   </section>
 
   <section id="memory" class="screen">
-    <div class="gamehead">
-      <div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div>
-      <div id="memoryRoundPill" class="pill">1 / 6</div>
-    </div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div><div id="memoryRoundPill" class="pill">1 / 6</div></div>
     <div class="panel">
-      <div class="stats">
-        <div class="stat"><span>ROUND</span><strong id="memoryRound">1</strong></div>
-        <div class="stat"><span>DIGITS</span><strong id="memoryDigits">4</strong></div>
-        <div class="stat"><span>CORRECT</span><strong id="memoryCorrect">0</strong></div>
-      </div>
-      <div class="memory-stage">
-        <div id="memoryLabel" class="memory-label">記住這串數字</div>
-        <div id="memoryNumber" class="memory-number">••••</div>
-        <div id="memoryEntry" class="hidden">
-          <input id="memoryAnswer" class="memory-input" inputmode="numeric" autocomplete="off" aria-label="輸入剛才的數字">
-          <div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div>
-        </div>
-        <button id="memoryStart" class="primary" type="button">開始</button>
-      </div>
+      <div class="stats"><div class="stat"><span>ROUND</span><strong id="memoryRound">1</strong></div><div class="stat"><span>DIGITS</span><strong id="memoryDigits">4</strong></div><div class="stat"><span>CORRECT</span><strong id="memoryCorrect">0</strong></div></div>
+      <div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" inputmode="numeric" autocomplete="off" aria-label="輸入剛才的數字"><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
     </div>
   </section>
 
   <section id="logic" class="screen">
-    <div class="gamehead">
-      <div><button class="back" type="button">← 首頁</button><h2>邏輯推理</h2></div>
-      <div id="logicPill" class="pill">1 / 5</div>
-    </div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>邏輯推理</h2></div><div id="logicPill" class="pill">1 / 5</div></div>
+    <div class="panel"><div id="logicProgress" class="logic-progress"></div><div id="logicQuestion" class="logic-q"></div><div id="logicClues" class="clues"></div><div id="logicChoices" class="choices"></div><div id="logicFeedback" class="feedback"></div><div class="actions"><button id="logicSubmit" class="primary" type="button">確認答案</button><button id="logicNext" class="secondary hidden" type="button">下一題</button></div></div>
+  </section>
+
+  <section id="executive" class="screen">
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>規則切換</h2></div><div id="execRoundPill" class="pill">1 / 16</div></div>
     <div class="panel">
-      <div id="logicProgress" class="logic-progress"></div>
-      <div id="logicQuestion" class="logic-q"></div>
-      <div id="logicClues" class="clues"></div>
-      <div id="logicChoices" class="choices"></div>
-      <div id="logicFeedback" class="feedback"></div>
-      <div class="actions">
-        <button id="logicSubmit" class="primary" type="button">確認答案</button>
-        <button id="logicNext" class="secondary hidden" type="button">下一題</button>
+      <div class="stats"><div class="stat"><span>CORRECT</span><strong id="execCorrect">0</strong></div><div class="stat"><span>SWITCH</span><strong id="execSwitch">0</strong></div><div class="stat"><span>AVG RT</span><strong id="execRt">—</strong></div></div>
+      <div id="execRule" class="exec-rule">準備</div><div id="execNumber" class="exec-number">—</div>
+      <div class="exec-choices"><button id="execLeft" class="choice" type="button">左</button><button id="execRight" class="choice" type="button">右</button></div>
+      <div id="execHint" class="exec-hint">依照目前規則作答；規則切換時不要沿用上一題。</div>
+    </div>
+  </section>
+
+  <section id="schulte" class="screen">
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>舒爾特方格</h2></div><div class="pill">1 → 25</div></div>
+    <div class="panel">
+      <div class="stats"><div class="stat"><span>NEXT</span><strong id="schulteNext">1</strong></div><div class="stat"><span>ERROR</span><strong id="schulteWrong">0</strong></div><div class="stat"><span>TIME</span><strong id="schulteTime">0.0</strong></div></div>
+      <div class="mini-instruction">依序點擊 1、2、3…直到 25。錯誤點擊不會前進。</div>
+      <div id="schulteGrid" class="schulte-grid" aria-label="舒爾特方格"></div>
+    </div>
+  </section>
+
+  <section id="stroop" class="screen">
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>Stroop 顏色衝突</h2></div><div id="stroopPill" class="pill">1 / 12</div></div>
+    <div class="panel">
+      <div class="stats"><div class="stat"><span>CORRECT</span><strong id="stroopCorrect">0</strong></div><div class="stat"><span>ERROR</span><strong id="stroopWrong">0</strong></div><div class="stat"><span>AVG RT</span><strong id="stroopRt">—</strong></div></div>
+      <div class="mini-instruction">回答「字體顏色」，不要讀文字內容。</div>
+      <div id="stroopWord" class="stroop-word" aria-live="polite" data-color="red">紅</div>
+      <div id="stroopChoices" class="stroop-choices">
+        <button class="choice" type="button" data-color="red">紅色</button><button class="choice" type="button" data-color="blue">藍色</button>
+        <button class="choice" type="button" data-color="green">綠色</button><button class="choice" type="button" data-color="yellow">黃色</button>
       </div>
     </div>
   </section>
 
-  <section id="executive" class="screen">
-    <div class="gamehead">
-      <div><button class="back" type="button">← 首頁</button><h2>前額葉挑戰</h2></div>
-      <div id="execRoundPill" class="pill">1 / 16</div>
-    </div>
+  <section id="odd" class="screen">
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>表裡不一</h2></div><div id="oddPill" class="pill">1 / 10</div></div>
     <div class="panel">
-      <div class="stats">
-        <div class="stat"><span>CORRECT</span><strong id="execCorrect">0</strong></div>
-        <div class="stat"><span>SWITCH</span><strong id="execSwitch">0</strong></div>
-        <div class="stat"><span>AVG RT</span><strong id="execRt">—</strong></div>
-      </div>
-      <div id="execRule" class="exec-rule">準備</div>
-      <div id="execNumber" class="exec-number">—</div>
-      <div class="exec-choices">
-        <button id="execLeft" class="choice" type="button">左</button>
-        <button id="execRight" class="choice" type="button">右</button>
-      </div>
-      <div id="execHint" class="exec-hint">依照目前規則作答；規則切換時不要沿用上一題。</div>
+      <div class="stats"><div class="stat"><span>CORRECT</span><strong id="oddCorrect">0</strong></div><div class="stat"><span>ERROR</span><strong id="oddWrong">0</strong></div><div class="stat"><span>AVG RT</span><strong id="oddRt">—</strong></div></div>
+      <div class="mini-instruction">找出唯一一個「箭頭方向」與「文字方向」不一致的格子。</div>
+      <div id="oddGrid" class="odd-grid" aria-label="表裡不一選項"></div>
     </div>
   </section>
 
   <section id="result" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2 id="resultTitle">訓練完成</h2></div></div>
-    <div class="panel result">
-      <div class="eyebrow">TRAINING SCORE</div>
-      <div id="resultScore" class="result-score">0</div>
-      <div class="result-unit">遊戲表現分數</div>
-      <div id="resultGrid" class="result-grid"></div>
-      <div id="resultActions" class="actions"></div>
-    </div>
+    <div class="panel result"><div class="eyebrow">TRAINING SCORE</div><div id="resultScore" class="result-score">0</div><div class="result-unit">遊戲表現分數</div><div id="resultGrid" class="result-grid"></div><div id="resultActions" class="actions"></div></div>
   </section>
 
   <section id="dailyResult" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>今日腦訓完成</h2></div></div>
-    <div class="panel result">
-      <div class="eyebrow">DAILY SCORE</div>
-      <div id="dailyScore" class="result-score">0</div>
-      <div class="result-unit">四項平均</div>
-      <div id="dailySummary" class="daily-summary"></div>
-      <div class="actions"><button id="dailyAgain" class="primary" type="button">再練一次</button></div>
-    </div>
+    <div class="panel result"><div class="eyebrow">DAILY SCORE</div><div id="dailyScore" class="result-score">0</div><div class="result-unit">今日抽選 4 項平均</div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再抽 4 項</button></div></div>
   </section>
 </main>
 
 <script>
 (function(){
   var screens=[].slice.call(document.querySelectorAll('.screen'));
-  var dailyMode=false,dailyQueue=[],dailyScores={};
+  var dailyMode=false,dailyQueue=[],dailySelection=[],dailyScores={};
   var muted=false,audioCtx=null;
-  var mathTimer=null,mathTime=30,mathCorrect=0,mathWrong=0,mathStreak=0,mathAnswerValue=0,mathLevel=1;
+  var mathTimer=null,mathTime=30,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1;
   var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null;
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false;
+  var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null;
+  var stroopRound=0,stroopCorrect=0,stroopWrong=0,stroopRtTotal=0,stroopStartedAt=0,stroopColor='red',stroopLocked=false;
+  var oddRound=0,oddCorrect=0,oddWrong=0,oddRtTotal=0,oddStartedAt=0,oddLocked=false;
 
   var logicBank=[
-    {q:'三人中只有一人拿了鑰匙，而且只有一句話是真的。誰拿了？',
-     clues:['阿明：是小美拿的。','小美：不是小美拿的。','阿哲：不是阿明拿的。'],
-     choices:['阿明','小美','阿哲'],answer:0,
-     explain:'如果阿明拿了：阿明說「小美拿」為假；小美說「不是小美」為真；阿哲說「不是阿明」為假，剛好只有一句真話。'},
-    {q:'A、B、C 三人排隊。誰一定站在中間？',
-     clues:['A 不站第一個。','C 站在 A 的前面。','B 站在 A 的後面。'],
-     choices:['A','B','C'],answer:0,
-     explain:'C 必須在 A 前面、B 必須在 A 後面，因此 A 只能在中間，唯一排列是 C－A－B。'},
-    {q:'密碼是三位數。哪一個符合所有條件？',
-     clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。','第一位是奇數。'],
-     choices:['213','325','426'],answer:1,
-     explain:'325：3 > 2、3 + 2 = 5、三個數字不同，而且第一位 3 是奇數。'},
-    {q:'四個盒子只有一個有獎品。哪個盒子最合理？',
-     clues:['獎品不在 1 號。','若不在 2 號，就一定在 4 號。','獎品也不在 4 號。'],
-     choices:['1 號','2 號','3 號','4 號'],answer:1,
-     explain:'1 號與 4 號已排除；若不在 2 號，依第二條必須在 4 號，但 4 號又被排除，所以只能在 2 號。'},
-    {q:'小王、小李、小陳各養一種不同寵物：貓、狗、魚。小李養什麼？',
-     clues:['小王不養狗。','小陳養魚。','小王不養魚。'],
-     choices:['貓','狗','魚'],answer:1,
-     explain:'小陳是魚；小王既不是狗也不是魚，所以是貓；剩下的小李只能是狗。'}
+    {q:'三人中只有一人拿了鑰匙，而且只有一句話是真的。誰拿了？',clues:['阿明：是小美拿的。','小美：不是小美拿的。','阿哲：不是阿明拿的。'],choices:['阿明','小美','阿哲'],answer:0,explain:'如果阿明拿了：阿明是假、小美是真、阿哲是假，剛好只有一句真話。'},
+    {q:'A、B、C 三人排隊。誰一定站在中間？',clues:['A 不站第一個。','C 站在 A 的前面。','B 站在 A 的後面。'],choices:['A','B','C'],answer:0,explain:'C 必須在 A 前面、B 必須在 A 後面，因此唯一排列是 C－A－B。'},
+    {q:'密碼是三位數。哪一個符合所有條件？',clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。','第一位是奇數。'],choices:['213','325','426'],answer:1,explain:'325：3 > 2、3 + 2 = 5、三個數字不同，而且第一位 3 是奇數。'},
+    {q:'四個盒子只有一個有獎品。哪個盒子最合理？',clues:['獎品不在 1 號。','若不在 2 號，就一定在 4 號。','獎品也不在 4 號。'],choices:['1 號','2 號','3 號','4 號'],answer:1,explain:'1 號與 4 號排除；若不在 2 號，依第二條必須在 4 號，但 4 號又被排除，所以只能在 2 號。'},
+    {q:'小王、小李、小陳各養一種不同寵物：貓、狗、魚。小李養什麼？',clues:['小王不養狗。','小陳養魚。','小王不養魚。'],choices:['貓','狗','魚'],answer:1,explain:'小陳是魚；小王既不是狗也不是魚，所以是貓；剩下的小李只能是狗。'}
   ];
 
+  var allModes=['math','memory','logic','executive','schulte','stroop','odd'];
+  var modeNames={math:'快速心算',memory:'瞬間記憶',logic:'邏輯推理',executive:'規則切換',schulte:'舒爾特方格',stroop:'Stroop 顏色衝突',odd:'表裡不一'};
+  var reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   function $(id){return document.getElementById(id)}
+  function applyScreen(id){screens.forEach(function(s){s.classList.toggle('active',s.id===id)});window.scrollTo(0,0)}
   function show(id){
-    screens.forEach(function(s){s.classList.toggle('active',s.id===id)});
-    window.scrollTo(0,0);
+    if(document.startViewTransition&&!reduceMotion){document.startViewTransition(function(){applyScreen(id)})}
+    else applyScreen(id);
   }
   function tone(freq,dur){
-    if(muted) return;
-    var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
-    if(!audioCtx)audioCtx=new AC();
-    if(audioCtx.state==='suspended')audioCtx.resume();
+    if(muted)return;var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
     var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;
-    o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);
-    o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur);
+    o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur)
   }
   function correctTone(){tone(680,.08);setTimeout(function(){tone(900,.1)},60)}
   function wrongTone(){tone(190,.12)}
-  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪'});
+  function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+  function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 
+  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪'});
   document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();dailyMode=false;show('home')})});
   document.querySelectorAll('.mode').forEach(function(b){b.addEventListener('click',function(){dailyMode=false;startMode(this.dataset.mode)})});
-  $('dailyBtn').addEventListener('click',startDaily);
-  $('dailyAgain').addEventListener('click',startDaily);
+  $('dailyBtn').addEventListener('click',startDaily);$('dailyAgain').addEventListener('click',startDaily);
 
-  function stopAll(){
-    clearInterval(mathTimer);mathTimer=null;
-    clearTimeout(memoryTimeout);memoryTimeout=null;
-  }
-  function startDaily(){
-    stopAll();dailyMode=true;dailyQueue=['math','memory','logic','executive'];dailyScores={};startNextDaily();
-  }
-  function startNextDaily(){
-    if(!dailyQueue.length){showDailyResult();return}
-    startMode(dailyQueue.shift());
-  }
+  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(memoryTimeout);memoryTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
+  function startDaily(){stopAll();dailyMode=true;dailyScores={};dailySelection=shuffle(allModes).slice(0,4);dailyQueue=dailySelection.slice();startNextDaily()}
+  function startNextDaily(){if(!dailyQueue.length){showDailyResult();return}startMode(dailyQueue.shift())}
   function startMode(mode){
     stopAll();
-    if(mode==='math')startMath();
-    if(mode==='memory')startMemory();
-    if(mode==='logic')startLogic();
-    if(mode==='executive')startExecutive();
+    if(mode==='math')startMath();if(mode==='memory')startMemory();if(mode==='logic')startLogic();if(mode==='executive')startExecutive();
+    if(mode==='schulte')startSchulte();if(mode==='stroop')startStroop();if(mode==='odd')startOdd()
   }
-  function finishMode(mode,score,stats){
-    dailyScores[mode]=score;
-    if(dailyMode){startNextDaily();return}
-    showResult(mode,score,stats);
-  }
+  function finishMode(mode,score,stats){dailyScores[mode]=score;if(dailyMode){startNextDaily();return}showResult(mode,score,stats)}
 
   function buildMathKeys(){
     var box=$('mathKeys');box.innerHTML='';
     ['1','2','3','4','5','6','7','8','9','清除','0','←'].forEach(function(k){
       var b=document.createElement('button');b.type='button';b.textContent=k;b.className='key'+((k==='清除'||k==='←')?' special':'');
-      b.addEventListener('click',function(){
-        var input=$('mathAnswer');
-        if(k==='清除')input.value='';
-        else if(k==='←')input.value=input.value.slice(0,-1);
-        else input.value=(input.value+k).slice(0,7);
-        input.focus();
-      });
-      box.appendChild(b);
-    });
+      b.addEventListener('click',function(){var input=$('mathAnswer');if(k==='清除')input.value='';else if(k==='←')input.value=input.value.slice(0,-1);else input.value=(input.value+k).slice(0,7);input.focus()});box.appendChild(b)
+    })
   }
   buildMathKeys();
-
   function makeMath(){
-    mathLevel=1+Math.floor(mathCorrect/5);
-    $('mathLevel').textContent=mathLevel;
-    var opPool=mathLevel<3?['+','-']:mathLevel<5?['+','-','×']:['+','-','×','÷'];
-    var op=opPool[Math.floor(Math.random()*opPool.length)],a,b;
+    mathLevel=1+Math.floor(mathCorrect/5);$('mathLevel').textContent=mathLevel;
+    var pool=mathLevel<3?['+','-']:mathLevel<5?['+','-','×']:['+','-','×','÷'],op=pool[Math.floor(Math.random()*pool.length)],a,b;
     if(op==='+'){a=rand(6,20+mathLevel*15);b=rand(3,18+mathLevel*12);mathAnswerValue=a+b}
     if(op==='-'){a=rand(15,35+mathLevel*18);b=rand(2,a-1);mathAnswerValue=a-b}
     if(op==='×'){a=rand(3,Math.min(12+mathLevel,25));b=rand(2,Math.min(10+mathLevel,18));mathAnswerValue=a*b}
     if(op==='÷'){b=rand(2,Math.min(12,5+mathLevel));mathAnswerValue=rand(2,Math.min(15,7+mathLevel));a=b*mathAnswerValue}
-    $('mathProblem').textContent=a+' '+op+' '+b;
-    $('mathAnswer').value='';
-    $('mathAnswer').focus();
+    $('mathProblem').textContent=a+' '+op+' '+b;$('mathAnswer').value='';$('mathAnswer').focus()
   }
-  function startMath(){
-    show('math');mathTime=30;mathCorrect=0;mathWrong=0;mathStreak=0;mathLevel=1;
-    $('mathTime').textContent='30';$('mathCorrect').textContent='0';$('mathLevel').textContent='1';
-    makeMath();
-    mathTimer=setInterval(function(){
-      mathTime--;$('mathTime').textContent=Math.max(0,mathTime);
-      if(mathTime<=0){clearInterval(mathTimer);mathTimer=null;endMath()}
-    },1000);
-  }
-  function submitMath(){
-    if(!mathTimer)return;
-    var v=$('mathAnswer').value.trim();if(v==='')return;
-    if(Number(v)===mathAnswerValue){mathCorrect++;mathStreak++;correctTone()}else{mathWrong++;mathStreak=0;wrongTone()}
-    $('mathCorrect').textContent=mathCorrect;makeMath();
-  }
-  $('mathSubmit').addEventListener('click',submitMath);
-  $('mathAnswer').addEventListener('keydown',function(e){if(e.key==='Enter')submitMath()});
-  function endMath(){
-    var attempts=mathCorrect+mathWrong;
-    var acc=attempts?Math.round(mathCorrect/attempts*100):0;
-    var score=Math.min(100,Math.round(mathCorrect*5+acc*.45));
-    finishMode('math',score,{a:mathCorrect,b:acc+'%',c:'LV '+mathLevel});
-  }
+  function startMath(){show('math');mathTime=30;mathCorrect=0;mathWrong=0;mathLevel=1;$('mathTime').textContent='30';$('mathCorrect').textContent='0';$('mathLevel').textContent='1';makeMath();mathTimer=setInterval(function(){mathTime--;$('mathTime').textContent=Math.max(0,mathTime);if(mathTime<=0){clearInterval(mathTimer);mathTimer=null;endMath()}},1000)}
+  function submitMath(){if(!mathTimer)return;var v=$('mathAnswer').value.trim();if(v==='')return;if(Number(v)===mathAnswerValue){mathCorrect++;correctTone()}else{mathWrong++;wrongTone()}$('mathCorrect').textContent=mathCorrect;makeMath()}
+  $('mathSubmit').addEventListener('click',submitMath);$('mathAnswer').addEventListener('keydown',function(e){if(e.key==='Enter')submitMath()});
+  function endMath(){var attempts=mathCorrect+mathWrong,acc=attempts?Math.round(mathCorrect/attempts*100):0,score=Math.min(100,Math.round(mathCorrect*5+acc*.45));finishMode('math',score,{a:mathCorrect,b:acc+'%',c:'LV '+mathLevel})}
 
-  function startMemory(){
-    show('memory');memoryRound=0;memoryCorrect=0;memoryValue='';
-    $('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');
-    $('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';
-    $('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 6';
-  }
+  function startMemory(){show('memory');memoryRound=0;memoryCorrect=0;$('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');$('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';$('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 6'}
   $('memoryStart').addEventListener('click',nextMemoryRound);
   function nextMemoryRound(){
-    if(memoryRound>=6){endMemory();return}
-    memoryRound++;
-    var digits=3+memoryRound;
-    $('memoryRound').textContent=memoryRound;$('memoryDigits').textContent=digits;$('memoryRoundPill').textContent=memoryRound+' / 6';
-    $('memoryStart').classList.add('hidden');$('memoryEntry').classList.add('hidden');
-    $('memoryLabel').textContent='記住這串數字';
-    memoryValue='';for(var i=0;i<digits;i++)memoryValue+=String(rand(i===0?1:0,9));
-    $('memoryNumber').textContent=memoryValue;
-    clearTimeout(memoryTimeout);
-    memoryTimeout=setTimeout(function(){
-      $('memoryNumber').textContent='••••••••••'.slice(0,digits);
-      $('memoryLabel').textContent='把剛才的數字輸入回來';
-      $('memoryEntry').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus();
-    },Math.max(1400,2600-memoryRound*140));
+    if(memoryRound>=6){endMemory();return}memoryRound++;var digits=3+memoryRound;
+    $('memoryRound').textContent=memoryRound;$('memoryDigits').textContent=digits;$('memoryRoundPill').textContent=memoryRound+' / 6';$('memoryStart').classList.add('hidden');$('memoryEntry').classList.add('hidden');$('memoryLabel').textContent='記住這串數字';
+    memoryValue='';for(var i=0;i<digits;i++)memoryValue+=String(rand(i===0?1:0,9));$('memoryNumber').textContent=memoryValue;
+    memoryTimeout=setTimeout(function(){$('memoryNumber').textContent='••••••••••'.slice(0,digits);$('memoryLabel').textContent='把剛才的數字輸入回來';$('memoryEntry').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus()},Math.max(1400,2600-memoryRound*140))
   }
-  function submitMemory(){
-    if($('memoryEntry').classList.contains('hidden'))return;
-    var ok=$('memoryAnswer').value.trim()===memoryValue;
-    if(ok){memoryCorrect++;correctTone()}else{wrongTone()}
-    $('memoryCorrect').textContent=memoryCorrect;
-    $('memoryEntry').classList.add('hidden');$('memoryNumber').textContent=ok?'正確':'答案 '+memoryValue;
-    $('memoryLabel').textContent=ok?'記憶成功':'這回合再加油';
-    setTimeout(function(){
-      if(memoryRound>=6)endMemory();else nextMemoryRound();
-    },700);
-  }
-  $('memorySubmit').addEventListener('click',submitMemory);
-  $('memoryAnswer').addEventListener('keydown',function(e){if(e.key==='Enter')submitMemory()});
-  function endMemory(){
-    var score=Math.round(memoryCorrect/6*100);
-    finishMode('memory',score,{a:memoryCorrect+'/6',b:(3+Math.min(6,memoryRound))+' 位',c:score+'%'});
-  }
+  function submitMemory(){if($('memoryEntry').classList.contains('hidden'))return;var ok=$('memoryAnswer').value.trim()===memoryValue;if(ok){memoryCorrect++;correctTone()}else wrongTone();$('memoryCorrect').textContent=memoryCorrect;$('memoryEntry').classList.add('hidden');$('memoryNumber').textContent=ok?'正確':'答案 '+memoryValue;$('memoryLabel').textContent=ok?'記憶成功':'這回合再加油';setTimeout(function(){if(memoryRound>=6)endMemory();else nextMemoryRound()},700)}
+  $('memorySubmit').addEventListener('click',submitMemory);$('memoryAnswer').addEventListener('keydown',function(e){if(e.key==='Enter')submitMemory()});
+  function endMemory(){var score=Math.round(memoryCorrect/6*100);finishMode('memory',score,{a:memoryCorrect+'/6',b:(3+Math.min(6,memoryRound))+' 位',c:score+'%'})}
 
-  function startLogic(){
-    show('logic');logicIndex=0;logicCorrect=0;renderLogic();
-  }
+  function startLogic(){show('logic');logicIndex=0;logicCorrect=0;renderLogic()}
   function renderLogic(){
-    logicSelected=null;logicAnswered=false;
-    var q=logicBank[logicIndex];
-    $('logicPill').textContent=(logicIndex+1)+' / '+logicBank.length;
-    var prog=$('logicProgress');prog.innerHTML='';
-    logicBank.forEach(function(_,i){var d=document.createElement('i');if(i<=logicIndex)d.className='on';prog.appendChild(d)});
-    $('logicQuestion').textContent=q.q;
-    var clues=$('logicClues');clues.innerHTML='';q.clues.forEach(function(c){var d=document.createElement('div');d.className='clue';d.textContent=c;clues.appendChild(d)});
-    var choices=$('logicChoices');choices.innerHTML='';q.choices.forEach(function(c,i){
-      var b=document.createElement('button');b.type='button';b.className='choice';b.textContent=c;
-      b.addEventListener('click',function(){if(logicAnswered)return;logicSelected=i;choices.querySelectorAll('.choice').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')});
-      choices.appendChild(b);
-    });
-    $('logicFeedback').className='feedback';$('logicFeedback').textContent='';
-    $('logicSubmit').classList.remove('hidden');$('logicNext').classList.add('hidden');
+    logicSelected=null;logicAnswered=false;var q=logicBank[logicIndex];$('logicPill').textContent=(logicIndex+1)+' / '+logicBank.length;
+    var prog=$('logicProgress');prog.innerHTML='';logicBank.forEach(function(_,i){var d=document.createElement('i');if(i<=logicIndex)d.className='on';prog.appendChild(d)});
+    $('logicQuestion').textContent=q.q;var clues=$('logicClues');clues.innerHTML='';q.clues.forEach(function(c){var d=document.createElement('div');d.className='clue';d.textContent=c;clues.appendChild(d)});
+    var choices=$('logicChoices');choices.innerHTML='';q.choices.forEach(function(c,i){var b=document.createElement('button');b.type='button';b.className='choice';b.textContent=c;b.addEventListener('click',function(){if(logicAnswered)return;logicSelected=i;choices.querySelectorAll('.choice').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')});choices.appendChild(b)});
+    $('logicFeedback').className='feedback';$('logicFeedback').textContent='';$('logicSubmit').classList.remove('hidden');$('logicNext').classList.add('hidden')
   }
-  $('logicSubmit').addEventListener('click',function(){
-    if(logicSelected===null||logicAnswered)return;
-    logicAnswered=true;var q=logicBank[logicIndex],ok=logicSelected===q.answer;
-    if(ok){logicCorrect++;correctTone()}else wrongTone();
-    var f=$('logicFeedback');f.className='feedback show '+(ok?'good':'bad');f.textContent=(ok?'✓ 正確。':'✗ 正確答案：'+q.choices[q.answer]+'。')+' '+q.explain;
-    $('logicSubmit').classList.add('hidden');$('logicNext').classList.remove('hidden');
-    $('logicNext').textContent=logicIndex===logicBank.length-1?'看結果':'下一題';
-  });
-  $('logicNext').addEventListener('click',function(){
-    logicIndex++;if(logicIndex>=logicBank.length)endLogic();else renderLogic();
-  });
-  function endLogic(){
-    var score=Math.round(logicCorrect/logicBank.length*100);
-    finishMode('logic',score,{a:logicCorrect+'/'+logicBank.length,b:score+'%',c:'完成'});
+  $('logicSubmit').addEventListener('click',function(){if(logicSelected===null||logicAnswered)return;logicAnswered=true;var q=logicBank[logicIndex],ok=logicSelected===q.answer;if(ok){logicCorrect++;correctTone()}else wrongTone();var f=$('logicFeedback');f.className='feedback show '+(ok?'good':'bad');f.textContent=(ok?'✓ 正確。':'✗ 正確答案：'+q.choices[q.answer]+'。')+' '+q.explain;$('logicSubmit').classList.add('hidden');$('logicNext').classList.remove('hidden');$('logicNext').textContent=logicIndex===logicBank.length-1?'看結果':'下一題'});
+  $('logicNext').addEventListener('click',function(){logicIndex++;if(logicIndex>=logicBank.length)endLogic();else renderLogic()});
+  function endLogic(){var score=Math.round(logicCorrect/logicBank.length*100);finishMode('logic',score,{a:logicCorrect+'/'+logicBank.length,b:score+'%',c:'完成'})}
+
+  function startExecutive(){show('executive');execRound=0;execCorrect=0;execSwitchCorrect=0;execSwitchTotal=0;execRuleType='parity';execPrevRule=null;execRtTotal=0;execAnswered=false;$('execCorrect').textContent='0';$('execSwitch').textContent='0';$('execRt').textContent='—';nextExecutive()}
+  function nextExecutive(){
+    if(execRound>=16){endExecutive();return}execRound++;execPrevRule=execRuleType;if(execRound===1)execRuleType='parity';else if(execRound%3===1)execRuleType=execRuleType==='parity'?'size':'parity';
+    var switched=execRound>1&&execRuleType!==execPrevRule;if(switched)execSwitchTotal++;$('execRoundPill').textContent=execRound+' / 16';
+    if(execRuleType==='parity'){execValue=rand(1,9);$('execRule').textContent=(switched?'規則切換｜':'')+'判斷奇數 / 偶數';$('execLeft').textContent='奇數';$('execRight').textContent='偶數'}
+    else{do{execValue=rand(1,9)}while(execValue===5);$('execRule').textContent=(switched?'規則切換｜':'')+'判斷小於 5 / 大於 5';$('execLeft').textContent='小於 5';$('execRight').textContent='大於 5'}
+    $('execNumber').textContent=execValue;$('execHint').textContent=switched?'規則剛剛改變，先看規則再作答。':'依照目前規則作答。';execAnswered=false;execStartedAt=performance.now()
+  }
+  function answerExecutive(side){if(execAnswered||execRound<1)return;execAnswered=true;var rt=Math.max(0,performance.now()-execStartedAt);execRtTotal+=rt;var correctSide=execRuleType==='parity'?(execValue%2===1?'left':'right'):(execValue<5?'left':'right'),ok=side===correctSide,switched=execRound>1&&execRuleType!==execPrevRule;if(ok){execCorrect++;if(switched)execSwitchCorrect++;correctTone()}else wrongTone();$('execCorrect').textContent=execCorrect;$('execSwitch').textContent=execSwitchCorrect+'/'+execSwitchTotal;$('execRt').textContent=Math.round(execRtTotal/execRound)+'ms';setTimeout(nextExecutive,180)}
+  $('execLeft').addEventListener('click',function(){answerExecutive('left')});$('execRight').addEventListener('click',function(){answerExecutive('right')});
+  document.addEventListener('keydown',function(e){if(!$('executive').classList.contains('active'))return;var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea')return;if(e.key==='ArrowLeft'){e.preventDefault();answerExecutive('left')}if(e.key==='ArrowRight'){e.preventDefault();answerExecutive('right')}});
+  function endExecutive(){var acc=Math.round(execCorrect/16*100),avgRt=execRound?Math.round(execRtTotal/execRound):0,speedBonus=Math.max(0,Math.min(25,Math.round((2500-avgRt)/72))),score=Math.min(100,Math.round(acc*.75+speedBonus)),switchText=execSwitchTotal?Math.round(execSwitchCorrect/execSwitchTotal*100)+'%':'—';finishMode('executive',score,{a:execCorrect+'/16',b:acc+'%',c:switchText})}
+
+  function startSchulte(){
+    show('schulte');schulteNext=1;schulteWrong=0;schulteStart=performance.now();$('schulteNext').textContent='1';$('schulteWrong').textContent='0';$('schulteTime').textContent='0.0';
+    var grid=$('schulteGrid');grid.innerHTML='';shuffle(Array.from({length:25},function(_,i){return i+1})).forEach(function(n){var b=document.createElement('button');b.type='button';b.className='schulte-cell';b.textContent=n;b.dataset.number=n;b.addEventListener('click',function(){answerSchulte(n,b)});grid.appendChild(b)});
+    schulteTimer=setInterval(function(){$('schulteTime').textContent=((performance.now()-schulteStart)/1000).toFixed(1)},100)
+  }
+  function answerSchulte(n,button){
+    if(n!==schulteNext){schulteWrong++;$('schulteWrong').textContent=schulteWrong;wrongTone();return}
+    button.classList.add('done');button.disabled=true;correctTone();schulteNext++;
+    if(schulteNext>25){clearInterval(schulteTimer);schulteTimer=null;var sec=(performance.now()-schulteStart)/1000;var score=Math.max(0,Math.min(100,Math.round(110-sec*1.6-schulteWrong*3)));finishMode('schulte',score,{a:sec.toFixed(1)+'s',b:schulteWrong+' 錯',c:'25/25'})}
+    else $('schulteNext').textContent=schulteNext
   }
 
-  function startExecutive(){
-    show('executive');
-    execRound=0;execCorrect=0;execSwitchCorrect=0;execSwitchTotal=0;execRuleType='parity';execPrevRule=null;
-    execRtTotal=0;execAnswered=false;
-    $('execCorrect').textContent='0';$('execSwitch').textContent='0';$('execRt').textContent='—';
-    nextExecutive();
+  var stroopDefs={red:{word:'紅',label:'紅色',css:'#b42318'},blue:{word:'藍',label:'藍色',css:'#175cd3'},green:{word:'綠',label:'綠色',css:'#067647'},yellow:{word:'黃',label:'黃色',css:'#854d0e'}};
+  function startStroop(){show('stroop');stroopRound=0;stroopCorrect=0;stroopWrong=0;stroopRtTotal=0;$('stroopCorrect').textContent='0';$('stroopWrong').textContent='0';$('stroopRt').textContent='—';nextStroop()}
+  function nextStroop(){
+    if(stroopRound>=12){endStroop();return}stroopRound++;stroopLocked=false;var keys=Object.keys(stroopDefs),wordKey=keys[rand(0,keys.length-1)];do{stroopColor=keys[rand(0,keys.length-1)]}while(stroopColor===wordKey&&Math.random()<.8);
+    var w=$('stroopWord');w.textContent=stroopDefs[wordKey].word;w.style.color=stroopDefs[stroopColor].css;w.dataset.color=stroopColor;$('stroopPill').textContent=stroopRound+' / 12';stroopStartedAt=performance.now()
   }
-  function nextExecutive(){
-    if(execRound>=16){endExecutive();return}
-    execRound++;
-    execPrevRule=execRuleType;
-    if(execRound===1){
-      execRuleType='parity';
-    }else if(execRound%3===1){
-      execRuleType=execRuleType==='parity'?'size':'parity';
-    }
-    var switched=execRound>1&&execRuleType!==execPrevRule;
-    if(switched)execSwitchTotal++;
-    $('execRoundPill').textContent=execRound+' / 16';
-    if(execRuleType==='parity'){
-      execValue=rand(1,9);
-      $('execRule').textContent=(switched?'規則切換｜':'')+'判斷奇數 / 偶數';
-      $('execLeft').textContent='奇數';$('execRight').textContent='偶數';
-    }else{
-      do{execValue=rand(1,9)}while(execValue===5);
-      $('execRule').textContent=(switched?'規則切換｜':'')+'判斷小於 5 / 大於 5';
-      $('execLeft').textContent='小於 5';$('execRight').textContent='大於 5';
-    }
-    $('execNumber').textContent=execValue;
-    $('execHint').textContent=switched?'規則剛剛改變，先看規則再作答。':'依照目前規則作答。';
-    execAnswered=false;execStartedAt=performance.now();
+  document.querySelectorAll('#stroopChoices .choice').forEach(function(b){b.addEventListener('click',function(){answerStroop(this.dataset.color)})});
+  function answerStroop(color){if(stroopLocked)return;stroopLocked=true;var rt=performance.now()-stroopStartedAt;stroopRtTotal+=rt;if(color===stroopColor){stroopCorrect++;correctTone()}else{stroopWrong++;wrongTone()}$('stroopCorrect').textContent=stroopCorrect;$('stroopWrong').textContent=stroopWrong;$('stroopRt').textContent=Math.round(stroopRtTotal/stroopRound)+'ms';setTimeout(nextStroop,180)}
+  function endStroop(){var acc=Math.round(stroopCorrect/12*100),avg=Math.round(stroopRtTotal/12),speed=Math.max(0,Math.min(20,Math.round((2200-avg)/85))),score=Math.min(100,Math.round(acc*.8+speed));finishMode('stroop',score,{a:stroopCorrect+'/12',b:acc+'%',c:avg+'ms'})}
+
+  var dirs=[{arrow:'←',label:'左',opp:'右'},{arrow:'→',label:'右',opp:'左'},{arrow:'↑',label:'上',opp:'下'},{arrow:'↓',label:'下',opp:'上'}];
+  function startOdd(){show('odd');oddRound=0;oddCorrect=0;oddWrong=0;oddRtTotal=0;$('oddCorrect').textContent='0';$('oddWrong').textContent='0';$('oddRt').textContent='—';nextOdd()}
+  function nextOdd(){
+    if(oddRound>=10){endOdd();return}oddRound++;oddLocked=false;$('oddPill').textContent=oddRound+' / 10';var base=dirs[rand(0,dirs.length-1)],oddIndex=rand(0,15),grid=$('oddGrid');grid.innerHTML='';
+    for(var i=0;i<16;i++){var d=dirs[rand(0,dirs.length-1)],mismatch=i===oddIndex,label=mismatch?d.opp:d.label,b=document.createElement('button');b.type='button';b.className='odd-cell';b.dataset.odd=mismatch?'true':'false';b.innerHTML='<span class="odd-arrow">'+d.arrow+'</span><span class="odd-label">'+label+'</span>';b.addEventListener('click',(function(isOdd){return function(){answerOdd(isOdd)}})(mismatch));grid.appendChild(b)}
+    oddStartedAt=performance.now()
   }
-  function answerExecutive(side){
-    if(execAnswered||execRound<1)return;
-    execAnswered=true;
-    var rt=Math.max(0,performance.now()-execStartedAt);
-    execRtTotal+=rt;
-    var correctSide=execRuleType==='parity'?(execValue%2===1?'left':'right'):(execValue<5?'left':'right');
-    var ok=side===correctSide;
-    var switched=execRound>1&&execRuleType!==execPrevRule;
-    if(ok){
-      execCorrect++;
-      if(switched)execSwitchCorrect++;
-      correctTone();
-    }else{
-      wrongTone();
-    }
-    $('execCorrect').textContent=execCorrect;
-    $('execSwitch').textContent=execSwitchCorrect+'/'+execSwitchTotal;
-    $('execRt').textContent=Math.round(execRtTotal/execRound)+'ms';
-    setTimeout(nextExecutive,180);
-  }
-  $('execLeft').addEventListener('click',function(){answerExecutive('left')});
-  $('execRight').addEventListener('click',function(){answerExecutive('right')});
-  document.addEventListener('keydown',function(e){
-    if(!$('executive').classList.contains('active'))return;
-    var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();
-    if(tag==='input'||tag==='textarea')return;
-    if(e.key==='ArrowLeft'){e.preventDefault();answerExecutive('left')}
-    if(e.key==='ArrowRight'){e.preventDefault();answerExecutive('right')}
-  });
-  function endExecutive(){
-    var acc=Math.round(execCorrect/16*100);
-    var avgRt=execRound?Math.round(execRtTotal/execRound):0;
-    var speedBonus=Math.max(0,Math.min(25,Math.round((2500-avgRt)/72)));
-    var score=Math.min(100,Math.round(acc*.75+speedBonus));
-    var switchText=execSwitchTotal?Math.round(execSwitchCorrect/execSwitchTotal*100)+'%':'—';
-    finishMode('executive',score,{a:execCorrect+'/16',b:acc+'%',c:switchText});
-  }
+  function answerOdd(isOdd){if(oddLocked)return;if(!isOdd){oddWrong++;$('oddWrong').textContent=oddWrong;wrongTone();return}oddLocked=true;oddCorrect++;oddRtTotal+=performance.now()-oddStartedAt;$('oddCorrect').textContent=oddCorrect;$('oddRt').textContent=Math.round(oddRtTotal/oddCorrect)+'ms';correctTone();setTimeout(nextOdd,180)}
+  function endOdd(){var avg=oddCorrect?Math.round(oddRtTotal/oddCorrect):0,acc=Math.round(oddCorrect/(oddCorrect+oddWrong||1)*100),score=Math.max(0,Math.min(100,Math.round(acc*.75+Math.max(0,25-Math.max(0,avg-900)/80))));finishMode('odd',score,{a:oddCorrect+'/10',b:oddWrong+' 錯',c:avg+'ms'})}
 
   function showResult(mode,score,stats){
-    show('result');
-    var names={math:'快速心算',memory:'瞬間記憶',logic:'邏輯推理',executive:'前額葉挑戰'};
-    $('resultTitle').textContent=names[mode]+'完成';$('resultScore').textContent=score;
-    $('resultGrid').innerHTML=
-      '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div>'+
-      '<div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div>'+
-      '<div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
-    var a=$('resultActions');a.innerHTML='';
-    var retry=document.createElement('button');retry.className='primary';retry.type='button';retry.textContent='再玩一次';retry.addEventListener('click',function(){dailyMode=false;startMode(mode)});
-    var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='回首頁';home.addEventListener('click',function(){show('home')});
-    a.appendChild(retry);a.appendChild(home);
+    show('result');$('resultTitle').textContent=modeNames[mode]+'完成';$('resultScore').textContent=score;
+    $('resultGrid').innerHTML='<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div><div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div><div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
+    var a=$('resultActions');a.innerHTML='';var retry=document.createElement('button');retry.className='primary';retry.type='button';retry.textContent='再玩一次';retry.addEventListener('click',function(){dailyMode=false;startMode(mode)});
+    var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='回首頁';home.addEventListener('click',function(){show('home')});a.appendChild(retry);a.appendChild(home)
   }
   function showDailyResult(){
-    show('dailyResult');dailyMode=false;
-    var avg=Math.round(((dailyScores.math||0)+(dailyScores.memory||0)+(dailyScores.logic||0)+(dailyScores.executive||0))/4);
-    $('dailyScore').textContent=avg;
-    var names=[['math','快速心算'],['memory','瞬間記憶'],['logic','邏輯推理'],['executive','前額葉挑戰']];
-    $('dailySummary').innerHTML='';
-    names.forEach(function(item){
-      var s=dailyScores[item[0]]||0,d=document.createElement('div');d.className='summary-row';
-      d.innerHTML='<span>'+item[1]+'</span><div class="bar"><b style="width:'+s+'%"></b></div><strong>'+s+'</strong>';
-      $('dailySummary').appendChild(d);
-    });
+    show('dailyResult');dailyMode=false;var total=0;dailySelection.forEach(function(m){total+=(dailyScores[m]||0)});$('dailyScore').textContent=Math.round(total/dailySelection.length);
+    $('dailySummary').innerHTML='';dailySelection.forEach(function(m){var s=dailyScores[m]||0,d=document.createElement('div');d.className='summary-row';d.innerHTML='<span>'+modeNames[m]+'</span><div class="bar"><b style="width:'+s+'%"></b></div><strong>'+s+'</strong>';$('dailySummary').appendChild(d)})
   }
-  function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
 })();
 </script>
 </body>
