@@ -245,8 +245,8 @@
   </section>
 
   <section id="logic" class="screen">
-    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>邏輯推理</h2></div><div id="logicPill" class="pill">1 / 5</div></div>
-    <div class="panel"><div id="logicProgress" class="logic-progress"></div><div id="logicQuestion" class="logic-q"></div><div id="logicClues" class="clues"></div><div id="logicChoices" class="choices"></div><div id="logicFeedback" class="feedback"></div><div class="actions"><button id="logicSubmit" class="primary" type="button">確認答案</button><button id="logicNext" class="secondary hidden" type="button">下一題</button></div></div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>邏輯推理</h2></div><div id="logicPill" class="pill">1 / 10 · 排序</div></div>
+    <div class="panel"><div class="mini-instruction">每次 10 題，由排序、真假話、配對、位置與數字條件重新組題；每題只有一個答案。</div><div id="logicProgress" class="logic-progress"></div><div id="logicQuestion" class="logic-q"></div><div id="logicClues" class="clues"></div><div id="logicChoices" class="choices"></div><div id="logicFeedback" class="feedback"></div><div class="actions"><button id="logicSubmit" class="primary" type="button">確認答案</button><button id="logicNext" class="secondary hidden" type="button">下一題</button></div></div>
   </section>
 
   <section id="executive" class="screen">
@@ -333,13 +333,96 @@
   var GAME_BGM_URL='../assets/rag-time-on-the-rag-loop.m4a';
   var gameBgmDataPromise=null;
 
-  var logicBank=[
-    {q:'三人中只有一人拿了鑰匙，而且只有一句話是真的。誰拿了？',clues:['阿明：是小美拿的。','小美：不是小美拿的。','阿哲：不是阿明拿的。'],choices:['阿明','小美','阿哲'],answer:0,explain:'如果阿明拿了：阿明是假、小美是真、阿哲是假，剛好只有一句真話。'},
-    {q:'A、B、C 三人排隊。誰一定站在中間？',clues:['A 不站第一個。','C 站在 A 的前面。','B 站在 A 的後面。'],choices:['A','B','C'],answer:0,explain:'C 必須在 A 前面、B 必須在 A 後面，因此唯一排列是 C－A－B。'},
-    {q:'密碼是三位數。哪一個符合所有條件？',clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。','第一位是奇數。'],choices:['213','325','426'],answer:1,explain:'325：3 > 2、3 + 2 = 5、三個數字不同，而且第一位 3 是奇數。'},
-    {q:'四個盒子只有一個有獎品。哪個盒子最合理？',clues:['獎品不在 1 號。','若不在 2 號，就一定在 4 號。','獎品也不在 4 號。'],choices:['1 號','2 號','3 號','4 號'],answer:1,explain:'1 號與 4 號排除；若不在 2 號，依第二條必須在 4 號，但 4 號又被排除，所以只能在 2 號。'},
-    {q:'小王、小李、小陳各養一種不同寵物：貓、狗、魚。小李養什麼？',clues:['小王不養狗。','小陳養魚。','小王不養魚。'],choices:['貓','狗','魚'],answer:1,explain:'小陳是魚；小王既不是狗也不是魚，所以是貓；剩下的小李只能是狗。'}
-  ];
+  var logicSession=[];
+  var LOGIC_PEOPLE=['阿明','小美','阿哲','小安','小晴','小凱','小雯','阿倫'];
+  var LOGIC_PETS=['貓','狗','魚','兔子','鸚鵡','倉鼠'];
+  var LOGIC_OBJECTS=['鑰匙','票券','徽章','卡片'];
+
+  function takeRandom(arr,count){return shuffle(arr).slice(0,count)}
+  function logicChoiceSet(values,correct){
+    var choices=shuffle(values),answer=choices.indexOf(correct);
+    return {choices:choices,answer:answer}
+  }
+  function makeOrderLogic(){
+    var people=takeRandom(LOGIC_PEOPLE,3),order=shuffle(people),first=order[0],middle=order[1],last=order[2];
+    var c=logicChoiceSet(people,middle);
+    return {
+      type:'排序',
+      q:'三人排成一列。根據條件，誰一定站在中間？',
+      clues:[first+' 在 '+middle+' 前面。',last+' 在 '+middle+' 後面。'],
+      choices:c.choices,answer:c.answer,
+      explain:'兩個條件合起來，唯一順序是 '+first+' → '+middle+' → '+last+'。'
+    }
+  }
+  function makeBoxLogic(){
+    var labels=shuffle(['1 號','2 號','3 號','4 號']),a=labels[0],target=labels[1],c=labels[2],d=labels[3];
+    var choice=logicChoiceSet(labels,target);
+    return {
+      type:'位置',
+      q:'四個盒子只有一個有獎品。獎品在哪一個？',
+      clues:['獎品不在 '+a+'。','如果獎品不在 '+target+'，那它一定在 '+d+'。','獎品不在 '+d+'。'],
+      choices:choice.choices,answer:choice.answer,
+      explain:a+' 與 '+d+' 被排除；若不是 '+target+' 就必須是 '+d+'，但 '+d+' 已被排除，因此只能是 '+target+'。'
+    }
+  }
+  function makePetLogic(){
+    var people=takeRandom(LOGIC_PEOPLE,3),items=takeRandom(LOGIC_PETS,3),assigned=shuffle(items);
+    var pA=people[0],pB=people[1],pC=people[2],aItem=assigned[0],bItem=assigned[1],cItem=assigned[2];
+    var choice=logicChoiceSet(items,bItem);
+    return {
+      type:'配對',
+      q:pA+'、'+pB+'、'+pC+' 各養一種不同寵物。'+pB+' 養什麼？',
+      clues:[pC+' 養 '+cItem+'。',pA+' 不養 '+bItem+'。',pA+' 不養 '+cItem+'。'],
+      choices:choice.choices,answer:choice.answer,
+      explain:pC+' 已經是 '+cItem+'；'+pA+' 又排除 '+bItem+' 與 '+cItem+'，所以 '+pA+' 只能養 '+aItem+'，剩下 '+pB+' 是 '+bItem+'。'
+    }
+  }
+  function validLogicCode(s){
+    var d=s.split('').map(Number),a=d[0],b=d[1],c=d[2];
+    return a>b&&c===a+b&&new Set(d).size===3&&a%2===1
+  }
+  function makeCodeLogic(){
+    var valid=[];
+    for(var a=3;a<=9;a+=2)for(var b=1;b<a;b++){var c=a+b;if(c<=9&&new Set([a,b,c]).size===3)valid.push(''+a+b+c)}
+    var answerCode=valid[rand(0,valid.length-1)],choices=[answerCode],tries=0;
+    while(choices.length<3&&tries<200){
+      var candidate=''+rand(1,9)+rand(0,9)+rand(0,9);tries++;
+      if(!choices.includes(candidate)&&!validLogicCode(candidate))choices.push(candidate)
+    }
+    var choice=logicChoiceSet(choices,answerCode);
+    return {
+      type:'數字條件',
+      q:'哪一組三位數符合所有條件？',
+      clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。','第一位是奇數。'],
+      choices:choice.choices,answer:choice.answer,
+      explain:answerCode+' 同時符合大小、相加、不重複與奇數四個條件。'
+    }
+  }
+  function makeTruthLogic(){
+    var people=takeRandom(LOGIC_PEOPLE,3),a=people[0],b=people[1],c=people[2],object=LOGIC_OBJECTS[rand(0,LOGIC_OBJECTS.length-1)];
+    var choice=logicChoiceSet(people,a);
+    return {
+      type:'真假話',
+      q:'三人中只有一人拿了'+object+'，而且下面只有一句話是真的。誰拿了？',
+      clues:[a+'：是 '+b+' 拿的。',b+'：不是 '+b+' 拿的。',c+'：不是 '+a+' 拿的。'],
+      choices:choice.choices,answer:choice.answer,
+      explain:'如果是 '+a+'：第一句假、第二句真、第三句假，剛好只有一句真話。其他人都無法滿足條件。'
+    }
+  }
+  function buildLogicSession(){
+    return [
+      makeOrderLogic(),
+      makeBoxLogic(),
+      makePetLogic(),
+      makeOrderLogic(),
+      makeCodeLogic(),
+      makePetLogic(),
+      makeBoxLogic(),
+      makeTruthLogic(),
+      makeCodeLogic(),
+      makeTruthLogic()
+    ]
+  }
 
   var allModes=['math','memory','logic','executive','schulte','stroop','odd'];
   var modeNames={math:'快速心算',memory:'瞬間記憶',logic:'邏輯推理',executive:'規則切換',schulte:'舒爾特方格',stroop:'Stroop 顏色衝突',odd:'表裡不一'};
@@ -845,17 +928,34 @@
     })
   }
 
-  function startLogic(){show('logic');logicIndex=0;logicCorrect=0;renderLogic()}
+  function startLogic(){show('logic');logicSession=buildLogicSession();logicIndex=0;logicCorrect=0;renderLogic()}
   function renderLogic(){
-    logicSelected=null;logicAnswered=false;var q=logicBank[logicIndex];$('logicPill').textContent=(logicIndex+1)+' / '+logicBank.length;
-    var prog=$('logicProgress');prog.innerHTML='';logicBank.forEach(function(_,i){var d=document.createElement('i');if(i<=logicIndex)d.className='on';prog.appendChild(d)});
-    $('logicQuestion').textContent=q.q;var clues=$('logicClues');clues.innerHTML='';q.clues.forEach(function(c){var d=document.createElement('div');d.className='clue';d.textContent=c;clues.appendChild(d)});
-    var choices=$('logicChoices');choices.innerHTML='';q.choices.forEach(function(c,i){var b=document.createElement('button');b.type='button';b.className='choice';b.textContent=c;b.addEventListener('click',function(){if(logicAnswered)return;logicSelected=i;choices.querySelectorAll('.choice').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')});choices.appendChild(b)});
+    logicSelected=null;logicAnswered=false;var q=logicSession[logicIndex];
+    $('logicPill').textContent=(logicIndex+1)+' / '+logicSession.length+' · '+q.type;
+    var prog=$('logicProgress');prog.innerHTML='';logicSession.forEach(function(_,i){var d=document.createElement('i');if(i<=logicIndex)d.className='on';prog.appendChild(d)});
+    $('logicQuestion').textContent=q.q;var clues=$('logicClues');clues.innerHTML='';
+    q.clues.forEach(function(c){var d=document.createElement('div');d.className='clue';d.textContent=c;clues.appendChild(d)});
+    var choices=$('logicChoices');choices.innerHTML='';
+    q.choices.forEach(function(c,i){var b=document.createElement('button');b.type='button';b.className='choice';b.textContent=c;b.addEventListener('click',function(){if(logicAnswered)return;logicSelected=i;choices.querySelectorAll('.choice').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')});choices.appendChild(b)});
     $('logicFeedback').className='feedback';$('logicFeedback').textContent='';$('logicSubmit').classList.remove('hidden');$('logicNext').classList.add('hidden')
   }
-  $('logicSubmit').addEventListener('click',function(){if(logicSelected===null||logicAnswered)return;logicAnswered=true;var q=logicBank[logicIndex],ok=logicSelected===q.answer;if(ok){logicCorrect++;correctTone()}else wrongTone();var f=$('logicFeedback');f.className='feedback show '+(ok?'good':'bad');f.textContent=(ok?'✓ 正確。':'✗ 正確答案：'+q.choices[q.answer]+'。')+' '+q.explain;$('logicSubmit').classList.add('hidden');$('logicNext').classList.remove('hidden');$('logicNext').textContent=logicIndex===logicBank.length-1?'看結果':'下一題'});
-  $('logicNext').addEventListener('click',function(){logicIndex++;if(logicIndex>=logicBank.length)endLogic();else renderLogic()});
-  function endLogic(){var score=Math.round(logicCorrect/logicBank.length*100);finishMode('logic',score,{a:logicCorrect+'/'+logicBank.length,b:score+'%',c:'完成'})}
+  $('logicSubmit').addEventListener('click',function(){
+    if(logicSelected===null||logicAnswered)return;
+    logicAnswered=true;var q=logicSession[logicIndex],ok=logicSelected===q.answer;
+    if(ok){logicCorrect++;correctTone()}else wrongTone();
+    var f=$('logicFeedback');f.className='feedback show '+(ok?'good':'bad');
+    f.textContent=(ok?'✓ 正確。':'✗ 正確答案：'+q.choices[q.answer]+'。')+' '+q.explain;
+    $('logicSubmit').classList.add('hidden');$('logicNext').classList.remove('hidden');
+    $('logicNext').textContent=logicIndex===logicSession.length-1?'看結果':'下一題'
+  });
+  $('logicNext').addEventListener('click',function(){logicIndex++;if(logicIndex>=logicSession.length)endLogic();else renderLogic()});
+  function endLogic(){
+    var score=Math.round(logicCorrect/logicSession.length*100);
+    finishMode('logic',score,{
+      a:logicCorrect+'/'+logicSession.length,b:score+'%',c:'5 種題型',
+      items:[['正確',logicCorrect+'/'+logicSession.length],['正確率',score+'%'],['題型','5 種'],['本次題數',logicSession.length]]
+    })
+  }
 
   function startExecutive(){show('executive');execRound=0;execCorrect=0;execSwitchCorrect=0;execSwitchTotal=0;execRuleType='parity';execPrevRule=null;execRtTotal=0;execAnswered=false;$('execCorrect').textContent='0';$('execSwitch').textContent='0';$('execRt').textContent='—';nextExecutive()}
   function nextExecutive(){
