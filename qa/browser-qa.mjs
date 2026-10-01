@@ -30,6 +30,7 @@ async function runViewport(browser, viewport, name) {
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
 
   assert(await page.title() === '大人的腦部鍛鍊', `${name}: wrong page title`);
+  assert((await page.locator('meta[name="color-scheme"]').getAttribute('content')) === 'light', `${name}: BRAIN/7 should use the light color scheme`);
   assert(await page.locator('.mode').count() === 7, `${name}: expected seven modes`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
@@ -41,6 +42,13 @@ async function runViewport(browser, viewport, name) {
   assert((await page.locator('#previewIndex').innerText()).trim() === '05', `${name}: preview index should switch to 05`);
   assert((await page.locator('#previewLabel').innerText()).trim() === 'SEARCH', `${name}: preview label should switch to SEARCH`);
   assert((await page.locator('#previewTitle').innerText()).trim() === '舒爾特方格', `${name}: preview title should switch to Schulte`);
+  await page.locator('#previewPlay').click();
+  await page.locator('#schulte.active').waitFor();
+  await page.locator('.back:visible').click();
+  await page.locator('[data-preview-mode="math"]').click();
+  await page.locator('#homePreview').focus();
+  await page.keyboard.press('ArrowRight');
+  assert((await page.locator('#previewIndex').innerText()).trim() === '02', `${name}: keyboard preview should advance to 02`);
   await page.locator('[data-preview-mode="math"]').click();
 
 
@@ -127,6 +135,28 @@ async function runViewport(browser, viewport, name) {
   await context.close();
 }
 
+async function runNarrowHome(browser) {
+  const context = await browser.newContext({ viewport: { width: 320, height: 720 } });
+  const page = await context.newPage();
+  await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
+  const metrics = await page.evaluate(() => {
+    const preview = document.getElementById('homePreview').getBoundingClientRect();
+    const modes = document.querySelector('.modes').getBoundingClientRect();
+    const play = document.getElementById('previewPlay').getBoundingClientRect();
+    return {
+      overflow: document.documentElement.scrollWidth - window.innerWidth,
+      previewTop: preview.top,
+      modesTop: modes.top,
+      playHeight: play.height
+    };
+  });
+  assert(metrics.overflow <= 1, `narrow-mobile: horizontal overflow detected (${metrics.overflow}px)`);
+  assert(metrics.previewTop < metrics.modesTop, 'narrow-mobile: preview should appear before the mode list');
+  assert(metrics.playHeight >= 44, `narrow-mobile: preview action is too small (${metrics.playHeight}px)`);
+  await assertA11y(page, 'narrow-mobile home');
+  await context.close();
+}
+
 async function runReducedMotion(browser) {
   const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   const page = await context.newPage();
@@ -142,6 +172,7 @@ const browser = await chromium.launch({ headless: true });
 try {
   await runViewport(browser, { width: 390, height: 844 }, 'mobile');
   await runViewport(browser, { width: 1280, height: 900 }, 'desktop');
+  await runNarrowHome(browser);
   await runReducedMotion(browser);
   console.log('browser-qa: PASS — 7 games, mobile + desktop, accessibility, and reduced-motion checks passed.');
 } finally {
