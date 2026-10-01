@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       - name: Verify logic puzzles have unique solutions
         run: node qa/brain-game-qa.mjs
 
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
       - name: Install cloud QA tools
         run: |
           npm install --no-save @playwright/test@1.55.0 @axe-core/playwright@4.10.2
@@ -59,3 +59,38 @@ jobs:
           exit 1
       - name: Run mobile and desktop browser QA
         run: node qa/browser-qa.mjs
+
+
+  lighthouse-qa:
+    name: Lighthouse Quality Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Lighthouse
+        run: npm install --no-save lighthouse@12.2.1
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/adult-brain-server.log 2>&1 &
+          echo $! > /tmp/adult-brain-server.pid
+          for i in {1..20}; do
+            curl -fsS http://127.0.0.1:4173/adult-brain-training/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/adult-brain-server.log
+          exit 1
+      - name: Run Lighthouse audit
+        run: |
+          npx lighthouse http://127.0.0.1:4173/adult-brain-training/             --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage"             --only-categories=performance,accessibility,best-practices,seo             --output=json             --output-path=/tmp/lighthouse.json
+      - name: Enforce Lighthouse thresholds
+        run: node qa/lighthouse-qa.mjs /tmp/lighthouse.json
+      - name: Upload Lighthouse report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: adult-brain-lighthouse
+          path: /tmp/lighthouse.json
+          if-no-files-found: error
