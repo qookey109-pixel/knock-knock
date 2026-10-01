@@ -7,8 +7,8 @@
   <title>大人的腦部鍛鍊</title>
   <style>
     :root{
-      --bg:#f3f0ff;--paper:#fbfaff;--ink:#4b00d7;--accent:#f28a35;
-      --line:rgba(75,0,215,.18);--soft:rgba(75,0,215,.08);--muted:rgba(75,0,215,.65);
+      --bg:#f3f0ff;--paper:#fbfaff;--ink:#4b00d7;--accent:#a94700;
+      --line:rgba(75,0,215,.18);--soft:rgba(75,0,215,.08);--muted:rgba(75,0,215,.72);
       --good:#198754;--bad:#c43d39
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -213,13 +213,13 @@
      choices:['阿明','小美','阿哲'],answer:0,
      explain:'如果阿明拿了：阿明是假、小美是假、阿哲是真，剛好只有一句真話。'},
     {q:'A、B、C 三人排隊。誰一定站在中間？',
-     clues:['A 不站第一個。','C 站在 A 的前面。'],
+     clues:['A 不站第一個。','C 站在 A 的前面。','B 不站中間。'],
      choices:['A','B','C'],answer:0,
-     explain:'C 必須在 A 前面，而 A 又不能第一，因此唯一排列是 C－A－B。'},
+     explain:'C 必須在 A 前面、A 不能第一，而且 B 不能站中間，因此唯一排列是 C－A－B。'},
     {q:'密碼是三位數。哪一個符合所有條件？',
-     clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。'],
+     clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。','第一位是奇數。'],
      choices:['213','325','426'],answer:1,
-     explain:'325：3 > 2，而且 3 + 2 = 5，三個數字也都不同。'},
+     explain:'325：3 > 2、3 + 2 = 5、三個數字不同，而且第一位 3 是奇數。'},
     {q:'四個盒子只有一個有獎品。哪個盒子最合理？',
      clues:['獎品不在 1 號。','若不在 2 號，就一定在 4 號。','獎品也不在 4 號。'],
      choices:['1 號','2 號','3 號','4 號'],answer:1,
