@@ -330,7 +330,7 @@
   var oddRound=0,oddCorrect=0,oddWrong=0,oddRtTotal=0,oddStartedAt=0,oddLocked=false;
   var mathBgmBuffer=null,mathBgmSource=null,mathBgmGain=null,mathBgmToken=0;
   var MATH_BGM_URL='../assets/rag-time-on-the-rag-loop.m4a';
-  var mathBgmDataPromise=fetch(MATH_BGM_URL,{cache:'force-cache'}).then(function(r){if(!r.ok)throw new Error('BGM load failed');return r.arrayBuffer()}).catch(function(){return null});
+  var mathBgmDataPromise=null;
 
   var logicBank=[
     {q:'三人中只有一人拿了鑰匙，而且只有一句話是真的。誰拿了？',clues:['阿明：是小美拿的。','小美：不是小美拿的。','阿哲：不是阿明拿的。'],choices:['阿明','小美','阿哲'],answer:0,explain:'如果阿明拿了：阿明是假、小美是真、阿哲是假，剛好只有一句真話。'},
@@ -363,6 +363,7 @@
     if(mathBgmBuffer)return mathBgmBuffer;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
     if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
+    if(!mathBgmDataPromise)mathBgmDataPromise=fetch(MATH_BGM_URL,{cache:'force-cache'}).then(function(r){if(!r.ok)throw new Error('BGM load failed');return r.arrayBuffer()}).catch(function(){return null});
     var data=await mathBgmDataPromise;if(!data)return null;
     try{mathBgmBuffer=await audioCtx.decodeAudioData(data.slice(0));return mathBgmBuffer}catch(e){return null}
   }
