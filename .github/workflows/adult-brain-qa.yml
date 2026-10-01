@@ -8,19 +8,17 @@ on:
       - 'adult-brain-training/**'
       - 'qa/**'
       - '.github/workflows/adult-brain-qa.yml'
-      - '.agents/skills/brain-game-qa/**'
-      - '.agents/skills/ui-motion/**'
-      - '.agents/skills/award-game-design/**'
+      - '.agents/skills/**'
       - 'docs/ADULT_BRAIN_TRAINING_AWARD_BAR.md'
+      - 'THIRD_PARTY_SKILLS.md'
   pull_request:
     paths:
       - 'adult-brain-training/**'
       - 'qa/**'
       - '.github/workflows/adult-brain-qa.yml'
-      - '.agents/skills/brain-game-qa/**'
-      - '.agents/skills/ui-motion/**'
-      - '.agents/skills/award-game-design/**'
+      - '.agents/skills/**'
       - 'docs/ADULT_BRAIN_TRAINING_AWARD_BAR.md'
+      - 'THIRD_PARTY_SKILLS.md'
 
 permissions:
   contents: read
