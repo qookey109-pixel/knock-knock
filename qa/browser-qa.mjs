@@ -171,13 +171,23 @@ async function runViewport(browser, viewport, name) {
   assert(execStageBg !== 'rgba(0, 0, 0, 0)', `${name}: executive number stage should use a high-contrast jump color`);
   await assertA11y(page, `${name} executive`);
 
-  // Schulte
+  // Schulte: four modes, 50 targets, and full-field re-layout after every correct hit.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="schulte"]').click();
   await page.locator('#schulte.active').waitFor();
-  assert(await page.locator('#schulteGrid .schulte-cell').count() === 25, `${name}: Schulte grid should contain 25 cells`);
-  await page.locator('#schulteGrid .schulte-cell').filter({ hasText: /^1$/ }).click();
+  assert(await page.locator('.schulte-mode').count() === 4, `${name}: Schulte should expose A/B/C/D modes`);
+  assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: Schulte grid should start with 50 cells`);
+  assert((await page.locator('#schulteModePill').innerText()).includes('A · 1 → 50'), `${name}: standalone Schulte should start in mode A`);
+  const beforeOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
+  await page.locator('#schulteGrid .schulte-cell[data-number="1"]').click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '2');
+  assert(await page.locator('#schulteGrid .schulte-cell').count() === 49, `${name}: correct Schulte hit should remove one target`);
+  const afterOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
+  assert(afterOrder.length === 49 && beforeOrder.slice(1).join(',') !== afterOrder.join(','), `${name}: remaining Schulte cells should be re-laid out after a correct hit`);
+  assert(await page.locator('#schulteGrid .schulte-float').count() === 49, `${name}: remaining Schulte cells should retain drift wrappers`);
+  await page.locator('.schulte-mode[data-schulte-mode="B"]').click();
+  await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '50');
+  assert((await page.locator('#schulteModePill').innerText()).includes('B · 50 → 1'), `${name}: Schulte mode B should reverse the target order`);
   await assertA11y(page, `${name} schulte`);
 
   // Stroop
