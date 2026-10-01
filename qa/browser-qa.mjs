@@ -211,14 +211,22 @@ async function runViewport(browser, viewport, name) {
   assert(stroopSource.includes('for(var i=0;i<6;i++)types.push(\'congruent\')') && stroopSource.includes('for(var j=0;j<14;j++)types.push(\'conflict\')'), `${name}: Stroop schedule should contain 6 congruent and 14 conflict trials`);
   await assertA11y(page, `${name} stroop`);
 
-  // 表裡不一
+  // 表裡不一: 16 rounds, one semantic mismatch, and increasing search density.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="odd"]').click();
   await page.locator('#odd.active').waitFor();
-  assert(await page.locator('#oddGrid .odd-cell').count() === 16, `${name}: odd grid should contain 16 cells`);
+  assert((await page.locator('#oddPill').innerText()).trim() === '1 / 16 · 16 格', `${name}: odd challenge should start at 16 cells`);
+  assert(await page.locator('#oddGrid .odd-cell').count() === 16, `${name}: odd grid should start with 16 cells`);
   assert(await page.locator('#oddGrid .odd-cell[data-odd="true"]').count() === 1, `${name}: odd grid must have exactly one mismatch`);
+  const oddSemanticCheck = await page.locator('#oddGrid .odd-cell').evaluateAll(nodes => nodes.map(n => ({odd:n.dataset.odd, arrow:n.dataset.arrow, label:n.dataset.label})));
+  assert(oddSemanticCheck.filter(x => x.arrow !== x.label).length === 1, `${name}: exactly one odd cell should have mismatched arrow and label semantics`);
+  assert(oddSemanticCheck.every(x => (x.odd === 'true') === (x.arrow !== x.label)), `${name}: odd marker must match the semantic mismatch`);
   await page.locator('#oddGrid .odd-cell[data-odd="true"]').click();
-  await page.waitForFunction(() => document.getElementById('oddCorrect')?.textContent === '1');
+  await page.waitForFunction(() => document.getElementById('oddPill')?.textContent.startsWith('2 / 16'));
+  assert((await page.locator('#oddCorrect').innerText()).trim() === '1/1', `${name}: first-hit tracker should record a clean first round`);
+  assert((await page.locator('#oddRt').innerText()).trim().endsWith('秒'), `${name}: odd search time should be displayed in seconds`);
+  const oddSource = await page.locator('html').evaluate(el => el.innerHTML);
+  assert(oddSource.includes('round<=4?16:round<=10?20:24'), `${name}: odd challenge should progress through 16, 20, and 24-cell densities`);
   await assertA11y(page, `${name} odd`);
 
   await context.close();
