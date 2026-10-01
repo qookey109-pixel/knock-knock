@@ -99,10 +99,11 @@ async function runViewport(browser, viewport, name) {
   assert(source.includes("MATH_MAX_LEVEL=10"), `${name}: Quick Math should cap at LV10`);
   await assertA11y(page, `${name} math`);
 
-  // Memory: capture the shown digits, then submit the same digits after they disappear.
+  // Memory: 10-round progression with NORMAL, MASK, and REVERSE modes.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="memory"]').click();
   await page.locator('#memory.active').waitFor();
+  assert((await page.locator('#memoryRoundPill').innerText()).trim() === '1 / 10 · NORMAL', `${name}: memory should expose a 10-round progression`);
   await page.locator('#memoryStart').click();
   const shown = (await page.locator('#memoryNumber').innerText()).trim();
   assert(/^\d{4}$/.test(shown), `${name}: first memory round should show 4 digits`);
@@ -110,6 +111,9 @@ async function runViewport(browser, viewport, name) {
   await page.locator('#memoryAnswer').fill(shown);
   await page.locator('#memorySubmit').click();
   await page.waitForFunction(() => document.getElementById('memoryNumber')?.textContent === '正確');
+  const memorySource = await page.locator('html').evaluate(el => el.innerHTML);
+  assert(memorySource.includes("mode:'mask'") && memorySource.includes("mode:'reverse'"), `${name}: memory must include MASK and REVERSE rounds`);
+  assert(memorySource.includes("{digits:10,show:1450,mode:'reverse'"), `${name}: memory final round should reach 10 digits in REVERSE mode`);
   await assertA11y(page, `${name} memory`);
 
   // Logic: answer the first formally verified puzzle.
