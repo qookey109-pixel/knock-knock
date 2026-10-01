@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f3f0ff">
-  <meta name="description" content="大人的腦部鍛鍊：快速心算、瞬間記憶與邏輯推理的每日短時間腦力遊戲。">
+  <meta name="description" content="大人的腦部鍛鍊：快速心算、瞬間記憶、邏輯推理與執行功能規則切換的每日短時間腦力遊戲。">
   <title>大人的腦部鍛鍊</title>
   <style>
     :root{
@@ -75,9 +75,13 @@
     .feedback{display:none;margin-top:14px;padding:14px;border-radius:16px;font-weight:800;line-height:1.6}.feedback.show{display:block}.feedback.good{background:rgba(25,135,84,.10);color:var(--good)}.feedback.bad{background:rgba(196,61,57,.10);color:var(--bad)}
     .result{text-align:center;padding:14px 0}.result-score{font-size:72px;line-height:1;font-weight:950;letter-spacing:-.06em}.result-unit{font-size:14px;font-weight:950;color:var(--muted);margin-top:4px}
     .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}.result-box{padding:14px 8px;background:var(--soft);border-radius:16px}.result-box span{display:block;font-size:10px;font-weight:950;color:var(--muted)}.result-box strong{display:block;margin-top:6px;font-size:22px}
+    .exec-rule{padding:12px 14px;border:2px solid var(--accent);border-radius:16px;text-align:center;font-size:15px;font-weight:950;color:var(--accent)}
+    .exec-number{text-align:center;font-size:clamp(86px,28vw,150px);line-height:1;font-weight:950;letter-spacing:-.06em;padding:30px 0 22px;font-variant-numeric:tabular-nums}
+    .exec-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.exec-choices .choice{text-align:center;font-size:18px}
+    .exec-hint{text-align:center;margin-top:12px;font-size:12px;font-weight:800;color:var(--muted);line-height:1.5}
     .daily-summary{display:grid;gap:12px;margin-top:18px}.summary-row{display:grid;grid-template-columns:90px 1fr 42px;gap:10px;align-items:center}.summary-row span{font-size:13px;font-weight:900}.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.bar b{display:block;height:100%;background:var(--accent);border-radius:99px;width:0}.summary-row strong{text-align:right}
     .hidden{display:none!important}
-    @media(min-width:600px){.modes{grid-template-columns:repeat(3,1fr)}.mode{min-height:190px}.hero h2{font-size:46px}}
+    @media(min-width:600px){.modes{grid-template-columns:repeat(2,1fr)}.mode{min-height:190px}.hero h2{font-size:46px}}
   </style>
 </head>
 <body>
@@ -94,7 +98,7 @@
     <div class="hero">
       <div class="eyebrow">TODAY'S TRAINING</div>
       <h2>每天幾分鐘，<br>快速動動腦。</h2>
-      <p>一次練習計算速度、瞬間記憶與條件推理。每個模式都能單獨玩，也可以直接完成今日腦訓。</p>
+      <p>一次練習計算速度、瞬間記憶、條件推理與執行功能規則切換。每個模式都能單獨玩，也可以直接完成今日腦訓。</p>
       <div class="actions"><button id="dailyBtn" class="primary" type="button">開始今日腦訓</button></div>
     </div>
 
@@ -110,6 +114,10 @@
       <button class="mode" type="button" data-mode="logic">
         <div class="mode-top"><span class="mode-num">03 / LOGIC</span><span class="mode-arrow">→</span></div>
         <h3>邏輯推理</h3><p>讀取條件、排除矛盾，在有限線索中找唯一答案。</p>
+      </button>
+      <button class="mode" type="button" data-mode="executive">
+        <div class="mode-top"><span class="mode-num">04 / EXECUTIVE</span><span class="mode-arrow">→</span></div>
+        <h3>前額葉挑戰</h3><p>規則會突然切換，練習抑制控制、注意切換與認知彈性。</p>
       </button>
     </div>
     <div class="note">這是娛樂與練習用途的遊戲表現，不是 IQ、醫療或認知功能診斷。</div>
@@ -176,6 +184,27 @@
     </div>
   </section>
 
+  <section id="executive" class="screen">
+    <div class="gamehead">
+      <div><button class="back" type="button">← 首頁</button><h2>前額葉挑戰</h2></div>
+      <div id="execRoundPill" class="pill">1 / 16</div>
+    </div>
+    <div class="panel">
+      <div class="stats">
+        <div class="stat"><span>CORRECT</span><strong id="execCorrect">0</strong></div>
+        <div class="stat"><span>SWITCH</span><strong id="execSwitch">0</strong></div>
+        <div class="stat"><span>AVG RT</span><strong id="execRt">—</strong></div>
+      </div>
+      <div id="execRule" class="exec-rule">準備</div>
+      <div id="execNumber" class="exec-number">—</div>
+      <div class="exec-choices">
+        <button id="execLeft" class="choice" type="button">左</button>
+        <button id="execRight" class="choice" type="button">右</button>
+      </div>
+      <div id="execHint" class="exec-hint">依照目前規則作答；規則切換時不要沿用上一題。</div>
+    </div>
+  </section>
+
   <section id="result" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2 id="resultTitle">訓練完成</h2></div></div>
     <div class="panel result">
@@ -192,7 +221,7 @@
     <div class="panel result">
       <div class="eyebrow">DAILY SCORE</div>
       <div id="dailyScore" class="result-score">0</div>
-      <div class="result-unit">三項平均</div>
+      <div class="result-unit">四項平均</div>
       <div id="dailySummary" class="daily-summary"></div>
       <div class="actions"><button id="dailyAgain" class="primary" type="button">再練一次</button></div>
     </div>
@@ -207,6 +236,7 @@
   var mathTimer=null,mathTime=30,mathCorrect=0,mathWrong=0,mathStreak=0,mathAnswerValue=0,mathLevel=1;
   var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null;
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
+  var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false;
 
   var logicBank=[
     {q:'三人中只有一人拿了鑰匙，而且只有一句話是真的。誰拿了？',
@@ -259,7 +289,7 @@
     clearTimeout(memoryTimeout);memoryTimeout=null;
   }
   function startDaily(){
-    stopAll();dailyMode=true;dailyQueue=['math','memory','logic'];dailyScores={};startNextDaily();
+    stopAll();dailyMode=true;dailyQueue=['math','memory','logic','executive'];dailyScores={};startNextDaily();
   }
   function startNextDaily(){
     if(!dailyQueue.length){showDailyResult();return}
@@ -270,6 +300,7 @@
     if(mode==='math')startMath();
     if(mode==='memory')startMemory();
     if(mode==='logic')startLogic();
+    if(mode==='executive')startExecutive();
   }
   function finishMode(mode,score,stats){
     dailyScores[mode]=score;
@@ -406,9 +437,79 @@
     finishMode('logic',score,{a:logicCorrect+'/'+logicBank.length,b:score+'%',c:'完成'});
   }
 
+  function startExecutive(){
+    show('executive');
+    execRound=0;execCorrect=0;execSwitchCorrect=0;execSwitchTotal=0;execRuleType='parity';execPrevRule=null;
+    execRtTotal=0;execAnswered=false;
+    $('execCorrect').textContent='0';$('execSwitch').textContent='0';$('execRt').textContent='—';
+    nextExecutive();
+  }
+  function nextExecutive(){
+    if(execRound>=16){endExecutive();return}
+    execRound++;
+    execPrevRule=execRuleType;
+    if(execRound===1){
+      execRuleType='parity';
+    }else if(execRound%3===1){
+      execRuleType=execRuleType==='parity'?'size':'parity';
+    }
+    var switched=execRound>1&&execRuleType!==execPrevRule;
+    if(switched)execSwitchTotal++;
+    $('execRoundPill').textContent=execRound+' / 16';
+    if(execRuleType==='parity'){
+      execValue=rand(1,9);
+      $('execRule').textContent=(switched?'規則切換｜':'')+'判斷奇數 / 偶數';
+      $('execLeft').textContent='奇數';$('execRight').textContent='偶數';
+    }else{
+      do{execValue=rand(1,9)}while(execValue===5);
+      $('execRule').textContent=(switched?'規則切換｜':'')+'判斷小於 5 / 大於 5';
+      $('execLeft').textContent='小於 5';$('execRight').textContent='大於 5';
+    }
+    $('execNumber').textContent=execValue;
+    $('execHint').textContent=switched?'規則剛剛改變，先看規則再作答。':'依照目前規則作答。';
+    execAnswered=false;execStartedAt=performance.now();
+  }
+  function answerExecutive(side){
+    if(execAnswered||execRound<1)return;
+    execAnswered=true;
+    var rt=Math.max(0,performance.now()-execStartedAt);
+    execRtTotal+=rt;
+    var correctSide=execRuleType==='parity'?(execValue%2===1?'left':'right'):(execValue<5?'left':'right');
+    var ok=side===correctSide;
+    var switched=execRound>1&&execRuleType!==execPrevRule;
+    if(ok){
+      execCorrect++;
+      if(switched)execSwitchCorrect++;
+      correctTone();
+    }else{
+      wrongTone();
+    }
+    $('execCorrect').textContent=execCorrect;
+    $('execSwitch').textContent=execSwitchCorrect+'/'+execSwitchTotal;
+    $('execRt').textContent=Math.round(execRtTotal/execRound)+'ms';
+    setTimeout(nextExecutive,180);
+  }
+  $('execLeft').addEventListener('click',function(){answerExecutive('left')});
+  $('execRight').addEventListener('click',function(){answerExecutive('right')});
+  document.addEventListener('keydown',function(e){
+    if(!$('executive').classList.contains('active'))return;
+    var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();
+    if(tag==='input'||tag==='textarea')return;
+    if(e.key==='ArrowLeft'){e.preventDefault();answerExecutive('left')}
+    if(e.key==='ArrowRight'){e.preventDefault();answerExecutive('right')}
+  });
+  function endExecutive(){
+    var acc=Math.round(execCorrect/16*100);
+    var avgRt=execRound?Math.round(execRtTotal/execRound):0;
+    var speedBonus=Math.max(0,Math.min(25,Math.round((2500-avgRt)/72)));
+    var score=Math.min(100,Math.round(acc*.75+speedBonus));
+    var switchText=execSwitchTotal?Math.round(execSwitchCorrect/execSwitchTotal*100)+'%':'—';
+    finishMode('executive',score,{a:execCorrect+'/16',b:acc+'%',c:switchText});
+  }
+
   function showResult(mode,score,stats){
     show('result');
-    var names={math:'快速心算',memory:'瞬間記憶',logic:'邏輯推理'};
+    var names={math:'快速心算',memory:'瞬間記憶',logic:'邏輯推理',executive:'前額葉挑戰'};
     $('resultTitle').textContent=names[mode]+'完成';$('resultScore').textContent=score;
     $('resultGrid').innerHTML=
       '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div>'+
@@ -421,9 +522,9 @@
   }
   function showDailyResult(){
     show('dailyResult');dailyMode=false;
-    var avg=Math.round(((dailyScores.math||0)+(dailyScores.memory||0)+(dailyScores.logic||0))/3);
+    var avg=Math.round(((dailyScores.math||0)+(dailyScores.memory||0)+(dailyScores.logic||0)+(dailyScores.executive||0))/4);
     $('dailyScore').textContent=avg;
-    var names=[['math','快速心算'],['memory','瞬間記憶'],['logic','邏輯推理']];
+    var names=[['math','快速心算'],['memory','瞬間記憶'],['logic','邏輯推理'],['executive','前額葉挑戰']];
     $('dailySummary').innerHTML='';
     names.forEach(function(item){
       var s=dailyScores[item[0]]||0,d=document.createElement('div');d.className='summary-row';
