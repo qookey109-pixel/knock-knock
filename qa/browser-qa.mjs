@@ -130,7 +130,11 @@ async function runViewport(browser, viewport, name) {
   const middlePerson = firstClue[2];
   const logicChoices = page.locator('#logicChoices .choice');
   assert(await logicChoices.count() === 3, `${name}: ordering puzzle should have three choices`);
-  await logicChoices.filter({ hasText: new RegExp('^' + middlePerson + '
+  await logicChoices.filter({ hasText: new RegExp('^' + middlePerson + '$') }).click();
+  await page.locator('#logicSubmit').click();
+  const feedback = await page.locator('#logicFeedback').innerText();
+  assert(feedback.includes('正確'), `${name}: generated ordering puzzle should accept the formally derived middle person`);
+  await assertA11y(page, `${name} logic`);
 
   // Executive function: learn two rules, then verify the first planned rule switch.
   await page.locator('.back:visible').click();
