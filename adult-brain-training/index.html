@@ -69,6 +69,8 @@
     .odd-arrow{font-size:30px;line-height:1}.odd-label{font-size:12px;color:var(--muted)}
     .result{text-align:center;padding:14px 0}.result-score{font-size:72px;line-height:1;font-weight:950;letter-spacing:-.06em}.result-unit{font-size:14px;font-weight:950;color:var(--muted);margin-top:4px}
     .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}.result-box{padding:14px 8px;background:var(--soft);border-radius:16px}.result-box span{display:block;font-size:10px;font-weight:950;color:var(--muted)}.result-box strong{display:block;margin-top:6px;font-size:22px}
+    .session-dots{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:18px 0}.session-dots i{height:8px;border-radius:99px;background:var(--line)}.session-dots i.done{background:var(--accent)}
+    .session-next-name{margin-top:8px;font-size:13px;font-weight:850;color:var(--muted)}
     .daily-summary{display:grid;gap:12px;margin-top:18px}.summary-row{display:grid;grid-template-columns:100px 1fr 42px;gap:10px;align-items:center}.summary-row span{font-size:13px;font-weight:900}.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.bar b{display:block;height:100%;background:var(--accent);border-radius:99px;width:0}.summary-row strong{text-align:right}
     .hidden{display:none!important}
     @media(min-width:600px){.modes{grid-template-columns:repeat(2,1fr)}.mode{min-height:190px}.hero h2{font-size:46px}}
@@ -173,6 +175,20 @@
     </div>
   </section>
 
+  <section id="sessionBreak" class="screen">
+    <div class="gamehead"><div><button class="back" type="button">← 結束訓練</button><h2>本關完成</h2></div><div id="sessionProgressPill" class="pill">1 / 7</div></div>
+    <div class="panel result">
+      <div class="eyebrow">SESSION PROGRESS</div>
+      <h2 id="sessionBreakTitle" style="margin:8px 0 10px;font-size:28px">快速心算完成</h2>
+      <div id="sessionBreakScore" class="result-score">0</div>
+      <div class="result-unit">本關表現分數</div>
+      <div id="sessionDots" class="session-dots" aria-label="完整訓練進度"></div>
+      <div id="sessionBreakStats" class="result-grid"></div>
+      <div id="sessionNextName" class="session-next-name"></div>
+      <div class="actions"><button id="sessionNext" class="primary" type="button">下一項</button></div>
+    </div>
+  </section>
+
   <section id="result" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2 id="resultTitle">訓練完成</h2></div></div>
     <div class="panel result"><div class="eyebrow">TRAINING SCORE</div><div id="resultScore" class="result-score">0</div><div class="result-unit">遊戲表現分數</div><div id="resultGrid" class="result-grid"></div><div id="resultActions" class="actions"></div></div>
@@ -239,7 +255,7 @@
     if(mode==='math')startMath();if(mode==='memory')startMemory();if(mode==='logic')startLogic();if(mode==='executive')startExecutive();
     if(mode==='schulte')startSchulte();if(mode==='stroop')startStroop();if(mode==='odd')startOdd()
   }
-  function finishMode(mode,score,stats){dailyScores[mode]=score;if(dailyMode){startNextDaily();return}showResult(mode,score,stats)}
+  function finishMode(mode,score,stats){dailyScores[mode]=score;if(dailyMode){showDailyBreak(mode,score,stats);return}showResult(mode,score,stats)}
 
   function buildMathKeys(){
     var box=$('mathKeys');box.innerHTML='';
@@ -331,6 +347,30 @@
   }
   function answerOdd(isOdd){if(oddLocked)return;if(!isOdd){oddWrong++;$('oddWrong').textContent=oddWrong;wrongTone();return}oddLocked=true;oddCorrect++;oddRtTotal+=performance.now()-oddStartedAt;$('oddCorrect').textContent=oddCorrect;$('oddRt').textContent=Math.round(oddRtTotal/oddCorrect)+'ms';correctTone();setTimeout(nextOdd,180)}
   function endOdd(){var avg=oddCorrect?Math.round(oddRtTotal/oddCorrect):0,acc=Math.round(oddCorrect/(oddCorrect+oddWrong||1)*100),score=Math.max(0,Math.min(100,Math.round(acc*.75+Math.max(0,25-Math.max(0,avg-900)/80))));finishMode('odd',score,{a:oddCorrect+'/10',b:oddWrong+' 錯',c:avg+'ms'})}
+
+  function showDailyBreak(mode,score,stats){
+    var completed=dailySelection.length-dailyQueue.length;
+    show('sessionBreak');
+    $('sessionProgressPill').textContent=completed+' / '+dailySelection.length;
+    $('sessionBreakTitle').textContent=modeNames[mode]+'完成';
+    $('sessionBreakScore').textContent=score;
+    $('sessionBreakStats').innerHTML=
+      '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div>'+
+      '<div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div>'+
+      '<div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
+    var dots=$('sessionDots');dots.innerHTML='';
+    dailySelection.forEach(function(_,i){var d=document.createElement('i');if(i<completed)d.className='done';dots.appendChild(d)});
+    if(dailyQueue.length){
+      $('sessionNext').textContent='下一項';
+      $('sessionNextName').textContent='接下來：'+modeNames[dailyQueue[0]];
+    }else{
+      $('sessionNext').textContent='查看完整結果';
+      $('sessionNextName').textContent='7 項完整訓練已完成';
+    }
+  }
+  $('sessionNext').addEventListener('click',function(){
+    if(dailyQueue.length)startNextDaily();else showDailyResult();
+  });
 
   function showResult(mode,score,stats){
     show('result');$('resultTitle').textContent=modeNames[mode]+'完成';$('resultScore').textContent=score;
