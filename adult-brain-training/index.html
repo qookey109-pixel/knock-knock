@@ -94,7 +94,7 @@
     <div class="hero">
       <div class="eyebrow">TODAY'S TRAINING</div>
       <h2>每天幾分鐘，<br>快速動動腦。</h2>
-      <p>7 種小遊戲可獨立練習；今日腦訓會隨機抽 4 個，混合速度、記憶、推理、視覺搜尋與執行功能。</p>
+      <p>7 種小遊戲可獨立練習；今日腦訓會一次完整跑完 7 個，形成一套速度、記憶、推理、視覺搜尋與執行功能的完整挑戰。</p>
       <div class="actions"><button id="dailyBtn" class="primary" type="button">開始今日腦訓</button></div>
     </div>
     <div class="modes">
@@ -180,7 +180,7 @@
 
   <section id="dailyResult" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>今日腦訓完成</h2></div></div>
-    <div class="panel result"><div class="eyebrow">DAILY SCORE</div><div id="dailyScore" class="result-score">0</div><div class="result-unit">今日抽選 4 項平均</div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再抽 4 項</button></div></div>
+    <div class="panel result"><div class="eyebrow">DAILY SCORE</div><div id="dailyScore" class="result-score">0</div><div class="result-unit">7 項完整訓練平均</div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再練完整 7 項</button></div></div>
   </section>
 </main>
 
@@ -232,7 +232,7 @@
   $('dailyBtn').addEventListener('click',startDaily);$('dailyAgain').addEventListener('click',startDaily);
 
   function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(memoryTimeout);memoryTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
-  function startDaily(){stopAll();dailyMode=true;dailyScores={};dailySelection=shuffle(allModes).slice(0,4);dailyQueue=dailySelection.slice();startNextDaily()}
+  function startDaily(){stopAll();dailyMode=true;dailyScores={};dailySelection=allModes.slice();dailyQueue=dailySelection.slice();startNextDaily()}
   function startNextDaily(){if(!dailyQueue.length){showDailyResult();return}startMode(dailyQueue.shift())}
   function startMode(mode){
     stopAll();
