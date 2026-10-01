@@ -192,14 +192,23 @@ async function runViewport(browser, viewport, name) {
   assert((await page.locator('#schulteModePill').innerText()).includes('B · 50 → 1'), `${name}: Schulte mode B should reverse the target order`);
   await assertA11y(page, `${name} schulte`);
 
-  // Stroop
+  // Stroop: 20 trials with fixed congruent/conflict mix and seconds-based reaction time.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="stroop"]').click();
   await page.locator('#stroop.active').waitFor();
+  assert((await page.locator('#stroopPill').innerText()).trim() === '1 / 20', `${name}: Stroop should run 20 trials`);
   const stroopColor = await page.locator('#stroopWord').getAttribute('data-color');
+  const stroopWordKey = await page.locator('#stroopWord').getAttribute('data-word');
+  const stroopTag = (await page.locator('#stroopTrialTag').innerText()).trim();
   assert(['red','blue','green','yellow'].includes(stroopColor), `${name}: invalid Stroop color`);
+  assert(['red','blue','green','yellow'].includes(stroopWordKey), `${name}: invalid Stroop word key`);
+  if(stroopTag === '一致題') assert(stroopColor === stroopWordKey, `${name}: congruent Stroop trial must match word and color`);
+  if(stroopTag === '衝突題') assert(stroopColor !== stroopWordKey, `${name}: conflict Stroop trial must mismatch word and color`);
   await page.locator(`#stroopChoices [data-color="${stroopColor}"]`).click();
   await page.waitForFunction(() => document.getElementById('stroopCorrect')?.textContent === '1');
+  assert((await page.locator('#stroopRt').innerText()).trim().endsWith('秒'), `${name}: Stroop reaction time should be displayed in seconds`);
+  const stroopSource = await page.locator('html').evaluate(el => el.innerHTML);
+  assert(stroopSource.includes('for(var i=0;i<6;i++)types.push(\'congruent\')') && stroopSource.includes('for(var j=0;j<14;j++)types.push(\'conflict\')'), `${name}: Stroop schedule should contain 6 congruent and 14 conflict trials`);
   await assertA11y(page, `${name} stroop`);
 
   // 表裡不一
