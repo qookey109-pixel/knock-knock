@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#f3f0ff">
+  <meta name="theme-color" content="#0a0a0c">
+  <meta name="color-scheme" content="dark">
   <meta name="description" content="大人的腦部鍛鍊：7 種短時間腦力小遊戲，包含快速心算、瞬間記憶、邏輯推理、規則切換、舒爾特方格、Stroop 與視覺抗干擾。">
   <title>大人的腦部鍛鍊</title>
   <style>
@@ -345,7 +346,7 @@
     else $('schulteNext').textContent=schulteNext
   }
 
-  var stroopDefs={red:{word:'紅',label:'紅色',css:'#b42318'},blue:{word:'藍',label:'藍色',css:'#175cd3'},green:{word:'綠',label:'綠色',css:'#067647'},yellow:{word:'黃',label:'黃色',css:'#854d0e'}};
+  var stroopDefs={red:{word:'紅',label:'紅色',css:'#ff6b5f'},blue:{word:'藍',label:'藍色',css:'#69adff'},green:{word:'綠',label:'綠色',css:'#63d7aa'},yellow:{word:'黃',label:'黃色',css:'#f6c85f'}};
   function startStroop(){show('stroop');stroopRound=0;stroopCorrect=0;stroopWrong=0;stroopRtTotal=0;$('stroopCorrect').textContent='0';$('stroopWrong').textContent='0';$('stroopRt').textContent='—';nextStroop()}
   function nextStroop(){
     if(stroopRound>=12){endStroop();return}stroopRound++;stroopLocked=false;var keys=Object.keys(stroopDefs),wordKey=keys[rand(0,keys.length-1)];do{stroopColor=keys[rand(0,keys.length-1)]}while(stroopColor===wordKey&&Math.random()<.8);
