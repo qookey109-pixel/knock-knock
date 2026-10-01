@@ -250,10 +250,10 @@
   </section>
 
   <section id="executive" class="screen">
-    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>規則切換</h2></div><div id="execRoundPill" class="pill">1 / 16</div></div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>規則切換</h2></div><div id="execRoundPill" class="pill">1 / 18 · 熟悉 A</div></div>
     <div class="panel">
       <div class="stats"><div class="stat"><span>CORRECT</span><strong id="execCorrect">0</strong></div><div class="stat"><span>SWITCH</span><strong id="execSwitch">0</strong></div><div class="stat"><span>AVG RT</span><strong id="execRt">—</strong></div></div>
-      <div id="execRule" class="exec-rule">準備</div><div id="execNumber" class="exec-number">—</div>
+      <div class="mini-instruction">先看規則，再看數字。後半段切換會變得更頻繁，且混入左右答案相反的衝突題。</div><div id="execRule" class="exec-rule">準備</div><div id="execNumber" class="exec-number">—</div>
       <div class="exec-choices"><button id="execLeft" class="choice" type="button">左</button><button id="execRight" class="choice" type="button">右</button></div>
       <div id="execHint" class="exec-hint">依照目前規則作答；規則切換時不要沿用上一題。</div>
     </div>
@@ -324,7 +324,7 @@
   var mathTimer=null,mathTime=60,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1,mathLevelCorrect=0,mathScore=0,mathStreak=0,mathMaxStreak=0,mathSeen=new Set(),mathOps=[],mathStepCount=1,mathQuestionStartedAt=0,mathTotalResponseMs=0,mathResponseCount=0,mathGameStartedAt=0,mathTransitioning=false,mathTransitionTimer=null;
   var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryScorePoints=0,memoryBestDigits=0;
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
-  var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false;
+  var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false,execSchedule=[],execSwitchRtTotal=0,execSwitchRtCount=0,execRepeatRtTotal=0,execRepeatRtCount=0,execConflictCorrect=0,execConflictTotal=0;
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null;
   var stroopRound=0,stroopCorrect=0,stroopWrong=0,stroopRtTotal=0,stroopStartedAt=0,stroopColor='red',stroopLocked=false;
   var oddRound=0,oddCorrect=0,oddWrong=0,oddRtTotal=0,oddStartedAt=0,oddLocked=false;
@@ -957,18 +957,96 @@
     })
   }
 
-  function startExecutive(){show('executive');execRound=0;execCorrect=0;execSwitchCorrect=0;execSwitchTotal=0;execRuleType='parity';execPrevRule=null;execRtTotal=0;execAnswered=false;$('execCorrect').textContent='0';$('execSwitch').textContent='0';$('execRt').textContent='—';nextExecutive()}
-  function nextExecutive(){
-    if(execRound>=16){endExecutive();return}execRound++;execPrevRule=execRuleType;if(execRound===1)execRuleType='parity';else if(execRound%3===1)execRuleType=execRuleType==='parity'?'size':'parity';
-    var switched=execRound>1&&execRuleType!==execPrevRule;if(switched)execSwitchTotal++;$('execRoundPill').textContent=execRound+' / 16';
-    if(execRuleType==='parity'){execValue=rand(1,9);$('execRule').textContent=(switched?'規則切換｜':'')+'判斷奇數 / 偶數';$('execLeft').textContent='奇數';$('execRight').textContent='偶數'}
-    else{do{execValue=rand(1,9)}while(execValue===5);$('execRule').textContent=(switched?'規則切換｜':'')+'判斷小於 5 / 大於 5';$('execLeft').textContent='小於 5';$('execRight').textContent='大於 5'}
-    $('execNumber').textContent=execValue;$('execHint').textContent=switched?'規則剛剛改變，先看規則再作答。':'依照目前規則作答。';execAnswered=false;execStartedAt=performance.now()
+  var EXEC_TOTAL_ROUNDS=18;
+  function otherExecRule(rule){return rule==='parity'?'size':'parity'}
+  function buildExecutiveSchedule(){
+    var rules=['parity','parity','parity','size','size','size'];
+    for(var i=6;i<EXEC_TOTAL_ROUNDS;i++){
+      var prev=rules[i-1],chance=i>=12?.72:.56;
+      var next=Math.random()<chance?otherExecRule(prev):prev;
+      if(i>=2&&rules[i-1]===rules[i-2])next=otherExecRule(prev);
+      rules.push(next)
+    }
+    return rules
   }
-  function answerExecutive(side){if(execAnswered||execRound<1)return;execAnswered=true;var rt=Math.max(0,performance.now()-execStartedAt);execRtTotal+=rt;var correctSide=execRuleType==='parity'?(execValue%2===1?'left':'right'):(execValue<5?'left':'right'),ok=side===correctSide,switched=execRound>1&&execRuleType!==execPrevRule;if(ok){execCorrect++;if(switched)execSwitchCorrect++;correctTone()}else wrongTone();$('execCorrect').textContent=execCorrect;$('execSwitch').textContent=execSwitchCorrect+'/'+execSwitchTotal;$('execRt').textContent=Math.round(execRtTotal/execRound)+'ms';setTimeout(nextExecutive,180)}
-  $('execLeft').addEventListener('click',function(){answerExecutive('left')});$('execRight').addEventListener('click',function(){answerExecutive('right')});
-  document.addEventListener('keydown',function(e){if(!$('executive').classList.contains('active'))return;var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea')return;if(e.key==='ArrowLeft'){e.preventDefault();answerExecutive('left')}if(e.key==='ArrowRight'){e.preventDefault();answerExecutive('right')}});
-  function endExecutive(){var acc=Math.round(execCorrect/16*100),avgRt=execRound?Math.round(execRtTotal/execRound):0,speedBonus=Math.max(0,Math.min(25,Math.round((2500-avgRt)/72))),score=Math.min(100,Math.round(acc*.75+speedBonus)),switchText=execSwitchTotal?Math.round(execSwitchCorrect/execSwitchTotal*100)+'%':'—';finishMode('executive',score,{a:execCorrect+'/16',b:acc+'%',c:switchText})}
+  function execPhase(round){
+    if(round<=3)return '熟悉 A';
+    if(round<=6)return '熟悉 B';
+    if(round<=12)return '混合';
+    return '快速切換'
+  }
+  function execIsConflictValue(value){return value===2||value===4||value===7||value===9}
+  function pickExecutiveValue(round){
+    var pool;
+    if(round<=6)pool=[1,2,3,4,6,7,8,9];
+    else pool=round%2===1?[2,4,7,9]:[1,3,6,8];
+    var value=pool[rand(0,pool.length-1)];
+    if(value===execValue&&pool.length>1)value=pool[(pool.indexOf(value)+1+rand(0,pool.length-2))%pool.length];
+    return value
+  }
+  function startExecutive(){
+    show('executive');execRound=0;execCorrect=0;execSwitchCorrect=0;execSwitchTotal=0;execRuleType='parity';execPrevRule=null;execRtTotal=0;execAnswered=false;
+    execSwitchRtTotal=0;execSwitchRtCount=0;execRepeatRtTotal=0;execRepeatRtCount=0;execConflictCorrect=0;execConflictTotal=0;execSchedule=buildExecutiveSchedule();
+    $('execCorrect').textContent='0';$('execSwitch').textContent='0/0';$('execRt').textContent='—';nextExecutive()
+  }
+  function nextExecutive(){
+    if(execRound>=EXEC_TOTAL_ROUNDS){endExecutive();return}
+    execRound++;execPrevRule=execRound===1?null:execRuleType;execRuleType=execSchedule[execRound-1];
+    var switched=execRound>1&&execRuleType!==execPrevRule;if(switched)execSwitchTotal++;
+    $('execRoundPill').textContent=execRound+' / '+EXEC_TOTAL_ROUNDS+' · '+execPhase(execRound);
+    execValue=pickExecutiveValue(execRound);
+    if(execRuleType==='parity'){
+      $('execRule').textContent=(switched?'規則切換｜':'')+'判斷奇數 / 偶數';
+      $('execLeft').textContent='奇數';$('execRight').textContent='偶數'
+    }else{
+      $('execRule').textContent=(switched?'規則切換｜':'')+'判斷小於 5 / 大於 5';
+      $('execLeft').textContent='小於 5';$('execRight').textContent='大於 5'
+    }
+    $('execNumber').textContent=execValue;
+    $('execHint').textContent=switched?'規則剛剛改變。先確認規則，再決定左右。':(execRound>=7&&execIsConflictValue(execValue)?'這個數字在兩種規則下的左右答案不同。':'依照目前規則作答。');
+    execAnswered=false;execStartedAt=performance.now()
+  }
+  function answerExecutive(side){
+    if(execAnswered||execRound<1)return;
+    execAnswered=true;
+    var rt=Math.max(0,performance.now()-execStartedAt);execRtTotal+=rt;
+    var correctSide=execRuleType==='parity'?(execValue%2===1?'left':'right'):(execValue<5?'left':'right');
+    var ok=side===correctSide,switched=execRound>1&&execRuleType!==execPrevRule,conflict=execIsConflictValue(execValue);
+    if(switched){execSwitchRtTotal+=rt;execSwitchRtCount++}else{execRepeatRtTotal+=rt;execRepeatRtCount++}
+    if(conflict){execConflictTotal++;if(ok)execConflictCorrect++}
+    if(ok){execCorrect++;if(switched)execSwitchCorrect++;correctTone()}else wrongTone();
+    $('execCorrect').textContent=execCorrect;$('execSwitch').textContent=execSwitchCorrect+'/'+execSwitchTotal;
+    $('execRt').textContent=Math.round(execRtTotal/execRound)+'ms';
+    setTimeout(nextExecutive,180)
+  }
+  $('execLeft').addEventListener('click',function(){answerExecutive('left')});
+  $('execRight').addEventListener('click',function(){answerExecutive('right')});
+  document.addEventListener('keydown',function(e){
+    if(!$('executive').classList.contains('active'))return;
+    var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea')return;
+    if(e.key==='ArrowLeft'){e.preventDefault();answerExecutive('left')}
+    if(e.key==='ArrowRight'){e.preventDefault();answerExecutive('right')}
+  });
+  function endExecutive(){
+    var acc=Math.round(execCorrect/EXEC_TOTAL_ROUNDS*100),avgRt=execRound?Math.round(execRtTotal/execRound):0;
+    var switchAcc=execSwitchTotal?Math.round(execSwitchCorrect/execSwitchTotal*100):0;
+    var speedPct=Math.max(0,Math.min(100,Math.round((2400-avgRt)/16)));
+    var score=Math.max(0,Math.min(100,Math.round(acc*.55+switchAcc*.25+speedPct*.20)));
+    var avgSwitch=execSwitchRtCount?Math.round(execSwitchRtTotal/execSwitchRtCount):0;
+    var avgRepeat=execRepeatRtCount?Math.round(execRepeatRtTotal/execRepeatRtCount):0;
+    var switchCost=avgSwitch&&avgRepeat?avgSwitch-avgRepeat:0;
+    var costText=(switchCost>0?'+':'')+switchCost+'ms';
+    finishMode('executive',score,{
+      a:execCorrect+'/'+EXEC_TOTAL_ROUNDS,b:acc+'%',c:switchAcc+'%',
+      items:[
+        ['正確',execCorrect+'/'+EXEC_TOTAL_ROUNDS],
+        ['正確率',acc+'%'],
+        ['切換命中',switchAcc+'%'],
+        ['切換成本',costText],
+        ['平均反應',avgRt+'ms']
+      ]
+    })
+  }
 
   function startSchulte(){
     show('schulte');schulteNext=1;schulteWrong=0;schulteStart=performance.now();$('schulteNext').textContent='1';$('schulteWrong').textContent='0';$('schulteTime').textContent='0.0';
