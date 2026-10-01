@@ -7,7 +7,7 @@ function assert(condition, message) {
 const html = fs.readFileSync('adult-brain-training/index.html', 'utf8');
 
 assert(html.includes("clues:['阿明：是小美拿的。','小美：不是小美拿的。','阿哲：不是阿明拿的。']"), 'Puzzle 1 source does not match the formal QA model.');
-assert(html.includes("clues:['A 不站第一個。','C 站在 A 的前面。','B 不站中間。']"), 'Puzzle 2 source does not match the formal QA model.');
+assert(html.includes("clues:['A 不站第一個。','C 站在 A 的前面。','B 站在 A 的後面。']"), 'Puzzle 2 source does not match the formal QA model.');
 assert(html.includes("clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。','第一位是奇數。']"), 'Puzzle 3 source does not match the formal QA model.');
 
 // Puzzle 1: exactly one statement is true.
@@ -32,7 +32,7 @@ assert(html.includes("clues:['第一位比第二位大。','第三位等於前�
   ];
   const valid = perms.filter(p => {
     const pos = Object.fromEntries(p.map((v,i)=>[v,i]));
-    return pos.A !== 0 && pos.C < pos.A && pos.B !== 1;
+    return pos.A !== 0 && pos.C < pos.A && pos.B > pos.A;
   });
   assert(valid.length === 1 && valid[0][1] === 'A', 'Puzzle 2 must have one valid order with A in the middle.');
 }
