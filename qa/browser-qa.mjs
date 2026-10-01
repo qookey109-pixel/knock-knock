@@ -183,7 +183,8 @@ async function runViewport(browser, viewport, name) {
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '2');
   assert(await page.locator('#schulteGrid .schulte-cell').count() === 49, `${name}: correct Schulte hit should remove one target`);
   const afterOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
-  assert(afterOrder.length === 49 && beforeOrder.slice(1).join(',') !== afterOrder.join(','), `${name}: remaining Schulte cells should be re-laid out after a correct hit`);
+  const beforeRemaining = beforeOrder.filter(n => n !== '1');
+  assert(afterOrder.length === 49 && beforeRemaining.join(',') !== afterOrder.join(','), `${name}: remaining Schulte cells should be re-laid out after a correct hit`);
   assert(await page.locator('#schulteGrid .schulte-float').count() === 49, `${name}: remaining Schulte cells should retain drift wrappers`);
   await page.locator('.schulte-mode[data-schulte-mode="B"]').click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '50');
