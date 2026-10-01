@@ -34,22 +34,37 @@
     .hero-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;position:relative;z-index:1}
     .hero-chip{border:1px solid var(--line);border-radius:999px;padding:8px 11px;font:800 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;color:var(--muted)}
     .circuit-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;max-width:460px}
-    .circuit-strip i{height:5px;border-radius:99px;background:var(--line-strong)}.circuit-strip i:nth-child(1){background:#ff6b4a}.circuit-strip i:nth-child(2){background:#ffbe55}.circuit-strip i:nth-child(3){background:#60d6a7}.circuit-strip i:nth-child(4){background:#59a6ff}.circuit-strip i:nth-child(5){background:#d8ff4f}.circuit-strip i:nth-child(6){background:#f075c2}.circuit-strip i:nth-child(7){background:#a78bfa}
+    .circuit-strip button{height:7px;min-width:0;border:0;border-radius:99px;background:var(--line-strong);padding:0;cursor:pointer;transition:transform 140ms var(--ease-out),opacity 140ms var(--ease-out)}.circuit-strip button:nth-child(1){background:#ff6b4a}.circuit-strip button:nth-child(2){background:#ffbe55}.circuit-strip button:nth-child(3){background:#60d6a7}.circuit-strip button:nth-child(4){background:#59a6ff}.circuit-strip button:nth-child(5){background:#d8ff4f}.circuit-strip button:nth-child(6){background:#f075c2}.circuit-strip button:nth-child(7){background:#a78bfa}.circuit-strip button:not(.is-active){opacity:.38}.circuit-strip button.is-active{transform:scaleY(1.8);opacity:1}
     .primary,.secondary,.choice,.key{min-height:54px;border-radius:12px;font-weight:900;border:1px solid var(--line-strong);transition:transform 120ms var(--ease-out),background 160ms var(--ease-out),border-color 160ms var(--ease-out)}
     .primary{background:var(--acid);border-color:var(--acid);color:#0a0a0c;padding:0 20px}
     .secondary{background:var(--surface);color:var(--ink);padding:0 18px}
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.actions>*{flex:1 1 170px}
     #home .actions{max-width:420px;margin-top:2px}
-    #dailyBtn{min-height:62px;font-size:16px;letter-spacing:.01em}
-    .modes{display:grid;gap:12px;margin-top:30px}
-    .mode{--mode:var(--accent);width:100%;min-height:170px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;color:var(--ink);position:relative;overflow:hidden;transition:transform 160ms var(--ease-out),border-color 160ms var(--ease-out),background 160ms var(--ease-out)}
-    .mode::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--mode)}
+    #dailyBtn{min-height:62px;font-size:16px;letter-spacing:.01em;position:relative;overflow:hidden}#dailyBtn::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.38) 48%,transparent 72%);transform:translateX(-120%)}@media(prefers-reduced-motion:no-preference){#dailyBtn:hover::after,#dailyBtn:focus-visible::after{animation:cta-scan 620ms var(--ease-out)}@keyframes cta-scan{to{transform:translateX(120%)}}}
+    .home-select{display:grid;gap:16px;margin-top:30px}
+    .home-preview{--preview:#ff6b4a;position:relative;min-height:210px;border:1px solid var(--line);border-radius:18px;background:var(--surface);overflow:hidden;padding:18px;display:flex;flex-direction:column;justify-content:space-between}
+    .home-preview::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,color-mix(in srgb,var(--preview) 16%,transparent),transparent 42%);pointer-events:none}
+    .home-preview-kicker{position:relative;z-index:1;font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;color:var(--preview)}
+    .home-preview-number{position:absolute;right:-8px;bottom:-30px;font-size:clamp(150px,34vw,260px);line-height:.8;font-weight:950;letter-spacing:-.11em;color:color-mix(in srgb,var(--preview) 18%,transparent);transition:color 180ms var(--ease-out),transform 180ms var(--ease-out)}
+    .home-preview-copy{position:relative;z-index:1;max-width:390px}
+    .home-preview-copy h3{margin:8px 0 6px;font-size:clamp(28px,5vw,42px);letter-spacing:-.05em}
+    .home-preview-copy p{margin:0;color:var(--muted);font-size:13px;line-height:1.6;font-weight:680}
+    .home-preview-foot{position:relative;z-index:1;display:flex;align-items:center;gap:8px;margin-top:18px;font:850 10px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;color:var(--muted)}
+    .preview-dot{width:8px;height:8px;border-radius:50%;background:var(--preview);box-shadow:0 0 0 4px color-mix(in srgb,var(--preview) 12%,transparent)}
+    .modes{display:grid;gap:0;border-top:1px solid var(--line)}
+    .mode-index{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;border:1px solid color-mix(in srgb,var(--mode) 48%,var(--line));color:var(--mode);font:900 11px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
+    .mode-copy{min-width:0;display:grid;gap:4px}
+    .mode-copy h3{margin:0!important;font-size:clamp(20px,3vw,27px)!important}
+    .mode-copy p{margin:0!important;max-width:560px}
+
+    .mode{--mode:var(--accent);width:100%;min-height:96px;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0;padding:16px 4px;color:var(--ink);position:relative;overflow:hidden;display:grid;grid-template-columns:42px minmax(0,1fr) 34px;gap:14px;align-items:center;transition:padding 160ms var(--ease-out),background 160ms var(--ease-out),border-color 160ms var(--ease-out)}
+    .mode::after{content:"";position:absolute;left:0;top:14px;bottom:14px;width:3px;border-radius:99px;background:var(--mode);transform:scaleY(0);transform-origin:center;transition:transform 160ms var(--ease-out)}
     .mode:nth-child(1){--mode:#ff6b4a}.mode:nth-child(2){--mode:#ffbe55}.mode:nth-child(3){--mode:#60d6a7}.mode:nth-child(4){--mode:#59a6ff}.mode:nth-child(5){--mode:#d8ff4f}.mode:nth-child(6){--mode:#f075c2}.mode:nth-child(7){--mode:#a78bfa}
-    .mode:hover{transform:translateY(-3px);border-color:var(--line-strong);background:var(--surface2)}
+    .mode:hover,.mode.is-active{padding-left:14px;background:color-mix(in srgb,var(--mode) 7%,transparent);border-color:color-mix(in srgb,var(--mode) 42%,var(--line))}.mode:hover::after,.mode.is-active::after,.mode:focus-visible::after{transform:scaleY(1)}
     .mode:active,.primary:active,.secondary:active,.choice:active,.key:active,.schulte-cell:active,.odd-cell:active{transform:scale(.985)}
-    .mode-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .mode-top{display:none}
     .mode-num{font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;color:var(--mode)}.mode-arrow{font-size:24px;font-weight:500;color:var(--muted)}
-    .mode h3{margin:32px 0 7px;font-size:clamp(24px,4vw,32px);letter-spacing:-.04em}.mode p{margin:0;max-width:440px;color:var(--muted);font-weight:680;line-height:1.55;font-size:13px}
+    .mode h3{letter-spacing:-.04em}.mode p{color:var(--muted);font-weight:680;line-height:1.5;font-size:12px}.mode-arrow{font-size:24px;font-weight:500;color:var(--muted);transition:transform 160ms var(--ease-out),color 160ms var(--ease-out)}.mode:hover .mode-arrow,.mode.is-active .mode-arrow{transform:translateX(5px);color:var(--mode)}
     .note{margin-top:20px;padding:12px 0;border-top:1px solid var(--line);font-size:11px;line-height:1.6;font-weight:700;color:var(--muted)}
     .gamehead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
     .back{border:0;background:transparent;color:var(--muted);padding:6px 0;font-weight:850}.back:hover{color:var(--ink)}.gamehead h2{margin:8px 0 0;font-size:clamp(28px,6vw,42px);letter-spacing:-.055em}
@@ -82,9 +97,10 @@
     .daily-summary{display:grid;gap:10px;margin-top:24px;text-align:left}.summary-row{display:grid;grid-template-columns:120px 1fr 42px;gap:10px;align-items:center}.summary-row span{font-size:12px;font-weight:800}.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden}.bar b{display:block;height:100%;background:var(--acid);border-radius:99px;width:0}.summary-row strong{text-align:right;font:900 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
     .hidden{display:none!important}
     @media(min-width:680px){
-      .modes{grid-template-columns:repeat(2,1fr)}
-      .mode:first-child{grid-column:span 2;min-height:190px}.mode:first-child h3{font-size:40px}
       .hero{padding-top:48px}
+      .home-select{grid-template-columns:minmax(0,1.35fr) minmax(250px,.65fr);align-items:start}
+      .home-preview{position:sticky;top:18px;min-height:420px}
+      .home-preview-number{font-size:250px}
     }
     @media(prefers-reduced-motion:no-preference){
       ::view-transition-old(root){animation:brain-out 90ms ease-in both}
@@ -114,17 +130,28 @@
         <span class="hero-chip">1 FULL RUN</span>
         <span class="hero-chip">CLOUD QA VERIFIED</span>
       </div>
-      <div class="circuit-strip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="circuit-strip" aria-label="七關回路"><button type="button" data-preview-mode="math" aria-label="預覽快速心算"></button><button type="button" data-preview-mode="memory" aria-label="預覽瞬間記憶"></button><button type="button" data-preview-mode="logic" aria-label="預覽邏輯推理"></button><button type="button" data-preview-mode="executive" aria-label="預覽規則切換"></button><button type="button" data-preview-mode="schulte" aria-label="預覽舒爾特方格"></button><button type="button" data-preview-mode="stroop" aria-label="預覽 Stroop"></button><button type="button" data-preview-mode="odd" aria-label="預覽表裡不一"></button></div>
       <div class="actions"><button id="dailyBtn" class="primary" type="button">開始完整 7 關</button></div>
     </div>
-    <div class="modes">
-      <button class="mode" type="button" data-mode="math"><div class="mode-top"><span class="mode-num">01 / SPEED</span><span class="mode-arrow">→</span></div><h3>快速心算</h3><p>30 秒壓力測試。越準、越快，題目越往上推。</p></button>
-      <button class="mode" type="button" data-mode="memory"><div class="mode-top"><span class="mode-num">02 / MEMORY</span><span class="mode-arrow">→</span></div><h3>瞬間記憶</h3><p>只看一眼。數字消失後，把它完整抓回來。</p></button>
-      <button class="mode" type="button" data-mode="logic"><div class="mode-top"><span class="mode-num">03 / LOGIC</span><span class="mode-arrow">→</span></div><h3>邏輯推理</h3><p>不是猜答案。把矛盾一個個排掉，直到只剩唯一解。</p></button>
-      <button class="mode" type="button" data-mode="executive"><div class="mode-top"><span class="mode-num">04 / EXECUTIVE</span><span class="mode-arrow">→</span></div><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></button>
-      <button class="mode" type="button" data-mode="schulte"><div class="mode-top"><span class="mode-num">05 / SEARCH</span><span class="mode-arrow">→</span></div><h3>舒爾特方格</h3><p>25 個數字散在眼前。你的視線能多快鎖定下一個？</p></button>
-      <button class="mode" type="button" data-mode="stroop"><div class="mode-top"><span class="mode-num">06 / INHIBITION</span><span class="mode-arrow">→</span></div><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p></button>
-      <button class="mode" type="button" data-mode="odd"><div class="mode-top"><span class="mode-num">07 / INTERFERENCE</span><span class="mode-arrow">→</span></div><h3>表裡不一</h3><p>16 個訊號裡只有 1 個說謊。把它抓出來。</p></button>
+    <div class="home-select">
+      <div class="modes" aria-label="選擇單項訓練">
+        <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#ff6b4a" data-preview="30 秒壓力測試。越準、越快，題目越往上推。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>30 秒壓力測試。越準、越快，題目越往上推。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#ffbe55" data-preview="只看一眼。數字消失後，把它完整抓回來。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>只看一眼。數字消失後，把它完整抓回來。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#60d6a7" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#59a6ff" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#d8ff4f" data-preview="視線持續鎖定下一個目標。接下來會升級成動態搜尋場。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>視線持續鎖定下一個目標，挑戰搜尋速度。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#f075c2" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#a78bfa" data-preview="16 個訊號裡只有 1 個說謊。把它抓出來。"><span class="mode-index">07</span><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>16 個訊號裡只有 1 個說謊。把它抓出來。</p></span><span class="mode-arrow">→</span></button>
+      </div>
+      <aside id="homePreview" class="home-preview" aria-live="polite">
+        <div class="home-preview-kicker"><span id="previewIndex">01</span> / <span id="previewLabel">SPEED</span></div>
+        <div id="previewNumber" class="home-preview-number" aria-hidden="true">01</div>
+        <div class="home-preview-copy">
+          <h3 id="previewTitle">快速心算</h3>
+          <p id="previewText">30 秒壓力測試。越準、越快，題目越往上推。</p>
+          <div class="home-preview-foot"><span class="preview-dot"></span><span>SELECT A CIRCUIT · TAP TO ENTER</span></div>
+        </div>
+      </aside>
     </div>
     <div class="note">這是娛樂與練習用途的遊戲表現，不是 IQ、醫療或認知功能診斷。</div>
   </section>
@@ -262,7 +289,25 @@
 
   $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪'});
   document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();dailyMode=false;show('home')})});
-  document.querySelectorAll('.mode').forEach(function(b){b.addEventListener('click',function(){dailyMode=false;startMode(this.dataset.mode)})});
+  var homeModeButtons=[].slice.call(document.querySelectorAll('.mode'));
+  function previewMode(mode){
+    var b=homeModeButtons.find(function(x){return x.dataset.mode===mode});if(!b)return;
+    homeModeButtons.forEach(function(x){x.classList.toggle('is-active',x===b)});
+    document.querySelectorAll('[data-preview-mode]').forEach(function(x){x.classList.toggle('is-active',x.dataset.previewMode===mode)});
+    var preview=$('homePreview');preview.style.setProperty('--preview',b.dataset.color||'#ff6b4a');
+    $('previewIndex').textContent=b.dataset.index||'01';$('previewNumber').textContent=b.dataset.index||'01';
+    $('previewLabel').textContent=b.dataset.label||'';$('previewTitle').textContent=b.querySelector('h3').textContent;
+    $('previewText').textContent=b.dataset.preview||b.querySelector('p').textContent;
+  }
+  homeModeButtons.forEach(function(b){
+    b.addEventListener('mouseenter',function(){previewMode(this.dataset.mode)});
+    b.addEventListener('focus',function(){previewMode(this.dataset.mode)});
+  });
+  document.querySelectorAll('[data-preview-mode]').forEach(function(b){
+    b.addEventListener('click',function(){previewMode(this.dataset.previewMode);var target=document.querySelector('.mode[data-mode="'+this.dataset.previewMode+'"]');if(target){target.focus();target.scrollIntoView({block:'nearest',behavior:reduceMotion?'auto':'smooth'})}});
+  });
+  previewMode('math');
+  homeModeButtons.forEach(function(b){b.addEventListener('click',function(){dailyMode=false;startMode(this.dataset.mode)})});
   $('dailyBtn').addEventListener('click',startDaily);$('dailyAgain').addEventListener('click',startDaily);
 
   function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(memoryTimeout);memoryTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
