@@ -121,7 +121,25 @@
       .exec-choices .choice{font-size:21px;min-height:72px;padding:0 8px}
       .exec-hint{font-size:15px;margin-top:15px}
     }
-    .schulte-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}.schulte-cell{min-height:58px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);color:var(--ink);font-size:22px;font-weight:900;transition:transform 110ms var(--ease-out),opacity 140ms var(--ease-out)}.schulte-cell:hover{border-color:var(--acid)}.schulte-cell.done{opacity:.18;border-color:transparent}
+    .schulte-mode-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+    .schulte-mode{min-height:58px;border:1px solid var(--line-strong);border-radius:12px;background:#fffdf8;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:8px;font-weight:900}
+    .schulte-mode b{font-size:18px}.schulte-mode span{font-size:12px;color:var(--muted)}
+    .schulte-mode.active{background:#e8ff80;border-color:#171717;box-shadow:0 3px 0 rgba(23,23,23,.12)}
+    .schulte-stats{grid-template-columns:repeat(4,1fr);gap:6px;background:transparent;border:0;overflow:visible}
+    .schulte-stats .stat{border:1px solid var(--line);border-radius:11px;padding:11px 8px}
+    .schulte-stats .stat span{font-size:9px;letter-spacing:.04em}
+    .schulte-stats .stat strong{font-size:clamp(18px,3.4vw,25px)}
+    .schulte-instruction{font-size:clamp(15px,2.2vw,17px);color:#3e3e3e;font-weight:760;line-height:1.6}
+    .schulte-targetbar{display:flex;align-items:center;justify-content:center;gap:12px;margin:15px 0 12px;padding:12px 16px;border:2px solid #171717;border-radius:14px;background:#ffe36d;color:#171717}
+    .schulte-targetbar span{font-size:14px;font-weight:850}.schulte-targetbar strong{font-size:clamp(34px,7vw,50px);line-height:1;font-weight:950;font-variant-numeric:tabular-nums}
+    .schulte-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:12px;align-items:stretch}
+    .schulte-cell{min-width:0;min-height:54px;border:1.5px solid #171717;border-radius:10px;background:var(--cell-bg,#fff0a6);color:#171717;font-size:clamp(17px,4vw,23px);font-weight:950;padding:0;overflow:hidden;box-shadow:0 3px 0 rgba(23,23,23,.10);will-change:transform}
+    .schulte-cell:hover{border-color:#171717;filter:brightness(.98)}
+    .schulte-float{width:100%;min-height:52px;display:flex;align-items:center;justify-content:center;animation:schulte-float var(--float-duration,2.8s) ease-in-out var(--float-delay,0s) infinite alternate;transform:translate(0,0);will-change:transform}
+    @keyframes schulte-float{from{transform:translate(var(--float-x1,-2px),var(--float-y1,1px))}to{transform:translate(var(--float-x2,2px),var(--float-y2,-1px))}}
+    @media(min-width:800px){.schulte-grid{grid-template-columns:repeat(10,minmax(0,1fr));gap:8px}.schulte-cell{min-height:60px}.schulte-float{min-height:58px}}
+    @media(max-width:560px){.schulte-mode-grid{grid-template-columns:repeat(2,1fr)}.schulte-stats{grid-template-columns:repeat(2,1fr)}.schulte-grid{gap:6px}.schulte-cell{min-height:50px}.schulte-float{min-height:48px}}
+    @media(prefers-reduced-motion:reduce){.schulte-float{animation:none!important}.schulte-cell{transition:none!important}}
     .stroop-word{text-align:center;font-size:clamp(66px,18vw,108px);font-weight:950;letter-spacing:.03em;padding:34px 0 24px}
     .stroop-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.stroop-choices .choice{text-align:center}
     .odd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}.odd-cell{min-height:78px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--ink);font-weight:950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.odd-cell:hover{border-color:var(--acid)}.odd-arrow{font-size:32px;line-height:1}.odd-label{font-size:11px;color:var(--muted)}
@@ -242,7 +260,7 @@
         <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="只看一眼。數字消失後，把它完整抓回來。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>只看一眼。數字消失後，把它完整抓回來。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="視線持續鎖定下一個目標。接下來會升級成動態搜尋場。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>視線持續鎖定下一個目標，挑戰搜尋速度。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標起跳。四種搜尋模式，每答對一次，剩餘數字全部重新排位。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、四種模式；每答對一次，全場重新排位。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#a62b74" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="16 個訊號裡只有 1 個說謊。把它抓出來。"><span class="mode-index">07</span><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>16 個訊號裡只有 1 個說謊。把它抓出來。</p></span><span class="mode-arrow">→</span></button>
       </div>
@@ -294,11 +312,18 @@
   </section>
 
   <section id="schulte" class="screen">
-    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>舒爾特方格</h2></div><div class="pill">1 → 25</div></div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>舒爾特方格</h2></div><div id="schulteModePill" class="pill">A · 1 → 50</div></div>
     <div class="panel">
-      <div class="stats"><div class="stat"><span>NEXT</span><strong id="schulteNext">1</strong></div><div class="stat"><span>ERROR</span><strong id="schulteWrong">0</strong></div><div class="stat"><span>TIME</span><strong id="schulteTime">0.0</strong></div></div>
-      <div class="mini-instruction">依序點擊 1、2、3…直到 25。錯誤點擊不會前進。</div>
-      <div id="schulteGrid" class="schulte-grid" aria-label="舒爾特方格"></div>
+      <div class="schulte-mode-grid" aria-label="舒爾特模式">
+        <button type="button" class="schulte-mode active" data-schulte-mode="A"><b>A</b><span>1 → 50</span></button>
+        <button type="button" class="schulte-mode" data-schulte-mode="B"><b>B</b><span>50 → 1</span></button>
+        <button type="button" class="schulte-mode" data-schulte-mode="C"><b>C</b><span>偏移 50</span></button>
+        <button type="button" class="schulte-mode" data-schulte-mode="D"><b>D</b><span>奇／偶 50</span></button>
+      </div>
+      <div class="stats schulte-stats"><div class="stat"><span>目前目標</span><strong id="schulteNext">1</strong></div><div class="stat"><span>已完成</span><strong id="schulteDone">0 / 50</strong></div><div class="stat"><span>錯誤</span><strong id="schulteWrong">0</strong></div><div class="stat"><span>時間</span><strong id="schulteTime">0.0 秒</strong></div></div>
+      <div class="mini-instruction schulte-instruction">找出目前目標。每答對一個，剩餘數字會全部重新排位；格子本身也會持續微幅漂動。</div>
+      <div class="schulte-targetbar"><span>現在找</span><strong id="schulteTargetBig">1</strong></div>
+      <div id="schulteGrid" class="schulte-grid" aria-label="動態舒爾特搜尋場"></div>
     </div>
   </section>
 
@@ -359,7 +384,7 @@
   var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryScorePoints=0,memoryBestDigits=0;
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false,execSchedule=[],execSwitchRtTotal=0,execSwitchRtCount=0,execRepeatRtTotal=0,execRepeatRtCount=0,execConflictCorrect=0,execConflictTotal=0;
-  var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null;
+  var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null,schulteSequence=[],schulteIndex=0,schulteMode='A',schulteModeDetail='',schulteFinished=false;
   var stroopRound=0,stroopCorrect=0,stroopWrong=0,stroopRtTotal=0,stroopStartedAt=0,stroopColor='red',stroopLocked=false;
   var oddRound=0,oddCorrect=0,oddWrong=0,oddRtTotal=0,oddStartedAt=0,oddLocked=false;
   var gameBgmBuffer=null,gameBgmSource=null,gameBgmGain=null,gameBgmToken=0;
@@ -1086,16 +1111,86 @@
     })
   }
 
-  function startSchulte(){
-    show('schulte');schulteNext=1;schulteWrong=0;schulteStart=performance.now();$('schulteNext').textContent='1';$('schulteWrong').textContent='0';$('schulteTime').textContent='0.0';
-    var grid=$('schulteGrid');grid.innerHTML='';shuffle(Array.from({length:25},function(_,i){return i+1})).forEach(function(n){var b=document.createElement('button');b.type='button';b.className='schulte-cell';b.textContent=n;b.dataset.number=n;b.addEventListener('click',function(){answerSchulte(n,b)});grid.appendChild(b)});
-    schulteTimer=setInterval(function(){$('schulteTime').textContent=((performance.now()-schulteStart)/1000).toFixed(1)},100)
+  function buildSchulteSequence(mode){
+    var seq=[],i,start,odd;
+    if(mode==='A'){for(i=1;i<=50;i++)seq.push(i);schulteModeDetail='1 → 50'}
+    else if(mode==='B'){for(i=50;i>=1;i--)seq.push(i);schulteModeDetail='50 → 1'}
+    else if(mode==='C'){
+      start=rand(8,40);for(i=0;i<50;i++)seq.push(start+i);schulteModeDetail=start+' → '+(start+49)
+    }else{
+      odd=Math.random()<.5;for(i=0;i<50;i++)seq.push((odd?1:2)+i*2);schulteModeDetail=odd?'奇數 1 → 99':'偶數 2 → 100'
+    }
+    return seq
   }
+  function setSchulteModeUi(){
+    $('schulteModePill').textContent=schulteMode+' · '+schulteModeDetail;
+    document.querySelectorAll('.schulte-mode').forEach(function(b){
+      var active=b.dataset.schulteMode===schulteMode;b.classList.toggle('active',active);b.setAttribute('aria-pressed',active?'true':'false')
+    })
+  }
+  function makeSchulteCell(n,index){
+    var colors=['#fff0a6','#c9f2ff','#d8f7bd','#ffd0be','#e8dcff'];
+    var b=document.createElement('button');b.type='button';b.className='schulte-cell';b.dataset.number=String(n);b.setAttribute('aria-label','數字 '+n);
+    b.style.setProperty('--cell-bg',colors[index%colors.length]);
+    var f=document.createElement('span');f.className='schulte-float';f.textContent=n;
+    f.style.setProperty('--float-duration',(2.2+Math.random()*1.8).toFixed(2)+'s');
+    f.style.setProperty('--float-delay',(-Math.random()*2).toFixed(2)+'s');
+    f.style.setProperty('--float-x1',rand(-4,2)+'px');f.style.setProperty('--float-y1',rand(-3,3)+'px');
+    f.style.setProperty('--float-x2',rand(-2,4)+'px');f.style.setProperty('--float-y2',rand(-3,3)+'px');
+    b.appendChild(f);b.addEventListener('click',function(){answerSchulte(n,b)});return b
+  }
+  function updateSchulteHud(){
+    var target=schulteSequence[schulteIndex];
+    schulteNext=target;
+    $('schulteNext').textContent=target==null?'完成':String(target);
+    $('schulteTargetBig').textContent=target==null?'✓':String(target);
+    $('schulteDone').textContent=schulteIndex+' / '+schulteSequence.length;
+  }
+  function relayoutSchulteAfterHit(hitButton){
+    var grid=$('schulteGrid'),remaining=[].slice.call(grid.querySelectorAll('.schulte-cell')).filter(function(c){return c!==hitButton});
+    var first=new Map();remaining.forEach(function(c){first.set(c,c.getBoundingClientRect())});
+    hitButton.remove();
+    shuffle(remaining).forEach(function(c){grid.appendChild(c)});
+    if(reduceMotion)return;
+    remaining.forEach(function(c){
+      var a=first.get(c),b=c.getBoundingClientRect(),dx=a.left-b.left,dy=a.top-b.top;
+      c.style.transition='none';c.style.transform='translate('+dx+'px,'+dy+'px)'
+    });
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      remaining.forEach(function(c){c.style.transition='transform 300ms cubic-bezier(.16,1,.3,1)';c.style.transform='translate(0,0)'})
+    })})
+  }
+  function startSchulte(modeOverride){
+    show('schulte');clearInterval(schulteTimer);schulteTimer=null;schulteFinished=false;
+    schulteMode=modeOverride||((dailyMode?['A','B','C','D'][rand(0,3)]:'A'));
+    schulteSequence=buildSchulteSequence(schulteMode);schulteIndex=0;schulteWrong=0;schulteStart=performance.now();
+    setSchulteModeUi();$('schulteWrong').textContent='0';$('schulteTime').textContent='0.0 秒';updateSchulteHud();
+    var grid=$('schulteGrid');grid.innerHTML='';
+    shuffle(schulteSequence.slice()).forEach(function(n,i){grid.appendChild(makeSchulteCell(n,i))});
+    schulteTimer=setInterval(function(){$('schulteTime').textContent=((performance.now()-schulteStart)/1000).toFixed(1)+' 秒'},100)
+  }
+  document.querySelectorAll('.schulte-mode').forEach(function(b){b.addEventListener('click',function(){startSchulte(this.dataset.schulteMode)})});
   function answerSchulte(n,button){
-    if(n!==schulteNext){schulteWrong++;$('schulteWrong').textContent=schulteWrong;wrongTone();return}
-    button.classList.add('done');button.disabled=true;correctTone();schulteNext++;
-    if(schulteNext>25){clearInterval(schulteTimer);schulteTimer=null;var sec=(performance.now()-schulteStart)/1000;var score=Math.max(0,Math.min(100,Math.round(110-sec*1.6-schulteWrong*3)));finishMode('schulte',score,{a:sec.toFixed(1)+'s',b:schulteWrong+' 錯',c:'25/25'})}
-    else $('schulteNext').textContent=schulteNext
+    if(schulteFinished)return;
+    var target=schulteSequence[schulteIndex];
+    if(n!==target){schulteWrong++;$('schulteWrong').textContent=schulteWrong;wrongTone();return}
+    correctTone();schulteIndex++;relayoutSchulteAfterHit(button);updateSchulteHud();
+    if(schulteIndex>=schulteSequence.length){
+      schulteFinished=true;clearInterval(schulteTimer);schulteTimer=null;
+      var sec=(performance.now()-schulteStart)/1000,accuracy=50/(50+schulteWrong)*100;
+      var pace=Math.max(0,Math.min(100,Math.round(130-sec*.7)));
+      var score=Math.max(0,Math.min(100,Math.round(accuracy*.72+pace*.28)));
+      finishMode('schulte',score,{
+        a:'50/50',b:schulteWrong+' 錯',c:sec.toFixed(1)+' 秒',
+        items:[
+          ['模式',schulteMode+' · '+schulteModeDetail],
+          ['完成','50 / 50'],
+          ['錯誤',String(schulteWrong)],
+          ['總時間',sec.toFixed(1)+' 秒'],
+          ['平均每題',(sec/50).toFixed(2)+' 秒']
+        ]
+      })
+    }
   }
 
   var stroopDefs={red:{word:'紅',label:'紅色',css:'#ff6b5f'},blue:{word:'藍',label:'藍色',css:'#69adff'},green:{word:'綠',label:'綠色',css:'#63d7aa'},yellow:{word:'黃',label:'黃色',css:'#f6c85f'}};
