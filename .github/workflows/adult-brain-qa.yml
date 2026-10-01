@@ -10,6 +10,7 @@ on:
       - '.github/workflows/adult-brain-qa.yml'
       - '.agents/skills/brain-game-qa/**'
       - '.agents/skills/ui-motion/**'
+      - '.agents/skills/award-game-design/**'
       - 'docs/ADULT_BRAIN_TRAINING_AWARD_BAR.md'
   pull_request:
     paths:
@@ -18,6 +19,7 @@ on:
       - '.github/workflows/adult-brain-qa.yml'
       - '.agents/skills/brain-game-qa/**'
       - '.agents/skills/ui-motion/**'
+      - '.agents/skills/award-game-design/**'
       - 'docs/ADULT_BRAIN_TRAINING_AWARD_BAR.md'
 
 permissions:
