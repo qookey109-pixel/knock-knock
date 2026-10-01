@@ -132,19 +132,27 @@ async function runViewport(browser, viewport, name) {
   assert(await logicChoices.count() === 3, `${name}: ordering puzzle should have three choices`);
   await logicChoices.filter({ hasText: new RegExp('^' + middlePerson + '
 
-  // Executive function: follow the visible rule and verify the first answer is accepted.
+  // Executive function: learn two rules, then verify the first planned rule switch.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="executive"]').click();
   await page.locator('#executive.active').waitFor();
-  const rule = (await page.locator('#execRule').innerText()).trim();
-  const value = Number((await page.locator('#execNumber').innerText()).trim());
-  assert(Number.isFinite(value), `${name}: executive stimulus should be numeric`);
-  let side;
-  if (rule.includes('奇數 / 偶數')) side = value % 2 === 1 ? 'left' : 'right';
-  else if (rule.includes('小於 5 / 大於 5')) side = value < 5 ? 'left' : 'right';
-  else throw new Error(`${name}: unknown executive rule: ${rule}`);
-  await page.locator(side === 'left' ? '#execLeft' : '#execRight').click();
-  await page.waitForFunction(() => document.getElementById('execCorrect')?.textContent === '1');
+  assert((await page.locator('#execRoundPill').innerText()).trim() === '1 / 18 · 熟悉 A', `${name}: executive should start an 18-round progression`);
+  for (let round = 1; round <= 3; round++) {
+    const rule = (await page.locator('#execRule').innerText()).trim();
+    const value = Number((await page.locator('#execNumber').innerText()).trim());
+    assert(Number.isFinite(value), `${name}: executive stimulus should be numeric`);
+    let side;
+    if (rule.includes('奇數 / 偶數')) side = value % 2 === 1 ? 'left' : 'right';
+    else if (rule.includes('小於 5 / 大於 5')) side = value < 5 ? 'left' : 'right';
+    else throw new Error(`${name}: unknown executive rule: ${rule}`);
+    await page.locator(side === 'left' ? '#execLeft' : '#execRight').click();
+    if (round < 3) await page.waitForFunction(r => document.getElementById('execRoundPill')?.textContent.startsWith((r + 1) + ' / 18'), round);
+  }
+  await page.waitForFunction(() => document.getElementById('execRoundPill')?.textContent.startsWith('4 / 18'));
+  assert((await page.locator('#execRoundPill').innerText()).includes('熟悉 B'), `${name}: executive round 4 should enter rule B familiarization`);
+  assert((await page.locator('#execRule').innerText()).includes('規則切換｜判斷小於 5 / 大於 5'), `${name}: executive round 4 should visibly switch rules`);
+  const execSource = await page.locator('html').evaluate(el => el.innerHTML);
+  assert(execSource.includes('execIsConflictValue') && execSource.includes('EXEC_TOTAL_ROUNDS=18'), `${name}: executive should include conflict trials and 18 rounds`);
   await assertA11y(page, `${name} executive`);
 
   // Schulte
