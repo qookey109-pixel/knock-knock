@@ -151,6 +151,10 @@ async function runViewport(browser, viewport, name) {
   await page.waitForFunction(() => document.getElementById('execRoundPill')?.textContent.startsWith('4 / 18'));
   assert((await page.locator('#execRoundPill').innerText()).includes('熟悉 B'), `${name}: executive round 4 should enter rule B familiarization`);
   assert((await page.locator('#execRule').innerText()).includes('規則切換｜判斷小於 5 / 大於 5'), `${name}: executive round 4 should visibly switch rules`);
+  const execLabels = await page.locator('#executive .stats .stat span').allInnerTexts();
+  assert(execLabels.join('|') === '正確題數|切換命中|平均反應', `${name}: executive stat labels should be localized`);
+  const execRtText = (await page.locator('#execRt').innerText()).trim();
+  assert(execRtText.endsWith('秒'), `${name}: executive reaction time should be displayed in seconds`);
   const execSource = await page.locator('html').evaluate(el => el.innerHTML);
   assert(execSource.includes('execIsConflictValue') && execSource.includes('EXEC_TOTAL_ROUNDS=18'), `${name}: executive should include conflict trials and 18 rounds`);
   await assertA11y(page, `${name} executive`);
