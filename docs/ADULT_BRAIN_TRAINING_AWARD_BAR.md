@@ -16,7 +16,7 @@ Current independent games:
 6. Stroop 顏色衝突
 7. 表裡不一
 
-Daily Training draws four games from the seven.
+Daily Training runs all seven games as one complete session.
 
 ## Judging pillars
 
@@ -46,7 +46,7 @@ No broken flows, no ambiguous logic puzzles, no horizontal overflow, no serious/
 A version is submission-ready only when:
 
 - all seven games have complete start → play → result loops;
-- Daily Training can complete four selected games end-to-end;
+- Daily Training can complete all seven games end-to-end;
 - scoring is internally consistent and explained;
 - animation and sound are cohesive rather than decorative;
 - mobile and desktop browser QA pass;
