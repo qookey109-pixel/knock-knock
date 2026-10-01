@@ -30,7 +30,7 @@ async function runViewport(browser, viewport, name) {
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
 
   assert(await page.title() === '大人的腦部鍛鍊', `${name}: wrong page title`);
-  assert(await page.locator('.mode').count() === 3, `${name}: expected three modes`);
+  assert(await page.locator('.mode').count() === 4, `${name}: expected four modes`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
   await assertA11y(page, `${name} home`);
@@ -66,6 +66,20 @@ async function runViewport(browser, viewport, name) {
   const feedback = await page.locator('#logicFeedback').innerText();
   assert(feedback.includes('正確'), `${name}: first logic puzzle expected 阿明 to be correct`);
   await assertA11y(page, `${name} logic`);
+
+  // Executive function: follow the visible rule and verify the first answer is accepted.
+  await page.locator('.back:visible').click();
+  await page.locator('[data-mode="executive"]').click();
+  const rule = (await page.locator('#execRule').innerText()).trim();
+  const value = Number((await page.locator('#execNumber').innerText()).trim());
+  assert(Number.isFinite(value), `${name}: executive stimulus should be numeric`);
+  let side;
+  if (rule.includes('奇數 / 偶數')) side = value % 2 === 1 ? 'left' : 'right';
+  else if (rule.includes('小於 5 / 大於 5')) side = value < 5 ? 'left' : 'right';
+  else throw new Error(`${name}: unknown executive rule: ${rule}`);
+  await page.locator(side === 'left' ? '#execLeft' : '#execRight').click();
+  await page.waitForFunction(() => document.getElementById('execCorrect')?.textContent === '1');
+  await assertA11y(page, `${name} executive`);
 
   await context.close();
 }
