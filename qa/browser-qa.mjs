@@ -64,6 +64,7 @@ async function runViewport(browser, viewport, name) {
   await page.locator('[data-preview-mode="math"]').click();
   await page.locator('#homePreview').focus();
   await page.keyboard.press('ArrowRight');
+  await page.waitForFunction(() => document.getElementById('previewIndex')?.textContent.trim() === '02');
   assert((await page.locator('#previewIndex').innerText()).trim() === '02', `${name}: keyboard preview should advance to 02`);
   await page.locator('[data-preview-mode="math"]').click();
 
