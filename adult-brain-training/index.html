@@ -140,8 +140,20 @@
     @media(min-width:800px){.schulte-grid{grid-template-columns:repeat(10,minmax(0,1fr));gap:8px}.schulte-cell{min-height:60px}.schulte-float{min-height:58px}}
     @media(max-width:560px){.schulte-mode-grid{grid-template-columns:repeat(2,1fr)}.schulte-stats{grid-template-columns:repeat(2,1fr)}.schulte-grid{gap:6px}.schulte-cell{min-height:50px}.schulte-float{min-height:48px}}
     @media(prefers-reduced-motion:reduce){.schulte-float{animation:none!important}.schulte-cell{transition:none!important}}
-    .stroop-word{text-align:center;font-size:clamp(66px,18vw,108px);font-weight:950;letter-spacing:.03em;padding:34px 0 24px}
-    .stroop-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.stroop-choices .choice{text-align:center}
+    .stroop-stats{gap:7px;background:transparent;border:0;overflow:visible}
+    .stroop-stats .stat{border:1px solid var(--line);border-radius:12px;padding:12px 10px}
+    .stroop-stats .stat:nth-child(1){background:#fff0a6}.stroop-stats .stat:nth-child(2){background:#ffd4c8}.stroop-stats .stat:nth-child(3){background:#d9eaff}
+    .stroop-stats .stat span{font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;font-size:10px;letter-spacing:.04em;color:#333;font-weight:900}
+    .stroop-instruction{font-size:clamp(16px,2.3vw,18px);line-height:1.65;color:#353535;font-weight:730}
+    .stroop-instruction strong{font-size:1.08em;color:#111;font-weight:950}
+    .stroop-trial-tag{width:max-content;margin:16px auto 8px;padding:7px 12px;border-radius:999px;background:#f0ebe0;color:#4b4b4b;font-size:12px;font-weight:900;letter-spacing:.04em}
+    .stroop-trial-tag.conflict{background:#ffcfbf;color:#8b2d18}.stroop-trial-tag.congruent{background:#d9f8c4;color:#245c28}
+    .stroop-stage{margin:8px 0 16px;border:2px solid #171717;border-radius:20px;background:#fffdf8;box-shadow:0 7px 0 rgba(23,23,23,.10);overflow:hidden}
+    .stroop-word{text-align:center;font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;font-size:clamp(112px,28vw,190px);line-height:.9;font-weight:950;letter-spacing:.02em;padding:54px 0 50px;text-shadow:0 2px 0 rgba(0,0,0,.04)}
+    .stroop-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+    .stroop-choices .choice{text-align:center;min-height:68px;font-size:clamp(20px,3vw,24px);font-weight:950;border:2px solid #171717;color:#111;box-shadow:0 4px 0 rgba(23,23,23,.10)}
+    .stroop-red{background:#ff8c80}.stroop-blue{background:#9fc8ff}.stroop-green{background:#9be6bd}.stroop-yellow{background:#ffe173}
+    @media(max-width:560px){.stroop-word{font-size:clamp(104px,35vw,150px);padding:46px 0 42px}.stroop-choices .choice{min-height:64px;font-size:20px}.stroop-stats .stat{padding:11px 7px}.stroop-stats .stat strong{font-size:22px}}
     .odd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}.odd-cell{min-height:78px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--ink);font-weight:950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.odd-cell:hover{border-color:var(--acid)}.odd-arrow{font-size:32px;line-height:1}.odd-label{font-size:11px;color:var(--muted)}
     .result{text-align:center;padding:26px 18px}.panel.result{background:#fffdf8}.result-score{font-size:clamp(92px,24vw,160px);line-height:.85;font-weight:950;letter-spacing:-.085em;color:var(--acid)}.result-unit{font:850 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:var(--muted);margin-top:10px;text-transform:uppercase}
     .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:24px}.result-box{padding:15px 8px;background:var(--surface2);border:1px solid var(--line);border-radius:10px}.result-box span{display:block;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:var(--muted)}.result-box strong{display:block;margin-top:7px;font-size:22px}
@@ -328,14 +340,15 @@
   </section>
 
   <section id="stroop" class="screen">
-    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>Stroop 顏色衝突</h2></div><div id="stroopPill" class="pill">1 / 12</div></div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>Stroop 顏色衝突</h2></div><div id="stroopPill" class="pill">1 / 20</div></div>
     <div class="panel">
-      <div class="stats"><div class="stat"><span>CORRECT</span><strong id="stroopCorrect">0</strong></div><div class="stat"><span>ERROR</span><strong id="stroopWrong">0</strong></div><div class="stat"><span>AVG RT</span><strong id="stroopRt">—</strong></div></div>
-      <div class="mini-instruction">回答「字體顏色」，不要讀文字內容。</div>
-      <div id="stroopWord" class="stroop-word" aria-live="polite" data-color="red">紅</div>
+      <div class="stats stroop-stats"><div class="stat"><span>正確題數</span><strong id="stroopCorrect">0</strong></div><div class="stat"><span>衝突命中</span><strong id="stroopConflict">0/0</strong></div><div class="stat"><span>平均反應</span><strong id="stroopRt">—</strong></div></div>
+      <div class="mini-instruction stroop-instruction"><strong>只看字體顏色，不要讀文字。</strong><br>例如「紅」如果是藍色字，就要按「藍色」。</div>
+      <div id="stroopTrialTag" class="stroop-trial-tag">準備</div>
+      <div class="stroop-stage"><div id="stroopWord" class="stroop-word" aria-live="polite" data-color="red">紅</div></div>
       <div id="stroopChoices" class="stroop-choices">
-        <button class="choice" type="button" data-color="red">紅色</button><button class="choice" type="button" data-color="blue">藍色</button>
-        <button class="choice" type="button" data-color="green">綠色</button><button class="choice" type="button" data-color="yellow">黃色</button>
+        <button class="choice stroop-red" type="button" data-color="red">紅色</button><button class="choice stroop-blue" type="button" data-color="blue">藍色</button>
+        <button class="choice stroop-green" type="button" data-color="green">綠色</button><button class="choice stroop-yellow" type="button" data-color="yellow">黃色</button>
       </div>
     </div>
   </section>
@@ -385,7 +398,7 @@
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false,execSchedule=[],execSwitchRtTotal=0,execSwitchRtCount=0,execRepeatRtTotal=0,execRepeatRtCount=0,execConflictCorrect=0,execConflictTotal=0;
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null,schulteSequence=[],schulteIndex=0,schulteMode='A',schulteModeDetail='',schulteFinished=false;
-  var stroopRound=0,stroopCorrect=0,stroopWrong=0,stroopRtTotal=0,stroopStartedAt=0,stroopColor='red',stroopLocked=false;
+  var stroopRound=0,stroopCorrect=0,stroopWrong=0,stroopRtTotal=0,stroopStartedAt=0,stroopColor='red',stroopLocked=false,stroopSchedule=[],stroopCurrentType='conflict',stroopConflictCorrect=0,stroopConflictTotal=0,stroopConflictRt=0,stroopCongruentRt=0,stroopCongruentCount=0;
   var oddRound=0,oddCorrect=0,oddWrong=0,oddRtTotal=0,oddStartedAt=0,oddLocked=false;
   var gameBgmBuffer=null,gameBgmSource=null,gameBgmGain=null,gameBgmToken=0;
   var homeBgmTimer=null,homeBgmUnlocked=false;
@@ -1193,15 +1206,73 @@
     }
   }
 
-  var stroopDefs={red:{word:'紅',label:'紅色',css:'#ff6b5f'},blue:{word:'藍',label:'藍色',css:'#69adff'},green:{word:'綠',label:'綠色',css:'#63d7aa'},yellow:{word:'黃',label:'黃色',css:'#f6c85f'}};
-  function startStroop(){show('stroop');stroopRound=0;stroopCorrect=0;stroopWrong=0;stroopRtTotal=0;$('stroopCorrect').textContent='0';$('stroopWrong').textContent='0';$('stroopRt').textContent='—';nextStroop()}
+  var STROOP_TOTAL=20;
+  var stroopDefs={
+    red:{word:'紅',label:'紅色',css:'#ef3f34'},
+    blue:{word:'藍',label:'藍色',css:'#2878d8'},
+    green:{word:'綠',label:'綠色',css:'#168f58'},
+    yellow:{word:'黃',label:'黃色',css:'#d49a00'}
+  };
+  function buildStroopSchedule(){
+    var types=[];
+    for(var i=0;i<6;i++)types.push('congruent');
+    for(var j=0;j<14;j++)types.push('conflict');
+    types=shuffle(types);
+    for(var k=2;k<types.length;k++){
+      if(types[k]===types[k-1]&&types[k]===types[k-2]){
+        var swap=-1;
+        for(var m=k+1;m<types.length;m++)if(types[m]!==types[k]){swap=m;break}
+        if(swap>=0){var t=types[k];types[k]=types[swap];types[swap]=t}
+      }
+    }
+    return types
+  }
+  function startStroop(){
+    show('stroop');stroopRound=0;stroopCorrect=0;stroopWrong=0;stroopRtTotal=0;stroopConflictCorrect=0;stroopConflictTotal=0;stroopConflictRt=0;stroopCongruentRt=0;stroopCongruentCount=0;stroopSchedule=buildStroopSchedule();
+    $('stroopCorrect').textContent='0';$('stroopConflict').textContent='0/0';$('stroopRt').textContent='—';nextStroop()
+  }
   function nextStroop(){
-    if(stroopRound>=12){endStroop();return}stroopRound++;stroopLocked=false;var keys=Object.keys(stroopDefs),wordKey=keys[rand(0,keys.length-1)];do{stroopColor=keys[rand(0,keys.length-1)]}while(stroopColor===wordKey&&Math.random()<.8);
-    var w=$('stroopWord');w.textContent=stroopDefs[wordKey].word;w.style.color=stroopDefs[stroopColor].css;w.dataset.color=stroopColor;$('stroopPill').textContent=stroopRound+' / 12';stroopStartedAt=performance.now()
+    if(stroopRound>=STROOP_TOTAL){endStroop();return}
+    stroopCurrentType=stroopSchedule[stroopRound];stroopRound++;stroopLocked=false;
+    var keys=Object.keys(stroopDefs),wordKey=keys[rand(0,keys.length-1)];
+    if(stroopCurrentType==='congruent')stroopColor=wordKey;
+    else{do{stroopColor=keys[rand(0,keys.length-1)]}while(stroopColor===wordKey)}
+    var w=$('stroopWord');w.textContent=stroopDefs[wordKey].word;w.style.color=stroopDefs[stroopColor].css;w.dataset.color=stroopColor;w.dataset.word=wordKey;
+    $('stroopPill').textContent=stroopRound+' / '+STROOP_TOTAL;
+    var tag=$('stroopTrialTag');tag.textContent=stroopCurrentType==='conflict'?'衝突題':'一致題';tag.className='stroop-trial-tag '+stroopCurrentType;
+    stroopStartedAt=performance.now()
   }
   document.querySelectorAll('#stroopChoices .choice').forEach(function(b){b.addEventListener('click',function(){answerStroop(this.dataset.color)})});
-  function answerStroop(color){if(stroopLocked)return;stroopLocked=true;var rt=performance.now()-stroopStartedAt;stroopRtTotal+=rt;if(color===stroopColor){stroopCorrect++;correctTone()}else{stroopWrong++;wrongTone()}$('stroopCorrect').textContent=stroopCorrect;$('stroopWrong').textContent=stroopWrong;$('stroopRt').textContent=Math.round(stroopRtTotal/stroopRound)+'ms';setTimeout(nextStroop,180)}
-  function endStroop(){var acc=Math.round(stroopCorrect/12*100),avg=Math.round(stroopRtTotal/12),speed=Math.max(0,Math.min(20,Math.round((2200-avg)/85))),score=Math.min(100,Math.round(acc*.8+speed));finishMode('stroop',score,{a:stroopCorrect+'/12',b:acc+'%',c:avg+'ms'})}
+  function answerStroop(color){
+    if(stroopLocked)return;stroopLocked=true;
+    var rt=performance.now()-stroopStartedAt;stroopRtTotal+=rt;var ok=color===stroopColor;
+    if(stroopCurrentType==='conflict'){stroopConflictTotal++;stroopConflictRt+=rt;if(ok)stroopConflictCorrect++}
+    else{stroopCongruentCount++;stroopCongruentRt+=rt}
+    if(ok){stroopCorrect++;correctTone()}else{stroopWrong++;wrongTone()}
+    $('stroopCorrect').textContent=stroopCorrect;$('stroopConflict').textContent=stroopConflictCorrect+'/'+stroopConflictTotal;
+    $('stroopRt').textContent=(stroopRtTotal/stroopRound/1000).toFixed(2)+' 秒';
+    setTimeout(nextStroop,180)
+  }
+  function endStroop(){
+    var acc=Math.round(stroopCorrect/STROOP_TOTAL*100),avg=stroopRtTotal/STROOP_TOTAL;
+    var conflictAcc=stroopConflictTotal?Math.round(stroopConflictCorrect/stroopConflictTotal*100):0;
+    var avgConflict=stroopConflictTotal?stroopConflictRt/stroopConflictTotal:0;
+    var avgCongruent=stroopCongruentCount?stroopCongruentRt/stroopCongruentCount:0;
+    var interference=avgConflict&&avgCongruent?avgConflict-avgCongruent:0;
+    var speed=Math.max(0,Math.min(100,Math.round((2200-avg)/16)));
+    var score=Math.max(0,Math.min(100,Math.round(acc*.55+conflictAcc*.30+speed*.15)));
+    var interferenceText=(interference>0?'+':'')+(interference/1000).toFixed(2)+' 秒';
+    finishMode('stroop',score,{
+      a:stroopCorrect+'/'+STROOP_TOTAL,b:acc+'%',c:conflictAcc+'%',
+      items:[
+        ['正確',stroopCorrect+'/'+STROOP_TOTAL],
+        ['正確率',acc+'%'],
+        ['衝突命中',conflictAcc+'%'],
+        ['平均反應',(avg/1000).toFixed(2)+' 秒'],
+        ['干擾成本',interferenceText]
+      ]
+    })
+  }
 
   var dirs=[{arrow:'←',label:'左',opp:'右'},{arrow:'→',label:'右',opp:'左'},{arrow:'↑',label:'上',opp:'下'},{arrow:'↓',label:'下',opp:'上'}];
   function startOdd(){show('odd');oddRound=0;oddCorrect=0;oddWrong=0;oddRtTotal=0;$('oddCorrect').textContent='0';$('oddWrong').textContent='0';$('oddRt').textContent='—';nextOdd()}
