@@ -45,7 +45,7 @@ async function runViewport(browser, viewport, name) {
   await assertA11y(page, `${name} math`);
 
   // Memory: capture the shown digits, then submit the same digits after they disappear.
-  await page.locator('.back').first().click();
+  await page.locator('.back:visible').click();
   await page.locator('[data-mode="memory"]').click();
   await page.locator('#memoryStart').click();
   const shown = (await page.locator('#memoryNumber').innerText()).trim();
@@ -57,7 +57,7 @@ async function runViewport(browser, viewport, name) {
   await assertA11y(page, `${name} memory`);
 
   // Logic: answer the first formally verified puzzle.
-  await page.locator('.back').first().click();
+  await page.locator('.back:visible').click();
   await page.locator('[data-mode="logic"]').click();
   const choices = page.locator('#logicChoices .choice');
   assert(await choices.count() === 3, `${name}: puzzle 1 should have three choices`);
