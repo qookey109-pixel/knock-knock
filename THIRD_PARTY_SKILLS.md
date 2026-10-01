@@ -110,3 +110,23 @@ Relevant upstream areas:
 - accessibility
 
 Upstream license: MIT.
+
+
+## Hallmark — Nutlope / Together AI
+
+Source: https://github.com/Nutlope/hallmark
+
+Project-adapted skill:
+- brain7-hallmark
+
+Relevant upstream areas:
+- anti-patterns
+- slop-test
+- responsive
+- motion
+- microinteractions
+- structure
+- interaction-and-states
+- typography
+
+Upstream license: MIT.
