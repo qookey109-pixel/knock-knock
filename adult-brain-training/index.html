@@ -714,11 +714,21 @@
     if(!mathGameStartedAt)return;
     clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;stopMathBgm();
     var tries=mathCorrect+mathWrong,acc=tries?Math.round(mathCorrect/tries*100):0,avgSec=mathResponseCount?mathTotalResponseMs/mathResponseCount/1000:0;
-    // BRAIN/7 needs a 0–100 comparable score; keep raw Quick Math score visible in stats.
+    var elapsedSec=Math.max(0,Math.round((performance.now()-mathGameStartedAt)/1000)),minutes=Math.floor(elapsedSec/60),seconds=elapsedSec%60,totalTime=minutes+':'+String(seconds).padStart(2,'0');
+    // BRAIN/7 needs a 0–100 comparable score; raw Quick Math score remains visible to the player.
     var progress=((mathLevel-1)*MATH_TARGET_PER_LEVEL+mathLevelCorrect)/(MATH_MAX_LEVEL*MATH_TARGET_PER_LEVEL);
     var normalized=Math.max(0,Math.min(100,Math.round(progress*55+acc*.30+Math.min(15,mathMaxStreak)*1)));
     if(completed)normalized=Math.max(normalized,95);
-    finishMode('math',normalized,{a:String(mathScore),b:acc+'%',c:'LV '+mathLevel+' · '+(mathResponseCount?avgSec.toFixed(1)+'s':'—')});
+    finishMode('math',normalized,{
+      a:String(mathScore),b:acc+'%',c:'LV '+mathLevel,
+      items:[
+        ['總分',String(mathScore)],
+        ['正確率',acc+'%'],
+        ['平均反應',mathResponseCount?avgSec.toFixed(1)+'s':'—'],
+        ['最高連對',String(mathMaxStreak)],
+        ['總時間',totalTime]
+      ]
+    });
     mathGameStartedAt=0
   }
 
@@ -797,10 +807,11 @@
     $('sessionProgressPill').textContent=completed+' / '+dailySelection.length;
     $('sessionBreakTitle').textContent=modeNames[mode]+'完成';
     $('sessionBreakScore').textContent=score;
-    $('sessionBreakStats').innerHTML=
-      '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div>'+
-      '<div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div>'+
-      '<div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
+    $('sessionBreakStats').innerHTML=stats.items
+      ? stats.items.map(function(item){return '<div class="result-box"><span>'+item[0]+'</span><strong>'+item[1]+'</strong></div>'}).join('')
+      : '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div>'+
+        '<div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div>'+
+        '<div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
     var dots=$('sessionDots');dots.innerHTML='';
     dailySelection.forEach(function(_,i){var d=document.createElement('i');if(i<completed)d.className='done';dots.appendChild(d)});
     if(dailyQueue.length){
@@ -817,7 +828,9 @@
 
   function showResult(mode,score,stats){
     show('result');$('resultTitle').textContent=modeNames[mode]+'完成';$('resultScore').textContent=score;
-    $('resultGrid').innerHTML='<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div><div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div><div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
+    $('resultGrid').innerHTML=stats.items
+      ? stats.items.map(function(item){return '<div class="result-box"><span>'+item[0]+'</span><strong>'+item[1]+'</strong></div>'}).join('')
+      : '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div><div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div><div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
     var a=$('resultActions');a.innerHTML='';var retry=document.createElement('button');retry.className='primary';retry.type='button';retry.textContent='再玩一次';retry.addEventListener('click',function(){dailyMode=false;startMode(mode)});
     var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='回首頁';home.addEventListener('click',function(){show('home')});a.appendChild(retry);a.appendChild(home)
   }
