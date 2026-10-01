@@ -37,8 +37,8 @@ The product identity is:
 - BRAIN/7;
 - seven independent challenges;
 - one complete seven-game session;
-- dark editorial / arcade visual language;
-- restrained high-contrast accent system;
+- bright editorial / playful arcade visual language;
+- warm paper background with restrained high-contrast jump-color accents;
 - compact, immediate game feedback.
 
 Preserve:
