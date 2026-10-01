@@ -61,9 +61,11 @@ async function runViewport(browser, viewport, name) {
   await page.locator('#previewPlay').click();
   await page.locator('#schulte.active').waitFor();
   await page.locator('.back:visible').click();
+  await page.locator('#home.active').waitFor();
   await page.locator('[data-preview-mode="math"]').click();
-  await page.locator('#homePreview').focus();
-  await page.keyboard.press('ArrowRight');
+  const homePreview = page.locator('#homePreview');
+  await homePreview.focus();
+  await homePreview.press('ArrowRight');
   await page.waitForFunction(() => document.getElementById('previewIndex')?.textContent.trim() === '02');
   assert((await page.locator('#previewIndex').innerText()).trim() === '02', `${name}: keyboard preview should advance to 02`);
   await page.locator('[data-preview-mode="math"]').click();
