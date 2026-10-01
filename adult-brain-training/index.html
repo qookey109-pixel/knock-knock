@@ -8,77 +8,88 @@
   <title>大人的腦部鍛鍊</title>
   <style>
     :root{
-      --bg:#f3f0ff;--paper:#fbfaff;--ink:#4b00d7;--accent:#a94700;
-      --line:rgba(75,0,215,.18);--soft:rgba(75,0,215,.08);--muted:rgba(75,0,215,.72);
-      --good:#146c43;--bad:#9f2724;--ease-out:cubic-bezier(.16,1,.3,1)
+      --bg:#0a0a0c;--surface:#111114;--surface2:#17171b;--ink:#f4f1e8;
+      --muted:rgba(244,241,232,.64);--line:rgba(244,241,232,.14);--line-strong:rgba(244,241,232,.28);
+      --accent:#ff5a36;--acid:#d8ff4f;--good:#66d5a3;--bad:#ff7b72;
+      --ease-out:cubic-bezier(.16,1,.3,1)
     }
     *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
     html,body{margin:0;min-height:100%;background:var(--bg);color:var(--ink)}
     body{font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}
     button,input{font:inherit}button{touch-action:manipulation}
-    button:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-    .app{width:min(100%,680px);margin:0 auto;padding:18px 16px 36px}
-    .top{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding:10px 2px 15px;border-bottom:2px solid var(--ink)}
-    .brand h1{margin:0;font-size:28px;line-height:1;font-weight:950;letter-spacing:-.04em}
-    .brand p{margin:7px 0 0;font-size:12px;font-weight:850;letter-spacing:.08em;color:var(--muted)}
-    .sound{width:40px;height:40px;border:2px solid var(--ink);border-radius:50%;background:transparent;color:var(--ink);font-weight:950}
-    .screen{display:none;padding-top:18px}.screen.active{display:block}
-    .hero{padding:10px 2px 6px}.eyebrow{font-size:11px;font-weight:950;letter-spacing:.14em;color:var(--accent)}
-    .hero h2{margin:7px 0 8px;font-size:38px;line-height:1.05;letter-spacing:-.05em}
-    .hero p{margin:0;color:var(--muted);font-weight:750;line-height:1.7}
-    .primary,.secondary,.choice,.key{min-height:52px;border-radius:16px;font-weight:950;border:2px solid var(--ink)}
-    .primary{background:var(--accent);border-color:var(--accent);color:#fff;padding:0 20px}
-    .secondary{background:transparent;color:var(--ink);padding:0 18px}
-    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions>*{flex:1 1 170px}
-    .modes{display:grid;gap:12px;margin-top:22px}
-    .mode{width:100%;text-align:left;background:var(--paper);border:2px solid var(--line);border-radius:22px;padding:18px;color:var(--ink);transition:transform 140ms var(--ease-out),border-color 140ms var(--ease-out)}
-    .mode:active,.primary:active,.secondary:active,.choice:active,.key:active,.schulte-cell:active,.odd-cell:active{transform:scale(.98)}
+    button:focus-visible,input:focus-visible{outline:3px solid var(--acid);outline-offset:3px}
+    .app{width:min(100%,900px);margin:0 auto;padding:18px 18px 56px;position:relative}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 0 16px;border-bottom:1px solid var(--line)}
+    .brand{display:flex;align-items:baseline;gap:12px}.brand h1{margin:0;font-size:24px;line-height:1;font-weight:950;letter-spacing:-.055em}
+    .brand h1 span{color:var(--accent)}.brand p{margin:0;font:800 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.14em;color:var(--muted)}
+    .sound{width:42px;height:42px;border:1px solid var(--line-strong);border-radius:999px;background:var(--surface);color:var(--ink);font-weight:950}
+    .screen{display:none;padding-top:22px}.screen.active{display:block}
+    .hero{position:relative;padding:34px 0 24px;display:grid;grid-template-columns:1fr;gap:18px}
+    .hero::after{content:"07";position:absolute;right:0;top:8px;font-size:clamp(112px,25vw,220px);line-height:.78;font-weight:950;letter-spacing:-.09em;color:rgba(244,241,232,.035);pointer-events:none}
+    .eyebrow{font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.18em;color:var(--acid);text-transform:uppercase}
+    .hero h2{margin:0;max-width:720px;font-size:clamp(46px,9vw,82px);line-height:.92;letter-spacing:-.065em;font-weight:950;position:relative;z-index:1}
+    .hero h2 span{color:var(--accent)}
+    .hero p{margin:0;max-width:650px;color:var(--muted);font-weight:720;line-height:1.75;font-size:15px;position:relative;z-index:1}
+    .hero-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;position:relative;z-index:1}
+    .hero-chip{border:1px solid var(--line);border-radius:999px;padding:8px 11px;font:800 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;color:var(--muted)}
+    .circuit-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;max-width:460px}
+    .circuit-strip i{height:5px;border-radius:99px;background:var(--line-strong)}.circuit-strip i:nth-child(1){background:#ff6b4a}.circuit-strip i:nth-child(2){background:#ffbe55}.circuit-strip i:nth-child(3){background:#60d6a7}.circuit-strip i:nth-child(4){background:#59a6ff}.circuit-strip i:nth-child(5){background:#d8ff4f}.circuit-strip i:nth-child(6){background:#f075c2}.circuit-strip i:nth-child(7){background:#a78bfa}
+    .primary,.secondary,.choice,.key{min-height:54px;border-radius:12px;font-weight:900;border:1px solid var(--line-strong);transition:transform 120ms var(--ease-out),background 160ms var(--ease-out),border-color 160ms var(--ease-out)}
+    .primary{background:var(--acid);border-color:var(--acid);color:#0a0a0c;padding:0 20px}
+    .secondary{background:var(--surface);color:var(--ink);padding:0 18px}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.actions>*{flex:1 1 170px}
+    #home .actions{max-width:420px;margin-top:2px}
+    #dailyBtn{min-height:62px;font-size:16px;letter-spacing:.01em}
+    .modes{display:grid;gap:12px;margin-top:30px}
+    .mode{--mode:var(--accent);width:100%;min-height:170px;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;color:var(--ink);position:relative;overflow:hidden;transition:transform 160ms var(--ease-out),border-color 160ms var(--ease-out),background 160ms var(--ease-out)}
+    .mode::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--mode)}
+    .mode:nth-child(1){--mode:#ff6b4a}.mode:nth-child(2){--mode:#ffbe55}.mode:nth-child(3){--mode:#60d6a7}.mode:nth-child(4){--mode:#59a6ff}.mode:nth-child(5){--mode:#d8ff4f}.mode:nth-child(6){--mode:#f075c2}.mode:nth-child(7){--mode:#a78bfa}
+    .mode:hover{transform:translateY(-3px);border-color:var(--line-strong);background:var(--surface2)}
+    .mode:active,.primary:active,.secondary:active,.choice:active,.key:active,.schulte-cell:active,.odd-cell:active{transform:scale(.985)}
     .mode-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
-    .mode-num{font-size:12px;font-weight:950;letter-spacing:.13em;color:var(--accent)}.mode-arrow{font-size:24px;font-weight:950}
-    .mode h3{margin:7px 0 5px;font-size:24px}.mode p{margin:0;color:var(--muted);font-weight:750;line-height:1.55}
-    .note{margin-top:18px;padding:13px 15px;border-left:4px solid var(--accent);background:rgba(169,71,0,.08);font-size:12px;line-height:1.55;font-weight:750;color:var(--muted)}
-    .gamehead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
-    .back{border:0;background:transparent;color:var(--ink);padding:7px 0;font-weight:950}.gamehead h2{margin:4px 0 0;font-size:27px;letter-spacing:-.04em}
-    .pill{border:2px solid var(--line);border-radius:999px;padding:8px 11px;font-size:12px;font-weight:950;white-space:nowrap}
-    .panel{background:var(--paper);border:2px solid var(--line);border-radius:24px;padding:18px}
-    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}.stat{padding:11px 9px;border-bottom:2px solid var(--line)}
-    .stat span{display:block;font-size:9px;font-weight:950;letter-spacing:.12em;color:var(--muted)}.stat strong{display:block;margin-top:5px;font-size:25px;line-height:1;font-variant-numeric:tabular-nums}
-    .big-problem{text-align:center;font-size:clamp(52px,16vw,88px);font-weight:950;letter-spacing:-.07em;padding:26px 0 20px}
-    .answer-wrap{display:grid;grid-template-columns:1fr 96px;gap:9px}
-    .answer-input{width:100%;min-width:0;height:56px;background:transparent;border:0;border-bottom:4px solid var(--ink);color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
-    .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.key{background:var(--paper);color:var(--ink);font-size:28px;min-height:62px}.key.special{color:var(--accent);border-color:var(--accent);font-size:14px}
-    .memory-stage{text-align:center;padding:16px 0}.memory-label{font-size:12px;font-weight:950;letter-spacing:.12em;color:var(--muted)}
-    .memory-number{font-size:clamp(48px,16vw,82px);font-weight:950;letter-spacing:.12em;margin:32px 0;word-break:break-all}
-    .memory-input{width:100%;height:62px;border:0;border-bottom:4px solid var(--ink);background:transparent;color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
-    .logic-progress{display:flex;gap:5px;margin-bottom:16px}.logic-progress i{height:5px;flex:1;background:var(--line);border-radius:99px}.logic-progress i.on{background:var(--accent)}
-    .logic-q{font-size:23px;line-height:1.45;font-weight:950;margin:4px 0 15px}.clues{display:grid;gap:8px;margin-bottom:15px}.clue{padding:12px 13px;border-left:4px solid var(--ink);background:var(--soft);font-weight:800;line-height:1.55}
-    .choices{display:grid;gap:9px}.choice{background:var(--paper);color:var(--ink);text-align:left;padding:0 15px;transition:transform 120ms var(--ease-out)}
-    .choice.selected{background:var(--soft);border-color:var(--accent)}
-    .feedback{display:none;margin-top:14px;padding:14px;border-radius:16px;font-weight:800;line-height:1.6}.feedback.show{display:block}.feedback.good{background:rgba(20,108,67,.10);color:var(--good)}.feedback.bad{background:rgba(159,39,36,.10);color:var(--bad)}
-    .exec-rule{padding:12px 14px;border:2px solid var(--accent);border-radius:16px;text-align:center;font-size:15px;font-weight:950;color:var(--accent)}
-    .exec-number{text-align:center;font-size:clamp(86px,28vw,150px);line-height:1;font-weight:950;letter-spacing:-.06em;padding:30px 0 22px;font-variant-numeric:tabular-nums}
+    .mode-num{font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;color:var(--mode)}.mode-arrow{font-size:24px;font-weight:500;color:var(--muted)}
+    .mode h3{margin:32px 0 7px;font-size:clamp(24px,4vw,32px);letter-spacing:-.04em}.mode p{margin:0;max-width:440px;color:var(--muted);font-weight:680;line-height:1.55;font-size:13px}
+    .note{margin-top:20px;padding:12px 0;border-top:1px solid var(--line);font-size:11px;line-height:1.6;font-weight:700;color:var(--muted)}
+    .gamehead{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+    .back{border:0;background:transparent;color:var(--muted);padding:6px 0;font-weight:850}.back:hover{color:var(--ink)}.gamehead h2{margin:8px 0 0;font-size:clamp(28px,6vw,42px);letter-spacing:-.055em}
+    .pill{border:1px solid var(--line);border-radius:999px;padding:8px 11px;font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.08em;color:var(--muted);white-space:nowrap}
+    .panel{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:18px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-bottom:16px;background:var(--line);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+    .stat{padding:12px;background:var(--surface2)}.stat span{display:block;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;color:var(--muted)}.stat strong{display:block;margin-top:7px;font-size:25px;line-height:1;font-variant-numeric:tabular-nums}
+    .big-problem{text-align:center;font-size:clamp(58px,16vw,96px);font-weight:950;letter-spacing:-.07em;padding:34px 0 26px}
+    .answer-wrap{display:grid;grid-template-columns:1fr 104px;gap:9px}
+    .answer-input{width:100%;min-width:0;height:58px;background:var(--surface2);border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
+    .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.key{background:var(--surface2);color:var(--ink);font-size:28px;min-height:62px}.key.special{color:var(--acid);border-color:rgba(216,255,79,.35);font-size:13px}
+    .memory-stage{text-align:center;padding:18px 0}.memory-label{font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;color:var(--muted)}
+    .memory-number{font-size:clamp(56px,16vw,96px);font-weight:950;letter-spacing:.14em;margin:34px 0;word-break:break-all}
+    .memory-input{width:100%;height:62px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
+    .logic-progress{display:flex;gap:5px;margin-bottom:18px}.logic-progress i{height:4px;flex:1;background:var(--line);border-radius:99px}.logic-progress i.on{background:var(--acid)}
+    .logic-q{font-size:clamp(23px,5vw,32px);line-height:1.3;font-weight:900;letter-spacing:-.03em;margin:6px 0 18px}.clues{display:grid;gap:8px;margin-bottom:16px}.clue{padding:13px 14px;border-left:3px solid var(--acid);background:var(--surface2);font-weight:760;line-height:1.55;color:var(--ink)}
+    .choices{display:grid;gap:9px}.choice{background:var(--surface2);color:var(--ink);text-align:left;padding:0 15px}.choice:hover{border-color:var(--line-strong)}.choice.selected{background:#222228;border-color:var(--acid)}
+    .feedback{display:none;margin-top:14px;padding:14px;border-radius:12px;font-weight:760;line-height:1.6}.feedback.show{display:block}.feedback.good{background:rgba(102,213,163,.10);color:#9be7c6}.feedback.bad{background:rgba(255,123,114,.10);color:#ff9d96}
+    .exec-rule{padding:13px 14px;border:1px solid rgba(216,255,79,.4);background:rgba(216,255,79,.05);border-radius:12px;text-align:center;font-size:15px;font-weight:900;color:var(--acid)}
+    .exec-number{text-align:center;font-size:clamp(96px,28vw,164px);line-height:1;font-weight:950;letter-spacing:-.07em;padding:34px 0 24px;font-variant-numeric:tabular-nums}
     .exec-choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}.exec-choices .choice{text-align:center;font-size:18px}
-    .exec-hint,.mini-instruction{text-align:center;margin-top:12px;font-size:12px;font-weight:800;color:var(--muted);line-height:1.55}
-    .schulte-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:14px}
-    .schulte-cell{min-height:54px;border:2px solid var(--line);border-radius:14px;background:var(--paper);color:var(--ink);font-size:22px;font-weight:950;transition:transform 110ms var(--ease-out),opacity 140ms var(--ease-out)}
-    .schulte-cell.done{opacity:.25;border-color:transparent}
-    .stroop-word{text-align:center;font-size:clamp(56px,18vw,96px);font-weight:950;letter-spacing:.04em;padding:30px 0 22px}
+    .exec-hint,.mini-instruction{text-align:center;margin-top:12px;font-size:12px;font-weight:760;color:var(--muted);line-height:1.55}
+    .schulte-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}.schulte-cell{min-height:58px;border:1px solid var(--line);border-radius:10px;background:var(--surface2);color:var(--ink);font-size:22px;font-weight:900;transition:transform 110ms var(--ease-out),opacity 140ms var(--ease-out)}.schulte-cell:hover{border-color:var(--acid)}.schulte-cell.done{opacity:.18;border-color:transparent}
+    .stroop-word{text-align:center;font-size:clamp(66px,18vw,108px);font-weight:950;letter-spacing:.03em;padding:34px 0 24px}
     .stroop-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.stroop-choices .choice{text-align:center}
-    .odd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:16px}
-    .odd-cell{min-height:74px;border:2px solid var(--line);border-radius:16px;background:var(--paper);color:var(--ink);font-weight:950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform 110ms var(--ease-out)}
-    .odd-arrow{font-size:30px;line-height:1}.odd-label{font-size:12px;color:var(--muted)}
-    .result{text-align:center;padding:14px 0}.result-score{font-size:72px;line-height:1;font-weight:950;letter-spacing:-.06em}.result-unit{font-size:14px;font-weight:950;color:var(--muted);margin-top:4px}
-    .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:22px}.result-box{padding:14px 8px;background:var(--soft);border-radius:16px}.result-box span{display:block;font-size:10px;font-weight:950;color:var(--muted)}.result-box strong{display:block;margin-top:6px;font-size:22px}
-    .session-dots{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:18px 0}.session-dots i{height:8px;border-radius:99px;background:var(--line)}.session-dots i.done{background:var(--accent)}
-    .session-next-name{margin-top:8px;font-size:13px;font-weight:850;color:var(--muted)}
-    .daily-summary{display:grid;gap:12px;margin-top:18px}.summary-row{display:grid;grid-template-columns:100px 1fr 42px;gap:10px;align-items:center}.summary-row span{font-size:13px;font-weight:900}.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}.bar b{display:block;height:100%;background:var(--accent);border-radius:99px;width:0}.summary-row strong{text-align:right}
+    .odd-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:18px}.odd-cell{min-height:78px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--ink);font-weight:950;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}.odd-cell:hover{border-color:var(--acid)}.odd-arrow{font-size:32px;line-height:1}.odd-label{font-size:11px;color:var(--muted)}
+    .result{text-align:center;padding:26px 18px}.panel.result{background:#0e0e11}.result-score{font-size:clamp(92px,24vw,160px);line-height:.85;font-weight:950;letter-spacing:-.085em;color:var(--acid)}.result-unit{font:850 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:var(--muted);margin-top:10px;text-transform:uppercase}
+    .result-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:24px}.result-box{padding:15px 8px;background:var(--surface2);border:1px solid var(--line);border-radius:10px}.result-box span{display:block;font:900 9px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.1em;color:var(--muted)}.result-box strong{display:block;margin-top:7px;font-size:22px}
+    .session-dots{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin:22px 0}.session-dots i{height:5px;border-radius:99px;background:var(--line-strong)}.session-dots i.done{background:var(--acid)}.session-next-name{margin-top:12px;font:800 11px/1.4 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.06em;color:var(--muted)}
+    .daily-summary{display:grid;gap:10px;margin-top:24px;text-align:left}.summary-row{display:grid;grid-template-columns:120px 1fr 42px;gap:10px;align-items:center}.summary-row span{font-size:12px;font-weight:800}.bar{height:6px;background:var(--line);border-radius:99px;overflow:hidden}.bar b{display:block;height:100%;background:var(--acid);border-radius:99px;width:0}.summary-row strong{text-align:right;font:900 12px/1 ui-monospace,SFMono-Regular,Menlo,monospace}
     .hidden{display:none!important}
-    @media(min-width:600px){.modes{grid-template-columns:repeat(2,1fr)}.mode{min-height:190px}.hero h2{font-size:46px}}
+    @media(min-width:680px){
+      .modes{grid-template-columns:repeat(2,1fr)}
+      .mode:first-child{grid-column:span 2;min-height:190px}.mode:first-child h3{font-size:40px}
+      .hero{padding-top:48px}
+    }
     @media(prefers-reduced-motion:no-preference){
-      ::view-transition-old(root){animation:brain-out 100ms ease-in both}
+      ::view-transition-old(root){animation:brain-out 90ms ease-in both}
       ::view-transition-new(root){animation:brain-in 180ms var(--ease-out) both}
-      @keyframes brain-out{to{opacity:0}}
-      @keyframes brain-in{from{opacity:0;transform:translateY(6px)}}
+      @keyframes brain-out{to{opacity:0;transform:translateY(-3px)}}
+      @keyframes brain-in{from{opacity:0;transform:translateY(8px)}}
     }
     @media(prefers-reduced-motion:reduce){
       *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
@@ -88,25 +99,31 @@
 <body>
 <main class="app">
   <header class="top">
-    <div class="brand"><h1>大人的腦部鍛鍊</h1><p>DAILY BRAIN TRAINING</p></div>
+    <div class="brand"><h1>BRAIN<span>/7</span></h1><p>大人的腦部鍛鍊</p></div>
     <button id="soundBtn" class="sound" type="button" aria-label="聲音開關">♪</button>
   </header>
 
   <section id="home" class="screen active">
     <div class="hero">
-      <div class="eyebrow">TODAY'S TRAINING</div>
-      <h2>每天幾分鐘，<br>快速動動腦。</h2>
-      <p>7 種小遊戲可獨立練習；今日腦訓會一次完整跑完 7 個，形成一套速度、記憶、推理、視覺搜尋與執行功能的完整挑戰。</p>
-      <div class="actions"><button id="dailyBtn" class="primary" type="button">開始今日腦訓</button></div>
+      <div class="eyebrow">FULL SESSION / SEVEN CIRCUITS</div>
+      <h2>一次，跑完<br><span>7 個腦內回路。</span></h2>
+      <p>不是題庫，也不是測驗報表。這是一套連續的 7 關腦力挑戰：速度、記憶、推理、切換、搜尋、抑制與抗干擾。</p>
+      <div class="hero-meta">
+        <span class="hero-chip">7 GAMES</span>
+        <span class="hero-chip">1 FULL RUN</span>
+        <span class="hero-chip">CLOUD QA VERIFIED</span>
+      </div>
+      <div class="circuit-strip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="actions"><button id="dailyBtn" class="primary" type="button">開始完整 7 關</button></div>
     </div>
     <div class="modes">
-      <button class="mode" type="button" data-mode="math"><div class="mode-top"><span class="mode-num">01 / SPEED</span><span class="mode-arrow">→</span></div><h3>快速心算</h3><p>30 秒連續作答，依表現逐步提高數字範圍。</p></button>
-      <button class="mode" type="button" data-mode="memory"><div class="mode-top"><span class="mode-num">02 / MEMORY</span><span class="mode-arrow">→</span></div><h3>瞬間記憶</h3><p>數字短暫出現後消失，從 4 位逐步增加。</p></button>
-      <button class="mode" type="button" data-mode="logic"><div class="mode-top"><span class="mode-num">03 / LOGIC</span><span class="mode-arrow">→</span></div><h3>邏輯推理</h3><p>讀取條件、排除矛盾，在有限線索中找唯一答案。</p></button>
-      <button class="mode" type="button" data-mode="executive"><div class="mode-top"><span class="mode-num">04 / EXECUTIVE</span><span class="mode-arrow">→</span></div><h3>規則切換</h3><p>規則突然改變，練習抑制控制、注意切換與認知彈性。</p></button>
-      <button class="mode" type="button" data-mode="schulte"><div class="mode-top"><span class="mode-num">05 / SEARCH</span><span class="mode-arrow">→</span></div><h3>舒爾特方格</h3><p>亂序方格中依序找出 1 → 25，挑戰視覺搜尋速度與持續注意。</p></button>
-      <button class="mode" type="button" data-mode="stroop"><div class="mode-top"><span class="mode-num">06 / INHIBITION</span><span class="mode-arrow">→</span></div><h3>Stroop 顏色衝突</h3><p>忽略文字內容，只回答字體顏色，練習抑制自動反應與抗干擾。</p></button>
-      <button class="mode" type="button" data-mode="odd"><div class="mode-top"><span class="mode-num">07 / INTERFERENCE</span><span class="mode-arrow">→</span></div><h3>表裡不一</h3><p>找出箭頭方向與文字標示不一致的唯一目標。</p></button>
+      <button class="mode" type="button" data-mode="math"><div class="mode-top"><span class="mode-num">01 / SPEED</span><span class="mode-arrow">→</span></div><h3>快速心算</h3><p>30 秒壓力測試。越準、越快，題目越往上推。</p></button>
+      <button class="mode" type="button" data-mode="memory"><div class="mode-top"><span class="mode-num">02 / MEMORY</span><span class="mode-arrow">→</span></div><h3>瞬間記憶</h3><p>只看一眼。數字消失後，把它完整抓回來。</p></button>
+      <button class="mode" type="button" data-mode="logic"><div class="mode-top"><span class="mode-num">03 / LOGIC</span><span class="mode-arrow">→</span></div><h3>邏輯推理</h3><p>不是猜答案。把矛盾一個個排掉，直到只剩唯一解。</p></button>
+      <button class="mode" type="button" data-mode="executive"><div class="mode-top"><span class="mode-num">04 / EXECUTIVE</span><span class="mode-arrow">→</span></div><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></button>
+      <button class="mode" type="button" data-mode="schulte"><div class="mode-top"><span class="mode-num">05 / SEARCH</span><span class="mode-arrow">→</span></div><h3>舒爾特方格</h3><p>25 個數字散在眼前。你的視線能多快鎖定下一個？</p></button>
+      <button class="mode" type="button" data-mode="stroop"><div class="mode-top"><span class="mode-num">06 / INHIBITION</span><span class="mode-arrow">→</span></div><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p></button>
+      <button class="mode" type="button" data-mode="odd"><div class="mode-top"><span class="mode-num">07 / INTERFERENCE</span><span class="mode-arrow">→</span></div><h3>表裡不一</h3><p>16 個訊號裡只有 1 個說謊。把它抓出來。</p></button>
     </div>
     <div class="note">這是娛樂與練習用途的遊戲表現，不是 IQ、醫療或認知功能診斷。</div>
   </section>
