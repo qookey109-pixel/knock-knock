@@ -8,11 +8,13 @@ on:
       - 'adult-brain-training/**'
       - 'qa/**'
       - '.github/workflows/adult-brain-qa.yml'
+      - '.agents/skills/brain-game-qa/**'
   pull_request:
     paths:
       - 'adult-brain-training/**'
       - 'qa/**'
       - '.github/workflows/adult-brain-qa.yml'
+      - '.agents/skills/brain-game-qa/**'
 
 permissions:
   contents: read
