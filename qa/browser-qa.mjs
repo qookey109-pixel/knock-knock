@@ -26,9 +26,10 @@ function solveMath(text) {
 
 async function answerCurrentMath(page) {
   const problem = (await page.locator('#mathProblem').innerText()).trim();
-  const answer = solveMath(problem);
-  await page.locator('#mathAnswer').fill(String(answer));
-  await page.locator('#mathSubmit').click();
+  const answer = String(solveMath(problem));
+  await page.keyboard.press('Delete');
+  for (const digit of answer) await page.keyboard.press(digit);
+  await page.keyboard.press('Enter');
 }
 
 async function assertA11y(page, label) {
@@ -86,6 +87,15 @@ async function runViewport(browser, viewport, name) {
   await page.locator('#math.active').waitFor();
   assert((await page.locator('#mathTime').innerText()).trim() === '60', `${name}: Quick Math should start each level at 60 seconds`);
   assert((await page.locator('#mathLevelMark').innerText()).trim() === 'LV 1 · 0/8', `${name}: Quick Math should require 8 correct answers per level`);
+  assert(await page.locator('#mathAnswer').getAttribute('readonly') !== null, `${name}: Quick Math answer display should be readonly so mobile soft keyboards do not open`);
+  assert((await page.locator('#mathAnswer').getAttribute('inputmode')) === 'none', `${name}: Quick Math should explicitly disable the mobile soft keyboard`);
+  await page.keyboard.press('Numpad1');
+  await page.keyboard.press('Numpad2');
+  assert((await page.locator('#mathAnswer').inputValue()) === '12', `${name}: physical numpad digits should enter answers`);
+  await page.keyboard.press('Backspace');
+  assert((await page.locator('#mathAnswer').inputValue()) === '1', `${name}: Backspace should delete one digit`);
+  await page.keyboard.press('Delete');
+  assert((await page.locator('#mathAnswer').inputValue()) === '', `${name}: Delete should clear the answer`);
   for (let i = 1; i <= 8; i++) {
     await answerCurrentMath(page);
     if (i < 8) {
