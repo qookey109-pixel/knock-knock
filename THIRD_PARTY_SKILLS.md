@@ -68,3 +68,45 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+
+
+## Karpathy-Inspired Guidelines — multica-ai
+
+Source: https://github.com/multica-ai/andrej-karpathy-skills
+
+Integrated skill:
+- karpathy-guidelines
+
+Upstream skill metadata declares MIT. The upstream repository README also states MIT.
+
+## Full Stack Skills — Design Skills
+
+Source: https://github.com/full-stack-skills/design-skills
+
+Project-adapted guidance:
+- brain7-ui-design
+
+Relevant upstream skills:
+- ui-design-spec
+- ui-design-review
+- ui-design-visual
+- ui-design-continuity
+
+Upstream license: Apache-2.0.
+
+## PixiJS Skills
+
+Source: https://github.com/pixijs/pixijs-skills
+
+Project-adapted guidance:
+- brain7-dynamic-2d
+
+Relevant upstream areas:
+- application lifecycle
+- events and hit testing
+- math and coordinates
+- ticker/render loop
+- performance
+- accessibility
+
+Upstream license: MIT.
