@@ -1,0 +1,61 @@
+name: Adult Brain Training Cloud QA
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'adult-brain-training/**'
+      - 'qa/**'
+      - '.github/workflows/adult-brain-qa.yml'
+  pull_request:
+    paths:
+      - 'adult-brain-training/**'
+      - 'qa/**'
+      - '.github/workflows/adult-brain-qa.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: adult-brain-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  logic-qa:
+    name: Brain Game Logic QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify logic puzzles have unique solutions
+        run: node qa/brain-game-qa.mjs
+
+  browser-qa:
+    name: Browser + Accessibility QA
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install cloud QA tools
+        run: |
+          npm install --no-save @playwright/test@1.55.0 @axe-core/playwright@4.10.2
+          npx playwright install --with-deps chromium
+      - name: Start static server
+        run: |
+          python3 -m http.server 4173 --bind 127.0.0.1 > /tmp/adult-brain-server.log 2>&1 &
+          echo $! > /tmp/adult-brain-server.pid
+          for i in {1..20}; do
+            curl -fsS http://127.0.0.1:4173/adult-brain-training/ >/dev/null && exit 0
+            sleep 1
+          done
+          cat /tmp/adult-brain-server.log
+          exit 1
+      - name: Run mobile and desktop browser QA
+        run: node qa/browser-qa.mjs
