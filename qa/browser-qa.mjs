@@ -44,6 +44,7 @@ async function assertA11y(page, label) {
 async function runViewport(browser, viewport, name) {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
+  page.on('pageerror', e => console.error('BROWSER ERROR:', e.message));
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
 
   assert(await page.title() === '大人的腦部鍛鍊', `${name}: wrong page title`);
