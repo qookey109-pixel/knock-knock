@@ -254,7 +254,7 @@
     @media(prefers-reduced-motion:no-preference){
       .screen.active{animation:screen-arrive 200ms var(--ease-out) both}
       .completion-star .lit{display:inline-block;animation:star-arrive 240ms var(--ease-out) both;animation-delay:calc(var(--star-index,0)*45ms)}
-      @keyframes screen-arrive{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+      @keyframes screen-arrive{from{transform:translateY(6px)}to{transform:none}}
       @keyframes star-arrive{from{opacity:0;transform:translateY(5px) scale(.9)}to{opacity:1;transform:none}}
     }
     @media(prefers-reduced-motion:reduce){
