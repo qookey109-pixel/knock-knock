@@ -151,7 +151,12 @@ async function runViewport(browser, viewport, name) {
   const logicSource = await page.locator('html').evaluate(el => el.innerHTML);
   assert(logicSource.includes('LOGIC_ANSWER_MS=20000'), `${name}: logic questions should have a 20-second answer window`);
   assert(!logicSource.includes('正確答案：') && !logicSource.includes("q.explain"), `${name}: logic should not display answer explanations after submission`);
-  await logicChoices.filter({ hasText: new RegExp('^' + middlePerson + '
+  await logicChoices.filter({ hasText: new RegExp('^' + middlePerson + '$') }).click();
+  await page.locator('#logicSubmit').click();
+  await page.waitForFunction(() => document.getElementById('logicCorrectCount')?.textContent === '1');
+  await page.waitForFunction(() => document.getElementById('logicPill')?.textContent.startsWith('2 / 10'));
+  assert(await page.locator('#logicFeedback').count() === 0, `${name}: logic explanation UI should be removed`);
+  await assertA11y(page, `${name} logic`);
 
   // Executive function: learn two rules, then verify the first planned rule switch.
   await page.locator('.back:visible').click();
