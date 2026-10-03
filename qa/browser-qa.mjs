@@ -44,6 +44,7 @@ async function assertA11y(page, label) {
 async function runViewport(browser, viewport, name) {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
+  page.on('pageerror', e => console.error('BROWSER ERROR:', e.message));
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
 
   assert(await page.title() === '大人的腦部鍛鍊', `${name}: wrong page title`);
@@ -80,6 +81,8 @@ async function runViewport(browser, viewport, name) {
   assert((await page.locator('#previewTitle').innerText()).trim() === '舒爾特方格', `${name}: preview title should switch to Schulte`);
   await page.locator('#previewPlay').click();
   await page.locator('#schulte.active').waitFor();
+  assert(await page.locator('#transitionBurst .burst-rays').count() === 0, 'first entry must use the gentle transition');
+  assert(await page.evaluate(() => document.activeElement === document.querySelector('#schulte h2')), 'screen entry must focus its heading');
   await page.locator('.back:visible').click();
   await page.locator('#home.active').waitFor();
   await page.locator('[data-preview-mode="math"]').click();
@@ -101,7 +104,7 @@ async function runViewport(browser, viewport, name) {
 
   // Math: root Quick Math rules — 60 sec per level, 8 correct to advance, score + streak.
   await page.locator('[data-mode="math"]').click();
-  // Full-screen radial transition should exist during animated entry.
+  // Soft entry never obscures the game with full-screen radial rays.
   assert(await page.locator('#transitionBurst .burst-rays').count() === 0, `${name}: repeat entry should skip the full-screen burst`);
   await page.locator('#math.active').waitFor();
   assert((await page.locator('#mathTime').innerText()).trim() === '60', `${name}: Quick Math should start each level at 60 seconds`);
@@ -468,6 +471,20 @@ async function runChillJourney(browser) {
   await page.reload();
   await page.locator('#recentPlays > summary').click();
   assert((await page.locator('#historyList').innerText()).includes('完成 7 關'), 'history must survive reload');
+
+  // Rest-page exit preserves completed ratings; recap can replay a single game.
+  await page.locator('#dailyBtn').click();
+  await page.clock.runFor(60050);
+  await page.locator('#sessionBreak.active').waitFor();
+  assert(await page.evaluate(() => document.activeElement === document.querySelector('#sessionBreak h2')), 'rest screen must receive keyboard focus');
+  await page.locator('#sessionFinish').click();
+  await page.locator('#dailyResult.active').waitFor();
+  assert((await page.locator('#dailyOverview').innerText()).includes('1 / 7'), 'rest exit must preserve one completed game');
+  await page.locator('#dailySummary .journey-row summary').first().click();
+  await page.getByRole('button', {name:'再玩快速心算',exact:true}).click();
+  await page.locator('#math.active').waitFor();
+  assert((await page.locator('#sessionContext').innerText()).includes('隨心玩一關'), 'recap replay must be standalone');
+  await page.locator('.back:visible').click();
 
   // Leaving during a delayed next-question callback must cancel it.
   await page.locator('[data-mode="odd"]').click();
