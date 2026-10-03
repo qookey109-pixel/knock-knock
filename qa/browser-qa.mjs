@@ -370,7 +370,7 @@ async function runChillJourney(browser) {
   assert(parseFloat(await page.locator('#schulteTime').innerText()) < 2, 'paused seconds must be excluded from elapsed time');
   await page.locator('#finishEarlyBtn').click();
   await page.locator('#result.active').waitFor();
-  assert((await page.locator('#resultScore').innerText()) === '☆', 'unfinished play must not be given a completion star');
+  assert((await page.locator('#resultScore').innerText()) === '☆☆☆☆☆', 'unfinished play must show five unlit slots');
   await page.locator('.back:visible').click();
 
   // Whole session: all seven real start -> play -> recap loops, including wrong answers.
@@ -394,7 +394,7 @@ async function runChillJourney(browser) {
   await page.locator('#resumeBtn').click();
   await page.clock.runFor(60000);
   await page.locator('#sessionBreak.active').waitFor();
-  assert((await page.locator('#sessionBreakScore').innerText()) === '★', 'playing to the time limit earns a completion star regardless of accuracy');
+  assert((await page.locator('#sessionBreakScore').innerText()) === '☆☆☆☆☆', 'zero correct answers must earn zero stars');
   await page.locator('#sessionNext').click();
   await page.locator('#memory.active').waitFor();
   await page.locator('#memoryStart').click();
@@ -453,17 +453,21 @@ async function runChillJourney(browser) {
   await page.locator('#sessionBreak.active').waitFor();
   await page.locator('#sessionNext').click();
   await page.locator('#dailyResult.active').waitFor();
-  assert(await page.locator('#dailyScore .lit').count() === 7, 'full session must show seven completion stars');
+  assert(await page.locator('#dailySummary .journey-rating span').count() === 35, 'seven games must each show five rating slots');
+  for (const mode of ['memory','executive','schulte','stroop','odd']) {
+    const row = page.locator('#dailySummary .journey-row').nth(['math','memory','logic','executive','schulte','stroop','odd'].indexOf(mode));
+    assert(await row.locator('.journey-rating .lit').count() === 5, mode + ' perfect fast play must earn five stars');
+  }
   assert(await page.locator('#dailySummary .journey-row').count() === 7, 'full recap must show every game');
   assert(!/分數|總分|評分|DAILY SCORE/.test(await page.locator('#dailyResult').innerText()), 'recap must not rank or score the player');
-  await assertA11y(page, 'seven-star recap');
+  await assertA11y(page, 'five-star ratings recap');
   await page.screenshot({path:'/tmp/brain7-chill-recap-mobile.png',fullPage:true});
   await page.locator('.back:visible').click();
   await page.locator('#recentPlays > summary').click();
-  assert((await page.locator('#historyList').innerText()).includes('7 顆完成星'), 'history must record the full journey');
+  assert((await page.locator('#historyList').innerText()).includes('完成 7 關'), 'history must record the full journey');
   await page.reload();
   await page.locator('#recentPlays > summary').click();
-  assert((await page.locator('#historyList').innerText()).includes('7 顆完成星'), 'history must survive reload');
+  assert((await page.locator('#historyList').innerText()).includes('完成 7 關'), 'history must survive reload');
 
   // Leaving during a delayed next-question callback must cancel it.
   await page.locator('[data-mode="odd"]').click();

@@ -81,3 +81,10 @@ const generatedCount = (sessionFactoryMatch[1].match(/make(?:Order|Box|Pet|Code|
 assert(generatedCount === 10, `Expected 10 generated logic questions per session, found ${generatedCount}.`);
 
 console.log('brain-game-qa: PASS — 5 logic generator families are formally unique and session length is 10.');
+
+
+// Public rating boundaries: five slots, with no completion-only star.
+const ratingSource = html.match(/function scoreToStars\(score\)\{([\s\S]*?)\n  \}/);
+assert(ratingSource, 'Missing star rating conversion');
+const rate = new Function('score', ratingSource[1]);
+for (const [score, stars] of [[0,0],[1,1],[39,1],[40,2],[59,2],[60,3],[74,3],[75,4],[89,4],[90,5],[100,5]]) assert(rate(score) === stars, 'Incorrect stars for score ' + score);
