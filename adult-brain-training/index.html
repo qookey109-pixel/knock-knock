@@ -84,6 +84,11 @@
     .memory-answer-timer{width:max-content;margin:-16px auto 18px;padding:8px 12px;border:1px solid var(--line-strong);border-radius:999px;background:#ffe8a8;color:#5d3b00;font-size:14px;font-weight:900;font-variant-numeric:tabular-nums}
     .memory-input{width:100%;height:62px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
     .logic-progress{display:flex;gap:5px;margin-bottom:18px}.logic-progress i{height:4px;flex:1;background:var(--line);border-radius:99px}.logic-progress i.on{background:var(--acid)}
+    .logic-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;background:transparent;border:0;overflow:visible}
+    .logic-stats .stat{border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+    .logic-stats .stat:first-child{background:#d9f8c4}.logic-stats .stat:last-child{background:#fff0a6}
+    .logic-stats .stat span{font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC",sans-serif;font-size:10px;letter-spacing:.04em;color:#333;font-weight:900}
+    .logic-stats .stat strong{font-size:clamp(24px,4vw,31px);font-variant-numeric:tabular-nums}
     .logic-q{font-size:clamp(23px,5vw,32px);line-height:1.3;font-weight:900;letter-spacing:-.03em;margin:6px 0 18px}.clues{display:grid;gap:8px;margin-bottom:16px}.clue{padding:13px 14px;border-left:3px solid var(--acid);background:var(--surface2);font-weight:760;line-height:1.55;color:var(--ink)}
     .choices{display:grid;gap:9px}.choice{background:var(--surface2);color:var(--ink);text-align:left;padding:0 15px}.choice:hover{border-color:var(--line-strong)}.choice.selected{background:#fff7dc;border-color:var(--acid)}
     .feedback{display:none;margin-top:14px;padding:14px;border-radius:12px;font-weight:760;line-height:1.6}.feedback.show{display:block}.feedback.good{background:rgba(102,213,163,.10);color:#147a55}.feedback.bad{background:rgba(255,123,114,.10);color:#b52f2f}
@@ -343,7 +348,12 @@
 
   <section id="logic" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>邏輯推理</h2></div><div id="logicPill" class="pill">1 / 10 · 排序</div></div>
-    <div class="panel"><div class="mini-instruction">每次 10 題，由排序、真假話、配對、位置與數字條件重新組題；每題只有一個答案。</div><div id="logicProgress" class="logic-progress"></div><div id="logicQuestion" class="logic-q"></div><div id="logicClues" class="clues"></div><div id="logicChoices" class="choices"></div><div id="logicFeedback" class="feedback"></div><div class="actions"><button id="logicSubmit" class="primary" type="button">確認答案</button><button id="logicNext" class="secondary hidden" type="button">下一題</button></div></div>
+    <div class="panel">
+      <div class="stats logic-stats"><div class="stat"><span>答對題數</span><strong id="logicCorrectCount">0</strong></div><div class="stat"><span>剩餘時間</span><strong id="logicTimer">20.0 秒</strong></div></div>
+      <div class="mini-instruction">每題限時 20 秒。選好答案後送出；作答後直接進下一題，不顯示答案解析。</div>
+      <div id="logicProgress" class="logic-progress"></div><div id="logicQuestion" class="logic-q"></div><div id="logicClues" class="clues"></div><div id="logicChoices" class="choices"></div>
+      <div class="actions"><button id="logicSubmit" class="primary" type="button">確認答案</button></div>
+    </div>
   </section>
 
   <section id="executive" class="screen exec-theme rule-parity">
@@ -428,7 +438,7 @@
   var muted=false,audioCtx=null;
   var mathTimer=null,mathTime=60,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1,mathLevelCorrect=0,mathScore=0,mathStreak=0,mathMaxStreak=0,mathSeen=new Set(),mathOps=[],mathStepCount=1,mathQuestionStartedAt=0,mathTotalResponseMs=0,mathResponseCount=0,mathGameStartedAt=0,mathTransitioning=false,mathTransitionTimer=null;
   var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null,memoryAnswerTimeout=null,memoryAnswerTicker=null,memoryAwaitingAnswer=false,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryScorePoints=0,memoryBestDigits=0;
-  var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
+  var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false,logicTimer=null,logicTimeout=null,logicStartedAt=0;
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false,execSchedule=[],execSwitchRtTotal=0,execSwitchRtCount=0,execRepeatRtTotal=0,execRepeatRtCount=0,execConflictCorrect=0,execConflictTotal=0;
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null,schulteSequence=[],schulteIndex=0,schulteMode='A',schulteModeDetail='',schulteFinished=false;
   var stroopRound=0,stroopCorrect=0,stroopWrong=0,stroopRtTotal=0,stroopStartedAt=0,stroopColor='red',stroopLocked=false,stroopSchedule=[],stroopCurrentType='conflict',stroopConflictCorrect=0,stroopConflictTotal=0,stroopConflictRt=0,stroopCongruentRt=0,stroopCongruentCount=0;
@@ -739,7 +749,7 @@
   });
   $('dailyAgain').addEventListener('click',startDaily);
 
-  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;clearTimeout(memoryTimeout);memoryTimeout=null;clearTimeout(memoryAnswerTimeout);memoryAnswerTimeout=null;clearInterval(memoryAnswerTicker);memoryAnswerTicker=null;memoryAwaitingAnswer=false;clearInterval(schulteTimer);schulteTimer=null}
+  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;clearTimeout(memoryTimeout);memoryTimeout=null;clearTimeout(memoryAnswerTimeout);memoryAnswerTimeout=null;clearInterval(memoryAnswerTicker);memoryAnswerTicker=null;memoryAwaitingAnswer=false;clearInterval(logicTimer);logicTimer=null;clearTimeout(logicTimeout);logicTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
   function startDaily(){stopAll();dailyMode=true;dailyScores={};dailySelection=allModes.slice();dailyQueue=dailySelection.slice();startNextDaily()}
   function startNextDaily(){if(!dailyQueue.length){showDailyResult();return}startMode(dailyQueue.shift())}
   function startMode(mode){
@@ -1053,32 +1063,56 @@
     })
   }
 
-  function startLogic(){show('logic');logicSession=buildLogicSession();logicIndex=0;logicCorrect=0;renderLogic()}
+  var LOGIC_ANSWER_MS=20000;
+  function clearLogicTimer(){
+    clearInterval(logicTimer);logicTimer=null;clearTimeout(logicTimeout);logicTimeout=null
+  }
+  function startLogic(){
+    show('logic');clearLogicTimer();logicSession=buildLogicSession();logicIndex=0;logicCorrect=0;logicSelected=null;logicAnswered=false;
+    $('logicCorrectCount').textContent='0';renderLogic()
+  }
   function renderLogic(){
-    logicSelected=null;logicAnswered=false;var q=logicSession[logicIndex];
+    if(logicIndex>=logicSession.length){endLogic();return}
+    clearLogicTimer();logicSelected=null;logicAnswered=false;var q=logicSession[logicIndex];
     $('logicPill').textContent=(logicIndex+1)+' / '+logicSession.length+' · '+q.type;
+    $('logicTimer').textContent='20.0 秒';
     var prog=$('logicProgress');prog.innerHTML='';logicSession.forEach(function(_,i){var d=document.createElement('i');if(i<=logicIndex)d.className='on';prog.appendChild(d)});
     $('logicQuestion').textContent=q.q;var clues=$('logicClues');clues.innerHTML='';
     q.clues.forEach(function(c){var d=document.createElement('div');d.className='clue';d.textContent=c;clues.appendChild(d)});
     var choices=$('logicChoices');choices.innerHTML='';
-    q.choices.forEach(function(c,i){var b=document.createElement('button');b.type='button';b.className='choice';b.textContent=c;b.addEventListener('click',function(){if(logicAnswered)return;logicSelected=i;choices.querySelectorAll('.choice').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')});choices.appendChild(b)});
-    $('logicFeedback').className='feedback';$('logicFeedback').textContent='';$('logicSubmit').classList.remove('hidden');$('logicNext').classList.add('hidden')
+    q.choices.forEach(function(c,i){
+      var b=document.createElement('button');b.type='button';b.className='choice';b.textContent=c;
+      b.addEventListener('click',function(){
+        if(logicAnswered)return;logicSelected=i;
+        choices.querySelectorAll('.choice').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')
+      });
+      choices.appendChild(b)
+    });
+    $('logicSubmit').disabled=false;logicStartedAt=performance.now();
+    logicTimer=setInterval(function(){
+      if(logicAnswered)return;
+      var left=Math.max(0,LOGIC_ANSWER_MS-(performance.now()-logicStartedAt));
+      $('logicTimer').textContent=(left/1000).toFixed(1)+' 秒'
+    },100);
+    logicTimeout=setTimeout(function(){finishLogicQuestion(true)},LOGIC_ANSWER_MS)
+  }
+  function finishLogicQuestion(timedOut){
+    if(logicAnswered)return;logicAnswered=true;clearLogicTimer();$('logicSubmit').disabled=true;
+    var q=logicSession[logicIndex],ok=!timedOut&&logicSelected!==null&&logicSelected===q.answer;
+    if(ok){logicCorrect++;$('logicCorrectCount').textContent=logicCorrect;correctTone()}else wrongTone();
+    logicIndex++;
+    setTimeout(function(){if(logicIndex>=logicSession.length)endLogic();else renderLogic()},260)
   }
   $('logicSubmit').addEventListener('click',function(){
-    if(logicSelected===null||logicAnswered)return;
-    logicAnswered=true;var q=logicSession[logicIndex],ok=logicSelected===q.answer;
-    if(ok){logicCorrect++;correctTone()}else wrongTone();
-    var f=$('logicFeedback');f.className='feedback show '+(ok?'good':'bad');
-    f.textContent=(ok?'✓ 正確。':'✗ 正確答案：'+q.choices[q.answer]+'。')+' '+q.explain;
-    $('logicSubmit').classList.add('hidden');$('logicNext').classList.remove('hidden');
-    $('logicNext').textContent=logicIndex===logicSession.length-1?'看結果':'下一題'
+    if(logicAnswered||logicSelected===null)return;
+    finishLogicQuestion(false)
   });
-  $('logicNext').addEventListener('click',function(){logicIndex++;if(logicIndex>=logicSession.length)endLogic();else renderLogic()});
   function endLogic(){
+    clearLogicTimer();
     var score=Math.round(logicCorrect/logicSession.length*100);
     finishMode('logic',score,{
-      a:logicCorrect+'/'+logicSession.length,b:score+'%',c:'5 種題型',
-      items:[['正確',logicCorrect+'/'+logicSession.length],['正確率',score+'%'],['題型','5 種'],['本次題數',logicSession.length]]
+      a:logicCorrect+'/'+logicSession.length,b:score+'%',c:'20 秒/題',
+      items:[['答對題數',logicCorrect+'/'+logicSession.length],['正確率',score+'%'],['每題上限','20 秒']]
     })
   }
 
