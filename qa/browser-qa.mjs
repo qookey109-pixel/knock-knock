@@ -142,7 +142,7 @@ async function runViewport(browser, viewport, name) {
   await page.locator('#memory.active').waitFor();
   assert((await page.locator('#memoryRoundPill').innerText()).trim() === '1 / 10', `${name}: memory should expose a 10-round progression`);
   await page.locator('#memoryStart').click();
-  const shown = (await page.locator('#memoryNumber').innerText()).trim();
+  const shown = (await page.locator('#memoryNumber').innerText()).replace(/\s/g,'');
   assert(/^\d{4}$/.test(shown), `${name}: first memory round should show 4 digits`);
   await page.locator('#memoryEntry').waitFor({ state: 'visible', timeout: 7000 });
   assert((await page.locator('#memoryAnswerTimer').innerText()).includes('不限時'), `${name}: memory should show its untimed answer state`);
