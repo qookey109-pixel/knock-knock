@@ -188,11 +188,12 @@ async function runViewport(browser, viewport, name) {
   assert(execStageBg !== 'rgba(0, 0, 0, 0)', `${name}: executive number stage should use a high-contrast jump color`);
   await assertA11y(page, `${name} executive`);
 
-  // Schulte: four modes, 50 targets, and full-field re-layout after every correct hit.
+  // Schulte: three modes, 50 targets, and full-field re-layout after every correct hit.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="schulte"]').click();
   await page.locator('#schulte.active').waitFor();
-  assert(await page.locator('.schulte-mode').count() === 4, `${name}: Schulte should expose A/B/C/D modes`);
+  assert(await page.locator('.schulte-mode').count() === 3, `${name}: Schulte should expose A/B/C modes only`);
+  assert(await page.locator('.schulte-mode[data-schulte-mode="D"]').count() === 0, `${name}: Schulte odd/even mode D should be removed`);
   assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: Schulte grid should start with 50 cells`);
   assert((await page.locator('#schulteModePill').innerText()).includes('A · 1 → 50'), `${name}: standalone Schulte should start in mode A`);
   const beforeOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
@@ -206,6 +207,8 @@ async function runViewport(browser, viewport, name) {
   await page.locator('.schulte-mode[data-schulte-mode="B"]').click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '50');
   assert((await page.locator('#schulteModePill').innerText()).includes('B · 50 → 1'), `${name}: Schulte mode B should reverse the target order`);
+  const schulteSource = await page.locator('html').evaluate(el => el.innerHTML);
+  assert(schulteSource.includes("['A','B','C'][rand(0,2)]") && !schulteSource.includes("奇數 1 → 99") && !schulteSource.includes("偶數 2 → 100"), `${name}: Schulte daily pool should contain only A/B/C`);
   await assertA11y(page, `${name} schulte`);
 
   // Stroop: 20 trials with fixed congruent/conflict mix and seconds-based reaction time.
