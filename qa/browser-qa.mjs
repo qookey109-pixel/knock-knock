@@ -473,6 +473,18 @@ async function runChillJourney(browser) {
   await page.clock.runFor(1000);
   assert(await page.locator('#home.active').isVisible(), 'old round callback must not restore a departed game');
   assert((await page.locator('#oddPill').textContent()).startsWith('1 / 16'), 'old round callback must not advance after leaving');
+  await page.locator('#dailyBtn').click();
+  await page.locator('#math.active').waitFor();
+  await page.locator('#finishEarlyBtn').click();
+  await page.locator('#dailyResult.active').waitFor();
+  assert(await page.locator('#dailyScore .lit').count() === 0, 'early session exit must not claim completed games');
+  assert((await page.locator('#dailyResult .gamehead h2').innerText()) === '這次先玩到這裡', 'early session recap should describe an unfinished journey');
+  await page.locator('.back:visible').click();
+  await page.locator('.audio-settings > summary').click();
+  await page.locator('#musicVolume').evaluate(el => {el.value='25';el.dispatchEvent(new Event('input',{bubbles:true}))});
+  assert((await page.locator('#musicValue').innerText()) === '25%', 'music control must update its visible value');
+  await page.reload();
+  assert(await page.locator('#musicVolume').inputValue() === '25', 'music preference must survive reload');
   assert(errors.length===0, 'runtime errors: '+errors.join('; '));
   await page.screenshot({path:'/tmp/brain7-chill-home-mobile.png',fullPage:true});
   await context.close();
