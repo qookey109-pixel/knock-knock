@@ -63,6 +63,10 @@ A version is submission-ready only when:
 
 The user requests a relaxing game rather than a scored test. The latest user correction requires up to five stars per game based on answer score. Preserve the original per-mode scoring formulas. Score thresholds: 0 = no lit stars; 1–39 = one; 40–59 = two; 60–74 = three; 75–89 = four; 90–100 = five. Every result has five slots. Ending early is explicitly unrated. The seven-game recap shows each game separately; it does not assign an overall grade. Legacy completion-only history remains labelled as legacy, never reinterpreted as a rating.
 
-Preserve memory exposure 5s, answer window 10s, max 9 digits; logic 20s per question with no answer explanations; Schulte A/B only with 50 fixed cells and strong drift. Pause is available across all games and on hidden tabs.
+Preserve memory exposure 5s, answer window 10s, max 9 digits; logic 20s per question with no answer explanations; Schulte A/B only with 50 visible slots and stronger drift; completed numbers stay pinned while unfinished numbers reshuffle after each correct hit. Pause is available across all games and on hidden tabs.
 
 Primary recaps show play time and activity; descriptive answer details are optional. Browser-only play history has no leaderboard, personal best ranking, streak pressure, or account requirement. Explicit preview selection must survive hover/focus changes. Music and effects have separate persisted volume controls. Repeat game entry uses shorter motion.
+
+## Mobile flow update — 2026-10-03 23:12 Asia/Taipei
+
+The latest user instruction supersedes the previous all-number fixed-order rule: only completed Schulte numbers are pinned; unfinished numbers change positions after each correct answer. All 50 slots remain visible. Phone gameplay uses the dynamic viewport height; memory uses an automatically revealed in-page numeric keypad, without requiring the OS keyboard. Preserve 5s exposure, 10s answering, max 9 digits, and the existing star formulas. Verify all seven game controls fit at 375×667 and 390×844. Extremely short landscape viewports may scroll inside the game panel to preserve access.

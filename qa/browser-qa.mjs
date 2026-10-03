@@ -146,7 +146,7 @@ async function runViewport(browser, viewport, name) {
   assert(/^\d{4}$/.test(shown), `${name}: first memory round should show 4 digits`);
   await page.locator('#memoryEntry').waitFor({ state: 'visible', timeout: 7000 });
   assert((await page.locator('#memoryAnswerTimer').innerText()).includes('作答'), `${name}: memory should show a visible answer countdown`);
-  await page.locator('#memoryAnswer').fill(shown);
+  for(const digit of shown) await page.locator('#memoryKeys button').filter({hasText:new RegExp('^'+digit+'$')}).click();
   await page.locator('#memorySubmit').click();
   await page.waitForFunction(() => document.getElementById('memoryNumber')?.textContent === '正確');
   const memorySource = await page.locator('html').evaluate(el => el.innerHTML);
@@ -236,14 +236,15 @@ async function runViewport(browser, viewport, name) {
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '2');
   assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: correct Schulte hit should keep all 50 cells visible`);
   const afterOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
-  assert(beforeOrder.join(',') === afterOrder.join(','), `${name}: Schulte cell order should remain fixed after a correct hit`);
+  assert(beforeOrder.indexOf('1') === afterOrder.indexOf('1'), `${name}: completed Schulte number must stay in its original slot`);
+  assert(beforeOrder.join(',') !== afterOrder.join(','), `${name}: unfinished numbers must change positions after a hit`);
   assert(await oneCell.evaluate(el => el.classList.contains('done') && el.disabled), `${name}: completed Schulte cell should remain in place with a completed state`);
   assert(await page.locator('#schulteGrid .schulte-float').count() === 50, `${name}: all Schulte drift wrappers should remain present`);
   await page.locator('.schulte-mode[data-schulte-mode="B"]').click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '50');
   assert((await page.locator('#schulteModePill').innerText()).includes('B · 50 → 1'), `${name}: Schulte mode B should reverse the target order`);
   const schulteSource = await page.locator('html').evaluate(el => el.innerHTML);
-  assert(schulteSource.includes("['A','B'][rand(0,1)]") && !schulteSource.includes('relayoutSchulteAfterHit'), `${name}: Schulte daily pool should use only A/B and never relayout completed hits`);
+  assert(schulteSource.includes("['A','B'][rand(0,1)]"), `${name}: Schulte daily pool should use only A/B and pin completed hits`);
   await assertA11y(page, `${name} schulte`);
 
   // Stroop: 20 trials with fixed congruent/conflict mix and seconds-based reaction time.
@@ -416,7 +417,7 @@ async function runChillJourney(browser) {
       assert((await page.locator('#memoryAnswerTimer').innerText()) === timerBefore, 'memory answer deadline must freeze');
       await page.locator('#resumeBtn').click();
     } else await page.clock.runFor(5100);
-    await page.locator('#memoryAnswer').fill(digits);
+    for(const digit of digits) await page.locator('#memoryKeys button').filter({hasText:new RegExp('^'+digit+'$')}).click();
     await page.locator('#memorySubmit').click();
     await page.clock.runFor(950);
   }
@@ -511,6 +512,54 @@ async function runChillJourney(browser) {
   await context.close();
 }
 
+async function runPhoneStage(browser) {
+  for(const viewport of [{width:375,height:667},{width:390,height:844}]) {
+    const context = await browser.newContext({viewport,reducedMotion:'reduce'});
+    const page = await context.newPage();
+    const errors=[];page.on('pageerror',e=>errors.push(e.message));
+    await page.clock.install();
+    await page.goto('http://127.0.0.1:4173/adult-brain-training/',{waitUntil:'networkidle'});
+    for(const mode of ['math','memory','logic','executive','schulte','stroop','odd']) {
+      await page.locator('[data-mode="'+mode+'"]').click();
+      await page.locator('#'+mode+'.active').waitFor();
+      if(mode==='memory') {
+        assert(await page.locator('#memoryAnswer').getAttribute('readonly')!==null,'memory must avoid opening the OS keyboard');
+        await page.locator('#memoryStart').click();
+        const digits=await page.locator('#memoryNumber').innerText();
+        await page.clock.runFor(5100);
+        assert(await page.locator('#memoryKeys').isVisible(),'memory keypad must appear automatically after exposure');
+        await page.locator('#memoryKeys button').filter({hasText:/^0$/}).click();
+        await page.locator('#memoryKeys button').filter({hasText:/^0$/}).click();
+        assert(await page.locator('#memoryAnswer').inputValue()==='00','keypad must preserve leading zeroes');
+        await page.locator('#memoryKeys button').filter({hasText:/^←$/}).click();
+        assert(await page.locator('#memoryAnswer').inputValue()==='0','delete key must remove only the last digit');
+        await page.locator('#memoryKeys button').filter({hasText:/^清除$/}).click();
+        for(const digit of digits) await page.keyboard.press(digit);
+        assert(await page.locator('#memoryAnswer').inputValue()===digits,'physical keyboard must work without editing readonly input');
+      }
+      const size=await page.evaluate(() => {
+        const screen=document.querySelector('.screen.active'),panel=screen.querySelector('.panel'),r=screen.getBoundingClientRect();
+        return {bottom:r.bottom,height:innerHeight,outer:document.documentElement.scrollHeight,scroll:scrollY,extra:panel.scrollHeight-panel.clientHeight};
+      });
+      assert(size.bottom<=size.height+1 && size.outer<=size.height+1 && size.scroll===0,mode+' must stay inside phone viewport '+JSON.stringify(size));
+      assert(size.extra<=2,mode+' controls must fit without panel scrolling '+JSON.stringify(size));
+      if(mode==='schulte') {
+        const initial=await page.locator('#schulteGrid button').evaluateAll(nodes=>nodes.map(n=>n.dataset.number));
+        await page.locator('#schulteGrid [data-number="1"]').click();
+        await page.locator('#schulteGrid [data-number="2"]').click();
+        const order=await page.locator('#schulteGrid button').evaluateAll(nodes=>nodes.map(n=>n.dataset.number));
+        assert(initial.indexOf('1')===order.indexOf('1'),'completed number must remain pinned after multiple reshuffles');
+        assert(await page.locator('#schulteGrid .done').count()===2,'completed targets must remain visible');
+      }
+      await assertA11y(page,'phone '+mode);
+      await page.screenshot({path:'/tmp/brain7-chill-stage-'+viewport.height+'-'+mode+'.png',fullPage:true});
+      await page.locator('.back:visible').click();
+    }
+    assert(errors.length===0,'phone runtime errors: '+errors.join('; '));
+    await context.close();
+  }
+}
+
 const browser = await chromium.launch({ headless: true });
 try {
   await runViewport(browser, { width: 390, height: 844 }, 'mobile');
@@ -521,6 +570,7 @@ try {
   await runAwardResponsiveShell(browser, 768, 1024, '768px');
   await runReducedMotion(browser);
   await runChillJourney(browser);
+  await runPhoneStage(browser);
   console.log('browser-qa: PASS — 7 games, mobile + desktop, accessibility, and reduced-motion checks passed.');
 } finally {
   await browser.close();

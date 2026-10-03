@@ -278,6 +278,63 @@
     @media(max-width:560px){.journey-heading{grid-template-columns:24px minmax(0,1fr)}.journey-heading .journey-star{grid-row:1/4}.journey-time{grid-column:2}.journey-rating{grid-column:2}}
     .hidden{display:none!important}
 
+
+    .schulte-cell.done .schulte-float{animation:none;transform:none;will-change:auto}
+    @media(max-width:680px){
+      body.is-game{height:100dvh;overflow:hidden}
+      body.is-game .app{height:100dvh;padding: max(6px,env(safe-area-inset-top)) 10px max(6px,env(safe-area-inset-bottom));display:flex;flex-direction:column}
+      body.is-game .top{display:none}
+      body.is-game .play-toolbar{padding:0;flex-direction:row;align-items:center;gap:6px;flex-shrink:0;min-height:44px}
+      body.is-game #sessionContext{font-size:10px;max-width:40%}
+      body.is-game .play-toolbar>div{width:auto;gap:5px}
+      body.is-game .play-toolbar .secondary{padding:0 8px;font-size:11px}
+      body.is-game .screen.active{padding-top:4px;flex:1;min-height:0;display:flex;flex-direction:column;animation:none}
+      body.is-game .gamehead{margin:0 0 6px;padding:0;align-items:center;min-height:44px;flex-shrink:0}
+      body.is-game .gamehead>div:first-child{display:flex;align-items:center;gap:6px}
+      body.is-game .gamehead h2{font-size:21px;margin:0}
+      body.is-game .gamehead .back{font-size:11px}
+      body.is-game .pill{font-size:10px;padding:7px}
+      body.is-game .panel{flex:1;min-height:0;padding:10px;overflow:auto;overscroll-behavior:contain}
+      body.is-game .mini-instruction{font-size:10px;line-height:1.4;margin:4px 0 8px}
+      body.is-game .stats{margin-bottom:6px}
+      body.is-game .stat{padding:7px 10px}
+      body.is-game .stat strong{font-size:22px;margin-top:4px}
+      body.is-game .keypad{gap:6px;margin-top:8px}
+      body.is-game .key{min-height:44px;font-size:23px}
+      body.is-game .key.special{font-size:12px}
+      body.is-game .actions{margin-top:8px}
+      body.is-game .actions button,body.is-game .choice{min-height:44px}
+      body.is-game .big-problem{font-size:clamp(40px,12vw,62px);padding:14px 0}
+      body.is-game .answer-input{height:48px;font-size:28px}
+      body.is-game .answer-wrap .primary{min-height:48px}
+      body.is-game .memory-stage{padding:8px 0}
+      body.is-game .memory-number{font-size:clamp(30px,8vw,48px);letter-spacing:.07em;margin:16px 0;white-space:nowrap;word-break:normal}
+      body.is-game .memory-input{height:44px;font-size:28px}
+      body.is-game .memory-answer-timer{margin:0 auto 8px;padding:5px 10px;font-size:12px}
+      body.is-game .logic-progress{margin-bottom:8px}
+      body.is-game .logic-q{font-size:19px;margin:5px 0 8px}
+      body.is-game .clues{gap:4px;margin-bottom:8px}
+      body.is-game .clue{font-size:12px;padding:6px 8px;line-height:1.4}
+      body.is-game .choices{gap:5px}
+      body.is-game .choice{font-size:14px;padding:6px 10px}
+      body.is-game .exec-stage{margin:8px 0}
+      body.is-game .exec-rule{font-size:18px;padding:10px}
+      body.is-game .exec-number{font-size:64px;padding:14px}
+      body.is-game .stroop-stage{padding:14px 0}
+      body.is-game .stroop-word{font-size:64px}
+      body.is-game .odd-cell{min-height:54px;gap:2px}
+      body.is-game .odd-grid{gap:5px}
+      body.is-game #schulte .panel{display:flex;flex-direction:column;overflow:hidden;padding:6px}
+      body.is-game .schulte-mode-grid{gap:5px;margin:0 0 5px;flex-shrink:0}
+      body.is-game .schulte-mode{min-height:44px;flex-direction:row;padding:4px;gap:8px}
+      body.is-game .schulte-mode b{font-size:14px}
+      body.is-game .schulte-stats,body.is-game .schulte-instruction{display:none}
+      body.is-game .schulte-targetbar{position:static;flex-shrink:0;margin:0 0 5px;padding:4px;min-height:44px;box-shadow:none}
+      body.is-game .schulte-targetbar strong{font-size:30px}
+      body.is-game .schulte-grid{flex:1;min-height:0;grid-template-columns:repeat(5,minmax(0,1fr));grid-template-rows:repeat(10,minmax(0,1fr));gap:3px;margin:0}
+      body.is-game .schulte-cell{min-height:0;font-size:clamp(17px,4.7vw,21px);box-shadow:none;border-radius:7px}
+      body.is-game .schulte-float{min-height:0;height:100%}
+    }
   </style>
 </head>
 <body>
@@ -302,7 +359,7 @@
         <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 5 秒，接著在 10 秒內完整輸入；最高 9 位數。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 5 秒，10 秒內完整輸入；最高 9 位數。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標。兩種搜尋方向，數字持續大幅漂動，答對後保留原位。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、兩種方向；數字持續漂動，答對後保留原位。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標。兩種搜尋方向，數字持續大幅漂動，答對的數字固定，其餘換位。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、兩種方向；數字持續漂動，答對的數字固定，其餘換位。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#a62b74" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="從 16 格一路增加到 24 格。每回合只有 1 個箭頭與文字不一致。"><span class="mode-index">07</span><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>從 16 到 24 格，找出唯一一個箭頭與文字不一致的訊號。</p></span><span class="mode-arrow">→</span></button>
       </div>
@@ -335,7 +392,7 @@
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div><div id="memoryRoundPill" class="pill">1 / 10</div></div>
     <div class="panel">
       <div class="stats"><div class="stat"><span>回合</span><strong id="memoryRound">1</strong></div><div class="stat"><span>位數</span><strong id="memoryDigits">4</strong></div><div class="stat"><span>正確</span><strong id="memoryCorrect">0</strong></div></div>
-      <div class="mini-instruction">每回合先看 5 秒，接著有 10 秒作答；最多記 9 位數。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryAnswerTimer" class="memory-answer-timer hidden">作答 10.0 秒</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" inputmode="numeric" autocomplete="off" aria-label="輸入剛才的數字"><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
+      <div class="mini-instruction">每回合先看 5 秒，接著有 10 秒作答；最多記 9 位數。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryAnswerTimer" class="memory-answer-timer hidden">作答 10.0 秒</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" readonly inputmode="none" maxlength="9" autocomplete="off" aria-label="輸入剛才的數字"><div id="memoryKeys" class="keypad" aria-label="記憶數字鍵盤"></div><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
     </div>
   </section>
 
@@ -367,7 +424,7 @@
         <button type="button" class="schulte-mode" data-schulte-mode="B"><b>B</b><span>50 → 1</span></button>
       </div>
       <div class="stats schulte-stats"><div class="stat"><span>目前目標</span><strong id="schulteNext">1</strong></div><div class="stat"><span>已完成</span><strong id="schulteDone">0 / 50</strong></div><div class="stat"><span>錯誤</span><strong id="schulteWrong">0</strong></div><div class="stat"><span>時間</span><strong id="schulteTime">0.0 秒</strong></div></div>
-      <div class="mini-instruction schulte-instruction">找出目前目標。數字會持續較大幅度漂動；答對後格子與數字保留在原位，不重新洗牌。</div>
+      <div class="mini-instruction schulte-instruction">找出目前目標。數字會持續較大幅度漂動；答對的數字留在原位，其餘數字重新換位。</div>
       <div class="schulte-targetbar"><span>現在找</span><strong id="schulteTargetBig">1</strong></div>
       <div id="schulteGrid" class="schulte-grid" aria-label="動態舒爾特搜尋場"></div>
     </div>
@@ -619,7 +676,7 @@
 
   function $(id){return document.getElementById(id)}
   function applyScreen(id){
-    screens.forEach(function(s){s.classList.toggle('active',s.id===id)});window.scrollTo(0,0);
+    screens.forEach(function(s){s.classList.toggle('active',s.id===id)});document.body.classList.toggle('is-game',allModes.indexOf(id)>=0);window.scrollTo(0,0);
     var heading=$(id).querySelector('h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}
   }
   function show(id){applyScreen(id)}
@@ -1026,7 +1083,7 @@
   function revealMemoryEntry(cfg){
     $('memoryNumber').textContent='•'.repeat(cfg.digits);
     $('memoryLabel').textContent='把剛才的數字輸入回來';
-    $('memoryEntry').classList.remove('hidden');$('memoryAnswerTimer').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus();
+    $('memoryEntry').classList.remove('hidden');$('memoryAnswerTimer').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus({preventScroll:true});
     memoryAwaitingAnswer=true;memoryAnswerStartedAt=playNow();
     $('memoryAnswerTimer').textContent='作答 10.0 秒';
     clearMemoryAnswerTimers();
@@ -1057,7 +1114,23 @@
     finishMemoryAnswer(answer,false)
   }
   $('memorySubmit').addEventListener('click',submitMemory);
-  $('memoryAnswer').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();submitMemory()}});
+  function inputMemory(key){
+    if(paused||!memoryAwaitingAnswer||!$('memory').classList.contains('active'))return;
+    var input=$('memoryAnswer');
+    if(key==='清除'||key==='Delete')input.value='';
+    else if(key==='←'||key==='Backspace')input.value=input.value.slice(0,-1);
+    else if(/^\d$/.test(key))input.value=(input.value+key).slice(0,9);
+    else if(key==='Enter')submitMemory()
+  }
+  ['1','2','3','4','5','6','7','8','9','清除','0','←'].forEach(function(key){
+    var button=document.createElement('button');button.type='button';button.className='key'+(key==='清除'||key==='←'?' special':'');button.textContent=key;
+    if(key==='←')button.setAttribute('aria-label','刪除最後一位');
+    button.addEventListener('click',function(){inputMemory(key)});$('memoryKeys').appendChild(button)
+  });
+  document.addEventListener('keydown',function(e){
+    if(paused||!memoryAwaitingAnswer||!$('memory').classList.contains('active')||e.ctrlKey||e.metaKey||e.altKey||e.target.closest('.audio-settings'))return;
+    if(/^\d$/.test(e.key)||['Delete','Backspace','Enter'].indexOf(e.key)>=0){e.preventDefault();inputMemory(e.key)}
+  });
   function endMemory(){
     var total=MEMORY_ROUNDS.reduce(function(sum,r){return sum+r.points},0);
     finishMode('memory',Math.round(memoryEarned/total*100),{items:[['遊玩回合',memoryRound+' 回合'],['成功記住',memoryBestDigits?memoryBestDigits+' 位數':'這次先熟悉玩法'],['答對回合',memoryCorrect+' / '+memoryRound],['平均作答',memoryRound?(memoryRtTotal/memoryRound/1000).toFixed(1)+' 秒':'—']]})
@@ -1208,11 +1281,11 @@
     var b=document.createElement('button');b.type='button';b.className='schulte-cell';b.dataset.number=String(n);b.setAttribute('aria-label','數字 '+n);
     b.style.setProperty('--cell-bg',colors[index%colors.length]);
     var f=document.createElement('span');f.className='schulte-float';f.textContent=n;
-    f.style.setProperty('--float-duration',(1.9+Math.random()*1.9).toFixed(2)+'s');
+    f.style.setProperty('--float-duration',(1.5+Math.random()*1.3).toFixed(2)+'s');
     f.style.setProperty('--float-delay',(-Math.random()*2).toFixed(2)+'s');
-    f.style.setProperty('--float-x1',rand(-10,-4)+'px');f.style.setProperty('--float-y1',rand(-7,2)+'px');
-    f.style.setProperty('--float-x2',rand(4,10)+'px');f.style.setProperty('--float-y2',rand(-2,7)+'px');
-    b.appendChild(f);b.addEventListener('click',function(){answerSchulte(n,b)});return b
+    f.style.setProperty('--float-x1',rand(-22,-18)+'%');f.style.setProperty('--float-y1',rand(-25,-18)+'%');
+    f.style.setProperty('--float-x2',rand(18,22)+'%');f.style.setProperty('--float-y2',rand(18,25)+'%');
+    b.appendChild(f);b.addEventListener('click',function(){answerSchulte(Number(b.dataset.number),b)});return b
   }
   function updateSchulteHud(){
     var target=schulteSequence[schulteIndex];
@@ -1232,11 +1305,19 @@
     schulteTimer=playInterval(function(){$('schulteTime').textContent=((playNow()-schulteStart)/1000).toFixed(1)+' 秒'},100)
   }
   document.querySelectorAll('.schulte-mode').forEach(function(b){b.addEventListener('click',function(){startSchulte(this.dataset.schulteMode)})});
+  function reshuffleSchulteRemaining(){
+    var grid=$('schulteGrid'),cells=Array.from(grid.children),remaining=cells.filter(function(cell){return !cell.disabled});
+    if(remaining.length<2)return;
+    var mixed=shuffle(remaining);
+    if(mixed.every(function(cell,i){return cell===remaining[i]}))mixed.push(mixed.shift());
+    var index=0;grid.replaceChildren.apply(grid,cells.map(function(cell){return cell.disabled?cell:mixed[index++]}))
+  }
   function answerSchulte(n,button){
     if(schulteFinished)return;
     var target=schulteSequence[schulteIndex];
     if(n!==target){schulteWrong++;$('schulteWrong').textContent=schulteWrong;wrongTone();return}
     correctTone();button.classList.add('done');button.disabled=true;button.setAttribute('aria-label','已完成數字 '+n);schulteIndex++;updateSchulteHud();
+    reshuffleSchulteRemaining();
     if(schulteIndex>=schulteSequence.length){
       schulteFinished=true;clearPlayTimer(schulteTimer);schulteTimer=null;
       var sec=(playNow()-schulteStart)/1000;
