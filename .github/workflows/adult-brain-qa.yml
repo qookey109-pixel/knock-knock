@@ -65,6 +65,13 @@ jobs:
           exit 1
       - name: Run mobile and desktop browser QA
         run: node qa/browser-qa.mjs
+      - name: Upload browser visual QA
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: brain7-chill-browser-visuals
+          path: /tmp/brain7-chill-*.png
+          if-no-files-found: ignore
 
 
   lighthouse-qa:
@@ -102,3 +109,4 @@ jobs:
           name: adult-brain-lighthouse
           path: /tmp/lighthouse-*.json
           if-no-files-found: error
+

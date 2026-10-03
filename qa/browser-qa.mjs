@@ -70,6 +70,7 @@ async function runViewport(browser, viewport, name) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
   await assertA11y(page, `${name} home`);
+  await page.screenshot({path:'/tmp/brain7-chill-home-'+name+'.png',fullPage:true});
 
   // Home interactive circuit preview
   assert(await page.locator('[data-preview-mode]').count() === 7, `${name}: expected seven circuit preview controls`);
@@ -91,7 +92,7 @@ async function runViewport(browser, viewport, name) {
 
 
   // Daily Training contract: the public session must run all seven games in sequence.
-  assert((await page.locator('#home .hero p').innerText()).includes('7 個小遊戲'), `${name}: home copy must describe the seven-game session`);
+  assert((await page.locator('#home .hero p:not(.session-info)').innerText()).includes('7 個小遊戲'), `${name}: home copy must describe the seven-game session`);
   await page.locator('#dailyBtn').click();
   await page.locator('#math.active').waitFor();
   assert((await page.locator('#math .gamehead h2').innerText()) === '快速心算', `${name}: Daily Training must start with Quick Math`);
@@ -384,6 +385,13 @@ async function runChillJourney(browser) {
   await page.keyboard.press('7');
   assert((await page.locator('#mathAnswer').inputValue()) === mathValue, 'paused game must reject keyboard answers');
   await page.locator('#resumeBtn').click();
+  await page.evaluate(() => {Object.defineProperty(document,'hidden',{configurable:true,get:()=>true});document.dispatchEvent(new Event('visibilitychange'))});
+  assert(await page.locator('#pauseOverlay').isVisible(), 'hidden tab must pause the game');
+  await page.clock.runFor(15000);
+  assert((await page.locator('#mathTime').innerText()) === mathTime, 'hidden tab time must not count toward deadline');
+  await page.evaluate(() => {delete document.hidden;document.dispatchEvent(new Event('visibilitychange'))});
+  assert(await page.locator('#pauseOverlay').isVisible(), 'returning to a tab must wait for manual resume');
+  await page.locator('#resumeBtn').click();
   await page.clock.runFor(60000);
   await page.locator('#sessionBreak.active').waitFor();
   assert((await page.locator('#sessionBreakScore').innerText()) === '★', 'playing to the time limit earns a completion star regardless of accuracy');
@@ -449,11 +457,12 @@ async function runChillJourney(browser) {
   assert(await page.locator('#dailySummary .journey-row').count() === 7, 'full recap must show every game');
   assert(!/分數|總分|評分|DAILY SCORE/.test(await page.locator('#dailyResult').innerText()), 'recap must not rank or score the player');
   await assertA11y(page, 'seven-star recap');
+  await page.screenshot({path:'/tmp/brain7-chill-recap-mobile.png',fullPage:true});
   await page.locator('.back:visible').click();
-  await page.locator('#recentPlays').click();
+  await page.locator('#recentPlays > summary').click();
   assert((await page.locator('#historyList').innerText()).includes('7 顆完成星'), 'history must record the full journey');
   await page.reload();
-  await page.locator('#recentPlays').click();
+  await page.locator('#recentPlays > summary').click();
   assert((await page.locator('#historyList').innerText()).includes('7 顆完成星'), 'history must survive reload');
 
   // Leaving during a delayed next-question callback must cancel it.
