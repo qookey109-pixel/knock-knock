@@ -408,7 +408,7 @@
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div><div id="memoryRoundPill" class="pill">1 / 10</div></div>
     <div class="panel">
       <div class="stats"><div class="stat"><span>回合</span><strong id="memoryRound">1</strong></div><div class="stat"><span>位數</span><strong id="memoryDigits">4</strong></div><div class="stat"><span>正確</span><strong id="memoryCorrect">0</strong></div></div>
-      <div class="mini-instruction">每回合看 6 秒，作答不限時；最多記 9 位數。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryAnswerTimer" class="memory-answer-timer hidden">作答不限時</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" readonly inputmode="none" maxlength="9" autocomplete="off" aria-label="輸入剛才的數字"><div id="memoryKeys" class="keypad" aria-label="記憶數字鍵盤"></div><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
+      <div class="mini-instruction">每回合看 6 秒，作答不限時；最多記 9 位數。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number" role="img" aria-label="準備記憶數字">••••</div><div id="memoryAnswerTimer" class="memory-answer-timer hidden">作答不限時</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" readonly inputmode="none" maxlength="9" autocomplete="off" aria-label="輸入剛才的數字"><div id="memoryKeys" class="keypad" aria-label="記憶數字鍵盤"></div><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
     </div>
   </section>
 
@@ -1009,7 +1009,7 @@
     show('memory');clearPlayTimer(memoryTimeout);memoryTimeout=null;clearMemoryAnswerTimers();memoryAwaitingAnswer=false;
     memoryRound=0;memoryEarned=0;memoryCorrect=0;memoryValue='';memoryRtTotal=0;memoryBestDigits=0;
     $('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
-    $('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';
+    $('memoryNumber').textContent='••••';$('memoryNumber').setAttribute('aria-label','準備開始');$('memoryLabel').textContent='準備好後開始';
     $('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 10'
   }
   $('memoryStart').addEventListener('click',nextMemoryRound);
