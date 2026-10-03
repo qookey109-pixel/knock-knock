@@ -690,6 +690,8 @@
     g.gain.setValueAtTime(.028*effectVolume,t);g.gain.exponentialRampToValueAtTime(.001,t+.04);
     o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+.045);
   }
+  function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
+  function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
   function enterMode(mode,source){
     if(!mode)return;
     stopHomeBgm();transitionClick();startMode(mode)
