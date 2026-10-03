@@ -6,6 +6,18 @@
   <meta name="theme-color" content="#f7f3ea">
   <meta name="color-scheme" content="light">
   <meta name="description" content="大人的腦部鍛鍊：7 種短時間腦力小遊戲，包含快速心算、瞬間記憶、邏輯推理、規則切換、舒爾特方格、Stroop 與視覺抗干擾。">
+  <meta name="application-name" content="BRAIN/7">
+  <link rel="canonical" href="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/">
+  <link rel="icon" href="./brain7-mark.svg" type="image/svg+xml">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:title" content="BRAIN/7｜大人的腦部鍛鍊">
+  <meta property="og:description" content="一次跑完 7 個腦內回路：速度、記憶、推理、切換、搜尋、抑制與抗干擾。">
+  <meta property="og:url" content="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="BRAIN/7｜大人的腦部鍛鍊">
+  <meta name="twitter:description" content="一次跑完 7 個腦內回路：速度、記憶、推理、切換、搜尋、抑制與抗干擾。">
   <title>大人的腦部鍛鍊</title>
   <style>
     :root{
@@ -294,7 +306,7 @@
 <main class="app">
   <header class="top">
     <div class="brand"><h1>BRAIN<span>/7</span></h1><p>大人的腦部鍛鍊</p></div>
-    <button id="soundBtn" class="sound" type="button" aria-label="聲音開關">♪</button>
+    <button id="soundBtn" class="sound" type="button" aria-label="關閉聲音" aria-pressed="false">♪</button>
   </header>
 
   <section id="home" class="screen active">
@@ -683,7 +695,7 @@
     },650);
   }
 
-  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪';this.setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');homeBgmUnlocked=true;if(muted){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else if(gameFlowActive())startGameBgm()});
+  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪';this.setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');this.setAttribute('aria-pressed',muted?'true':'false');homeBgmUnlocked=true;if(muted){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else if(gameFlowActive())startGameBgm()});
   document.addEventListener('pointerdown',unlockHomeBgm,{once:true});
   document.addEventListener('keydown',unlockHomeBgm,{once:true});
   document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm()})});
