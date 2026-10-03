@@ -81,6 +81,7 @@
     @media(hover:hover) and (pointer:fine){.math-desktop-hint{display:block}}
     .memory-stage{text-align:center;padding:18px 0}.memory-label{font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.12em;color:var(--muted)}
     .memory-number{font-size:clamp(56px,16vw,96px);font-weight:950;letter-spacing:.14em;margin:34px 0;word-break:break-all}
+    .memory-answer-timer{width:max-content;margin:-16px auto 18px;padding:8px 12px;border:1px solid var(--line-strong);border-radius:999px;background:#ffe8a8;color:#5d3b00;font-size:14px;font-weight:900;font-variant-numeric:tabular-nums}
     .memory-input{width:100%;height:62px;border:1px solid var(--line);border-radius:12px;background:var(--surface2);color:var(--ink);font-size:34px;font-weight:950;text-align:center;outline:none}
     .logic-progress{display:flex;gap:5px;margin-bottom:18px}.logic-progress i{height:4px;flex:1;background:var(--line);border-radius:99px}.logic-progress i.on{background:var(--acid)}
     .logic-q{font-size:clamp(23px,5vw,32px);line-height:1.3;font-weight:900;letter-spacing:-.03em;margin:6px 0 18px}.clues{display:grid;gap:8px;margin-bottom:16px}.clue{padding:13px 14px;border-left:3px solid var(--acid);background:var(--surface2);font-weight:760;line-height:1.55;color:var(--ink)}
@@ -300,7 +301,7 @@
     <div class="home-select">
       <div class="modes" aria-label="選擇單項訓練">
         <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="只看一眼。數字消失後，把它完整抓回來。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>只看一眼。數字消失後，把它完整抓回來。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 5 秒，接著在 10 秒內完整輸入；最高 9 位數。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 5 秒，10 秒內完整輸入；最高 9 位數。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標起跳。四種搜尋模式，每答對一次，剩餘數字全部重新排位。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、四種模式；每答對一次，全場重新排位。</p></span><span class="mode-arrow">→</span></button>
@@ -336,7 +337,7 @@
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div><div id="memoryRoundPill" class="pill">1 / 10</div></div>
     <div class="panel">
       <div class="stats"><div class="stat"><span>回合</span><strong id="memoryRound">1</strong></div><div class="stat"><span>位數</span><strong id="memoryDigits">4</strong></div><div class="stat"><span>正確</span><strong id="memoryCorrect">0</strong></div></div>
-      <div class="mini-instruction">每回合顯示時間固定，難度只靠需要記住的數字位數逐步增加。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" inputmode="numeric" autocomplete="off" aria-label="輸入剛才的數字"><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
+      <div class="mini-instruction">每回合先看 5 秒，接著有 10 秒作答；最多記 9 位數。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryAnswerTimer" class="memory-answer-timer hidden">作答 10.0 秒</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" inputmode="numeric" autocomplete="off" aria-label="輸入剛才的數字"><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
     </div>
   </section>
 
@@ -426,7 +427,7 @@
   var dailyMode=false,dailyQueue=[],dailySelection=[],dailyScores={};
   var muted=false,audioCtx=null;
   var mathTimer=null,mathTime=60,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1,mathLevelCorrect=0,mathScore=0,mathStreak=0,mathMaxStreak=0,mathSeen=new Set(),mathOps=[],mathStepCount=1,mathQuestionStartedAt=0,mathTotalResponseMs=0,mathResponseCount=0,mathGameStartedAt=0,mathTransitioning=false,mathTransitionTimer=null;
-  var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryScorePoints=0,memoryBestDigits=0;
+  var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null,memoryAnswerTimeout=null,memoryAnswerTicker=null,memoryAwaitingAnswer=false,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryScorePoints=0,memoryBestDigits=0;
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false;
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false,execSchedule=[],execSwitchRtTotal=0,execSwitchRtCount=0,execRepeatRtTotal=0,execRepeatRtCount=0,execConflictCorrect=0,execConflictTotal=0;
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null,schulteSequence=[],schulteIndex=0,schulteMode='A',schulteModeDetail='',schulteFinished=false;
@@ -738,7 +739,7 @@
   });
   $('dailyAgain').addEventListener('click',startDaily);
 
-  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;clearTimeout(memoryTimeout);memoryTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
+  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;clearTimeout(memoryTimeout);memoryTimeout=null;clearTimeout(memoryAnswerTimeout);memoryAnswerTimeout=null;clearInterval(memoryAnswerTicker);memoryAnswerTicker=null;memoryAwaitingAnswer=false;clearInterval(schulteTimer);schulteTimer=null}
   function startDaily(){stopAll();dailyMode=true;dailyScores={};dailySelection=allModes.slice();dailyQueue=dailySelection.slice();startNextDaily()}
   function startNextDaily(){if(!dailyQueue.length){showDailyResult();return}startMode(dailyQueue.shift())}
   function startMode(mode){
@@ -952,18 +953,19 @@
     mathGameStartedAt=0
   }
 
-  var MEMORY_SHOW_MS=2000;
+  var MEMORY_SHOW_MS=5000;
+  var MEMORY_ANSWER_MS=10000;
   var MEMORY_ROUNDS=[
     {digits:4,points:4},
+    {digits:4,points:4},
+    {digits:5,points:5},
     {digits:5,points:5},
     {digits:6,points:6},
+    {digits:6,points:6},
+    {digits:7,points:7},
     {digits:7,points:7},
     {digits:8,points:8},
-    {digits:9,points:9},
-    {digits:10,points:10},
-    {digits:11,points:11},
-    {digits:12,points:12},
-    {digits:13,points:13}
+    {digits:9,points:9}
   ];
   var MEMORY_TOTAL_POINTS=MEMORY_ROUNDS.reduce(function(sum,r){return sum+r.points},0);
 
@@ -976,20 +978,26 @@
     }while(tries<80&&(/(\d)\1\1/.test(value)||/0123|1234|2345|3456|4567|5678|6789|9876|8765|7654|6543|5432|4321|3210/.test(value)));
     return value
   }
+  function clearMemoryAnswerTimers(){
+    clearTimeout(memoryAnswerTimeout);memoryAnswerTimeout=null;
+    clearInterval(memoryAnswerTicker);memoryAnswerTicker=null
+  }
   function startMemory(){
-    show('memory');memoryRound=0;memoryCorrect=0;memoryValue='';memoryRtTotal=0;memoryScorePoints=0;memoryBestDigits=0;
-    $('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');
+    show('memory');clearTimeout(memoryTimeout);memoryTimeout=null;clearMemoryAnswerTimers();memoryAwaitingAnswer=false;
+    memoryRound=0;memoryCorrect=0;memoryValue='';memoryRtTotal=0;memoryScorePoints=0;memoryBestDigits=0;
+    $('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
     $('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';
     $('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 10'
   }
   $('memoryStart').addEventListener('click',nextMemoryRound);
   function nextMemoryRound(){
     if(memoryRound>=MEMORY_ROUNDS.length){endMemory();return}
+    clearMemoryAnswerTimers();memoryAwaitingAnswer=false;
     var cfg=MEMORY_ROUNDS[memoryRound];memoryRound++;
     $('memoryRound').textContent=memoryRound;$('memoryDigits').textContent=cfg.digits;
     $('memoryRoundPill').textContent=memoryRound+' / '+MEMORY_ROUNDS.length;
-    $('memoryStart').classList.add('hidden');$('memoryEntry').classList.add('hidden');
-    $('memoryLabel').textContent='記住這串數字';
+    $('memoryStart').classList.add('hidden');$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
+    $('memoryLabel').textContent='記住這串數字 · 5 秒';
     memoryValue=generateMemoryDigits(cfg.digits);
     $('memoryNumber').textContent=memoryValue;
     clearTimeout(memoryTimeout);
@@ -998,25 +1006,40 @@
   function revealMemoryEntry(cfg){
     $('memoryNumber').textContent='•'.repeat(cfg.digits);
     $('memoryLabel').textContent='把剛才的數字輸入回來';
-    $('memoryEntry').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus();memoryAnswerStartedAt=performance.now()
+    $('memoryEntry').classList.remove('hidden');$('memoryAnswerTimer').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus();
+    memoryAwaitingAnswer=true;memoryAnswerStartedAt=performance.now();
+    $('memoryAnswerTimer').textContent='作答 10.0 秒';
+    clearMemoryAnswerTimers();
+    memoryAnswerTicker=setInterval(function(){
+      if(!memoryAwaitingAnswer)return;
+      var left=Math.max(0,MEMORY_ANSWER_MS-(performance.now()-memoryAnswerStartedAt));
+      $('memoryAnswerTimer').textContent='作答 '+(left/1000).toFixed(1)+' 秒'
+    },100);
+    memoryAnswerTimeout=setTimeout(function(){finishMemoryAnswer('',true)},MEMORY_ANSWER_MS)
   }
-  function submitMemory(){
-    if($('memoryEntry').classList.contains('hidden'))return;
-    var answer=$('memoryAnswer').value.trim();if(answer==='')return;
-    var cfg=MEMORY_ROUNDS[memoryRound-1],ok=answer===memoryValue;
-    memoryRtTotal+=Math.max(0,performance.now()-memoryAnswerStartedAt);
+  function finishMemoryAnswer(answer,timedOut){
+    if(!memoryAwaitingAnswer)return;
+    memoryAwaitingAnswer=false;clearMemoryAnswerTimers();
+    var cfg=MEMORY_ROUNDS[memoryRound-1],ok=!timedOut&&answer===memoryValue;
+    var rt=timedOut?MEMORY_ANSWER_MS:Math.max(0,performance.now()-memoryAnswerStartedAt);
+    memoryRtTotal+=rt;
     if(ok){
       memoryCorrect++;memoryScorePoints+=cfg.points;memoryBestDigits=Math.max(memoryBestDigits,cfg.digits);correctTone()
     }else wrongTone();
-    $('memoryCorrect').textContent=memoryCorrect;$('memoryEntry').classList.add('hidden');
+    $('memoryCorrect').textContent=memoryCorrect;$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
     $('memoryNumber').textContent=ok?'正確':'答案 '+memoryValue;
-    $('memoryLabel').textContent=ok?'記憶成功':'這回合的答案如下';
-    memoryTimeout=setTimeout(function(){if(memoryRound>=MEMORY_ROUNDS.length)endMemory();else nextMemoryRound()},760)
+    $('memoryLabel').textContent=ok?'記憶成功':(timedOut?'時間到 · 這回合的答案如下':'這回合的答案如下');
+    memoryTimeout=setTimeout(function(){if(memoryRound>=MEMORY_ROUNDS.length)endMemory();else nextMemoryRound()},900)
+  }
+  function submitMemory(){
+    if(!memoryAwaitingAnswer||$('memoryEntry').classList.contains('hidden'))return;
+    var answer=$('memoryAnswer').value.trim();if(answer==='')return;
+    finishMemoryAnswer(answer,false)
   }
   $('memorySubmit').addEventListener('click',submitMemory);
   $('memoryAnswer').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();submitMemory()}});
   function endMemory(){
-    clearTimeout(memoryTimeout);memoryTimeout=null;
+    clearTimeout(memoryTimeout);memoryTimeout=null;clearMemoryAnswerTimers();memoryAwaitingAnswer=false;
     var score=Math.round(memoryScorePoints/MEMORY_TOTAL_POINTS*100);
     var avgRt=memoryRound?memoryRtTotal/memoryRound/1000:0;
     finishMode('memory',score,{
@@ -1025,7 +1048,7 @@
         ['正確',memoryCorrect+'/'+MEMORY_ROUNDS.length],
         ['加權分數',score],
         ['最高成功位數',(memoryBestDigits||0)+' 位'],
-        ['平均作答',avgRt?avgRt.toFixed(1)+'s':'—']
+        ['平均作答',avgRt?avgRt.toFixed(1)+' 秒':'—']
       ]
     })
   }
