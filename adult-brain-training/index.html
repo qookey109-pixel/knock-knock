@@ -335,13 +335,29 @@
       body.is-game .schulte-cell{min-height:0;font-size:clamp(17px,4.7vw,21px);box-shadow:none;border-radius:7px}
       body.is-game .schulte-float{min-height:0;height:100%}
     }
+
+    .memory-digit-row{display:flex;justify-content:center;gap:.16em;line-height:1.15}.memory-digit-row+.memory-digit-row{margin-top:.12em}
+    .memory-number:has(.memory-digit-row){letter-spacing:0;font-size:clamp(34px,8vw,64px)}
+    .audio-popover .secondary{width:100%;min-height:44px;margin-top:8px;font-size:13px}.sound-controls{flex-shrink:0}
+    .play-toolbar .audio-popover{z-index:50}.play-toolbar .sound{display:none}
+    #stroopWord[data-color="yellow"]{background:#262018;border-radius:12px}
+    #sessionBreak .panel.result{max-width:560px;margin-inline:auto}#sessionBreak .session-next-name{line-height:1.6}
+    @media(max-width:680px){
+      body.is-game .memory-number:has(.memory-digit-row){font-size:30px;margin:10px 0}
+      body.is-game .audio-settings>summary{padding:0 4px;font-size:11px}
+      body.is-game #sessionContext{max-width:30%;font-size:9px}
+      body.is-game .play-toolbar{position:relative;z-index:20}
+      body.is-game .audio-popover{top:44px;width:240px}
+      body.is-game .play-toolbar .audio-popover .secondary{font-size:13px}
+      body.is-game .memory-answer-timer{font-size:11px;padding:4px 8px;margin-bottom:6px}
+    }
   </style>
 </head>
 <body>
 <main class="app">
   <header class="top">
     <div class="brand"><h1>BRAIN<span>/7</span></h1><p>大人的腦部鍛鍊</p></div>
-    <div class="sound-controls"><button id="soundBtn" class="sound" type="button" aria-label="關閉聲音" aria-pressed="false">♪</button><details class="audio-settings"><summary aria-label="音樂與音效設定">聲音</summary><div class="audio-popover"><label for="musicVolume">音樂 <output id="musicValue">38%</output></label><input id="musicVolume" type="range" min="0" max="100" value="38"><label for="effectVolume">音效 <output id="effectValue">70%</output></label><input id="effectVolume" type="range" min="0" max="100" value="70"></div></details></div>
+    <div class="sound-controls"><button id="soundBtn" class="sound" type="button" aria-label="關閉聲音" aria-pressed="false">♪</button><details class="audio-settings"><summary aria-label="音樂與音效設定">聲音</summary><div class="audio-popover"><button id="musicToggle" class="secondary" type="button" aria-label="切換背景音樂" aria-pressed="false">BGM 開啟</button><label for="musicVolume">BGM <output id="musicValue">38%</output></label><input id="musicVolume" type="range" min="0" max="100" value="38"><button id="effectsToggle" class="secondary" type="button" aria-label="切換音效" aria-pressed="false">音效開啟</button><label for="effectVolume">音效 <output id="effectValue">70%</output></label><input id="effectVolume" type="range" min="0" max="100" value="70"></div></details></div>
   </header>
 
   <div id="playToolbar" class="play-toolbar hidden"><span id="sessionContext">隨心玩一關</span><div><button id="pauseBtn" class="secondary" type="button">休息一下</button><button id="finishEarlyBtn" class="secondary" type="button">先玩到這裡</button></div></div>
@@ -355,8 +371,8 @@
     </div>
     <div class="home-select">
       <div class="modes" aria-label="選擇單項訓練">
-        <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 5 秒，接著在 10 秒內完整輸入；最高 9 位數。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 5 秒，10 秒內完整輸入；最高 9 位數。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="每級 60 秒。累計答對升級，全程只用兩個數運算。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>每級 60 秒。累計答對升級，全程只用兩個數運算。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 6 秒，作答不限時；最高 9 位數。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 6 秒，慢慢完整輸入；最高 9 位數。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></span><span class="mode-arrow">→</span></button>
         <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標。兩種搜尋方向，數字持續大幅漂動，答對的數字固定，其餘換位。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、兩種方向；數字持續漂動，答對的數字固定，其餘換位。</p></span><span class="mode-arrow">→</span></button>
@@ -368,7 +384,7 @@
         <div id="previewNumber" class="home-preview-number" aria-hidden="true">01</div>
         <div class="home-preview-copy">
           <h3 id="previewTitle">快速心算</h3>
-          <div id="previewDemo" class="preview-demo" aria-label="玩法示例">8 + 6 = ?</div><p id="previewText">每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。</p>
+          <div id="previewDemo" class="preview-demo" aria-label="玩法示例">8 + 6 = ?</div><p id="previewText">每級 60 秒。累計答對升級，全程只用兩個數運算。</p>
           <div class="home-preview-foot"><span class="preview-dot"></span><span>左右切換回路 · 點擊進入</span></div><button id="previewPlay" class="secondary" type="button">進入這一關 →</button>
         </div>
       </aside>
@@ -380,7 +396,7 @@
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div><div id="mathLevelMark" class="pill">LV 1 · 0/8</div></div>
     <div class="panel">
       <div class="stats"><div class="stat"><span>時間</span><strong id="mathTime">60</strong></div><div class="stat"><span>已玩題數</span><strong id="mathPlayed">0</strong></div><div class="stat quiet-stat"><span>連對</span><strong id="mathStreak">0</strong></div></div>
-      <div class="mini-instruction">每級 60 秒 · 8 題正確升級 · LV5 起加入多步驟運算 · 最高 LV10</div>
+      <div class="mini-instruction">每級 60 秒 · 8 題正確升級 · 全程兩個數運算 · 最高 LV10</div>
       <div id="mathProblem" class="big-problem">準備</div>
       <div class="answer-wrap"><input id="mathAnswer" class="answer-input" inputmode="none" autocomplete="off" readonly aria-label="答案；手機使用畫面數字鍵盤，電腦可直接使用數字鍵盤輸入"><button id="mathSubmit" class="primary" type="button">送出</button></div>
       <div id="mathKeys" class="keypad"></div>
@@ -392,17 +408,16 @@
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div><div id="memoryRoundPill" class="pill">1 / 10</div></div>
     <div class="panel">
       <div class="stats"><div class="stat"><span>回合</span><strong id="memoryRound">1</strong></div><div class="stat"><span>位數</span><strong id="memoryDigits">4</strong></div><div class="stat"><span>正確</span><strong id="memoryCorrect">0</strong></div></div>
-      <div class="mini-instruction">每回合先看 5 秒，接著有 10 秒作答；最多記 9 位數。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryAnswerTimer" class="memory-answer-timer hidden">作答 10.0 秒</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" readonly inputmode="none" maxlength="9" autocomplete="off" aria-label="輸入剛才的數字"><div id="memoryKeys" class="keypad" aria-label="記憶數字鍵盤"></div><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
+      <div class="mini-instruction">每回合看 6 秒，作答不限時；最多記 9 位數。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number">••••</div><div id="memoryAnswerTimer" class="memory-answer-timer hidden">作答不限時</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" readonly inputmode="none" maxlength="9" autocomplete="off" aria-label="輸入剛才的數字"><div id="memoryKeys" class="keypad" aria-label="記憶數字鍵盤"></div><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
     </div>
   </section>
 
   <section id="logic" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>邏輯推理</h2></div><div id="logicPill" class="pill">1 / 10 · 排序</div></div>
     <div class="panel">
-      <div class="stats logic-stats"><div class="stat"><span>答對題數</span><strong id="logicCorrectCount">0</strong></div><div class="stat"><span>剩餘時間</span><strong id="logicTimer">20.0 秒</strong></div></div>
-      <div class="mini-instruction">每題限時 20 秒。選好答案後送出；作答後直接進下一題，不顯示答案解析。</div>
+      <div class="stats logic-stats"><div class="stat"><span>答對題數</span><strong id="logicCorrectCount">0</strong></div><div class="stat"><span>作答節奏</span><strong id="logicTimer">不限時</strong></div></div>
+      <div class="mini-instruction">作答不限時。點選答案直接換題，不顯示答案解析。</div>
       <div id="logicProgress" class="logic-progress"></div><div id="logicQuestion" class="logic-q"></div><div id="logicClues" class="clues"></div><div id="logicChoices" class="choices"></div>
-      <div class="actions"><button id="logicSubmit" class="primary" type="button">確認答案</button></div>
     </div>
   </section>
 
@@ -461,7 +476,7 @@
       <div id="sessionBreakScore" class="completion-star" role="img" aria-label="完成一關">★</div>
       <div class="result-unit">每關五顆星，記下這次的答題表現。</div>
       <div id="sessionDots" class="session-dots" role="img" aria-label="完整訓練進度"></div>
-      <div id="sessionBreakStats" class="result-grid"></div>
+      
       <div id="sessionNextName" class="session-next-name"></div>
       <div class="actions"><button id="sessionNext" class="primary" type="button">下一項</button><button id="sessionFinish" class="secondary" type="button">先玩到這裡</button></div>
     </div>
@@ -523,7 +538,7 @@
     var labels=shuffle(['1 號','2 號','3 號','4 號']),a=labels[0],target=labels[1],c=labels[2],d=labels[3];
     var choice=logicChoiceSet(labels,target);
     return {
-      type:'位置',
+      type:'盒子',
       q:'四個盒子只有一個有獎品。獎品在哪一個？',
       clues:['獎品不在 '+a+'。','如果獎品不在 '+target+'，那它一定在 '+d+'。','獎品不在 '+d+'。'],
       choices:choice.choices,answer:choice.answer,
@@ -556,7 +571,7 @@
     }
     var choice=logicChoiceSet(choices,answerCode);
     return {
-      type:'數字條件',
+      type:'密碼',
       q:'哪一組三位數符合所有條件？',
       clues:['第一位比第二位大。','第三位等於前兩位相加。','三個數字都不同。','第一位是奇數。'],
       choices:choice.choices,answer:choice.answer,
@@ -574,19 +589,21 @@
       explain:'如果是 '+a+'：第一句假、第二句真、第三句假，剛好只有一句真話。其他人都無法滿足條件。'
     }
   }
+  function makeCompareLogic(){
+    var people=takeRandom(LOGIC_PEOPLE,3),c=logicChoiceSet(people,people[0]);
+    return {type:'比較',q:'三人的書本數量不同。誰的書最多？',clues:[people[0]+' 的書比 '+people[1]+' 多。',people[1]+' 的書比 '+people[2]+' 多。'],choices:c.choices,answer:c.answer}
+  }
+  function makeTimeLogic(){
+    var days=['星期一','星期二','星期三','星期四','星期五','星期六','星期日'],start=rand(0,6),offset=rand(2,4),target=days[(start+offset)%7];
+    var c=logicChoiceSet([target,days[(start+offset+1)%7],days[(start+offset+6)%7]],target);
+    return {type:'日程',q:'活動會在哪一天舉行？',clues:['今天是'+days[start]+'。','活動在 '+offset+' 天後舉行，今天不算第 1 天。'],choices:c.choices,answer:c.answer}
+  }
+  function makePatternLogic(){
+    var first=rand(2,12),step=rand(2,6),next=first+step*4,c=logicChoiceSet([String(next),String(next-step),String(next+step)],String(next));
+    return {type:'規律',q:'下一個數字是什麼？',clues:[[first,first+step,first+step*2,first+step*3].join(' → ')+' → ?','每一步都增加相同的數量。'],choices:c.choices,answer:c.answer}
+  }
   function buildLogicSession(){
-    return [
-      makeOrderLogic(),
-      makeBoxLogic(),
-      makePetLogic(),
-      makeOrderLogic(),
-      makeCodeLogic(),
-      makePetLogic(),
-      makeBoxLogic(),
-      makeTruthLogic(),
-      makeCodeLogic(),
-      makeTruthLogic()
-    ]
+    return [makeOrderLogic(),makeBoxLogic(),makePetLogic(),makeCodeLogic(),makeTruthLogic(),makeCompareLogic(),makeTimeLogic(),makePatternLogic(),makePetLogic(),makeCodeLogic()]
   }
 
   var allModes=['math','memory','logic','executive','schulte','stroop','odd'];
@@ -596,7 +613,8 @@
 
 
   var playTimers=new Map(),nextPlayTimer=1,paused=false,pauseStarted=0,pausedTotal=0,pauseFocus=null;
-  var musicVolume=.38,effectVolume=.70;
+  var musicVolume=.38,effectVolume=.70,musicMuted=false,effectsMuted=false;
+  var homeMusicGains=new Set();
   var previewExamples={math:'8 + 6 = ?',memory:'看一眼：3 8 1 7',logic:'A 在 B 前，C 在 B 後。誰在中間？',executive:'奇偶？大小？先看這回合的規則。',schulte:'01 → 02 → 03 · 找到下一個數字',stroop:'「紅」寫成藍色，就選藍色。',odd:'↑ 上　↓ 下　→ 左 · 哪個不一樣？'};
   function playNow(){return (paused?pauseStarted:performance.now())-pausedTotal}
   function armPlayTimer(id,t){
@@ -676,12 +694,13 @@
 
   function $(id){return document.getElementById(id)}
   function applyScreen(id){
-    screens.forEach(function(s){s.classList.toggle('active',s.id===id)});document.body.classList.toggle('is-game',allModes.indexOf(id)>=0);window.scrollTo(0,0);
+    screens.forEach(function(s){s.classList.toggle('active',s.id===id)});document.body.classList.toggle('is-game',allModes.indexOf(id)>=0);
+    var audio=document.querySelector('.sound-controls');(allModes.indexOf(id)>=0?$('playToolbar'):document.querySelector('.top')).appendChild(audio);document.querySelector('.audio-settings').open=false;window.scrollTo(0,0);
     var heading=$(id).querySelector('h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}
   }
   function show(id){applyScreen(id)}
   function tone(freq,dur){
-    if(muted||paused||effectVolume===0)return;var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    if(muted||effectsMuted||paused||effectVolume===0)return;var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
     var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;
     o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.035*effectVolume,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur)
@@ -705,9 +724,9 @@
     return ['math','memory','logic','executive','schulte','stroop','odd','sessionBreak','result','dailyResult'].some(function(id){return $(id)&&$(id).classList.contains('active')});
   }
   async function startGameBgm(){
-    if(muted||paused||musicVolume===0||gameBgmSource)return;
+    if(muted||musicMuted||paused||musicVolume===0||gameBgmSource)return;
     var token=gameBgmToken,buffer=await loadGameBgm();
-    if(!buffer||muted||paused||musicVolume===0||token!==gameBgmToken||!gameFlowActive())return;
+    if(!buffer||muted||musicMuted||paused||musicVolume===0||token!==gameBgmToken||!gameFlowActive())return;
     var src=audioCtx.createBufferSource(),g=audioCtx.createGain();
     src.buffer=buffer;src.loop=true;g.gain.value=musicVolume;
     src.connect(g);g.connect(audioCtx.destination);src.start(0);
@@ -715,9 +734,10 @@
   }
   function stopHomeBgm(){
     if(homeBgmTimer){clearInterval(homeBgmTimer);homeBgmTimer=null}
+    homeMusicGains.forEach(function(g){if(audioCtx){g.gain.cancelScheduledValues(audioCtx.currentTime);g.gain.setValueAtTime(0,audioCtx.currentTime)}});homeMusicGains.clear();
   }
   function scheduleHomePhrase(){
-    if(muted||musicVolume===0||!homeBgmUnlocked||!$('home').classList.contains('active'))return;
+    if(muted||musicMuted||musicVolume===0||!homeBgmUnlocked||!$('home').classList.contains('active'))return;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
     var now=audioCtx.currentTime;
@@ -726,11 +746,11 @@
       var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=now+i*.46;
       o.type=i%2===0?'sine':'triangle';o.frequency.setValueAtTime(freq,t);
       g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.008*(musicVolume/.38),t+.035);g.gain.exponentialRampToValueAtTime(.0001,t+.36);
-      o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+.4);
+      homeMusicGains.add(g);o.onended=function(){homeMusicGains.delete(g);g.disconnect()};o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+.4);
     })
   }
   function startHomeBgm(){
-    if(muted||musicVolume===0||!homeBgmUnlocked||!$('home').classList.contains('active')||homeBgmTimer)return;
+    if(muted||musicMuted||musicVolume===0||!homeBgmUnlocked||!$('home').classList.contains('active')||homeBgmTimer)return;
     stopGameBgm();scheduleHomePhrase();homeBgmTimer=setInterval(scheduleHomePhrase,3900)
   }
   function unlockHomeBgm(){
@@ -739,7 +759,7 @@
   }
   function mathTapTone(){tone(520,.035)}
   function transitionClick(){
-    if(muted||paused||effectVolume===0)return;
+    if(muted||effectsMuted||paused||effectVolume===0)return;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
     var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;
@@ -754,17 +774,21 @@
     stopHomeBgm();transitionClick();startMode(mode)
   }
 
-  function saveAudioPreferences(){try{localStorage.setItem('brain7-audio',JSON.stringify({music:musicVolume,effects:effectVolume,muted:muted}))}catch(e){}}
+  function saveAudioPreferences(){try{localStorage.setItem('brain7-audio',JSON.stringify({music:musicVolume,effects:effectVolume,muted:muted,musicMuted:musicMuted,effectsMuted:effectsMuted}))}catch(e){}}
   function updateAudioUi(){
     $('musicVolume').value=Math.round(musicVolume*100);$('effectVolume').value=Math.round(effectVolume*100);
     $('musicValue').textContent=Math.round(musicVolume*100)+'%';$('effectValue').textContent=Math.round(effectVolume*100)+'%';
-    $('soundBtn').textContent=muted?'×':'♪';$('soundBtn').setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');$('soundBtn').setAttribute('aria-pressed',String(muted))
+    $('musicToggle').textContent=musicMuted?'BGM 已關閉':'BGM 開啟';$('musicToggle').setAttribute('aria-pressed',String(musicMuted));
+    $('effectsToggle').textContent=effectsMuted?'音效已關閉':'音效開啟';$('effectsToggle').setAttribute('aria-pressed',String(effectsMuted));
+    var allMuted=musicMuted&&effectsMuted;$('soundBtn').textContent=allMuted?'×':'♪';$('soundBtn').setAttribute('aria-label',allMuted?'開啟聲音':'關閉聲音');$('soundBtn').setAttribute('aria-pressed',String(allMuted))
   }
-  try{var pref=JSON.parse(localStorage.getItem('brain7-audio')||'null');if(pref){if(Number.isFinite(pref.music))musicVolume=Math.max(0,Math.min(1,pref.music));if(Number.isFinite(pref.effects))effectVolume=Math.max(0,Math.min(1,pref.effects));muted=pref.muted===true}}catch(e){}
+  try{var pref=JSON.parse(localStorage.getItem('brain7-audio')||'null');if(pref){if(Number.isFinite(pref.music))musicVolume=Math.max(0,Math.min(1,pref.music));if(Number.isFinite(pref.effects))effectVolume=Math.max(0,Math.min(1,pref.effects));musicMuted=pref.musicMuted===true||(pref.musicMuted==null&&pref.muted===true);effectsMuted=pref.effectsMuted===true||(pref.effectsMuted==null&&pref.muted===true);muted=false}}catch(e){}
   updateAudioUi();
-  $('musicVolume').addEventListener('input',function(){musicVolume=Number(this.value)/100;updateAudioUi();saveAudioPreferences();if(gameBgmGain)gameBgmGain.gain.value=musicVolume;if(musicVolume===0){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else startGameBgm()});
+  $('musicToggle').addEventListener('click',function(){musicMuted=!musicMuted;updateAudioUi();saveAudioPreferences();if(musicMuted){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else startGameBgm()});
+  $('effectsToggle').addEventListener('click',function(){effectsMuted=!effectsMuted;updateAudioUi();saveAudioPreferences()});
+  $('musicVolume').addEventListener('input',function(){musicVolume=Number(this.value)/100;updateAudioUi();saveAudioPreferences();if(gameBgmGain)gameBgmGain.gain.value=musicMuted?0:musicVolume;if(musicVolume===0){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else startGameBgm()});
   $('effectVolume').addEventListener('input',function(){effectVolume=Number(this.value)/100;updateAudioUi();saveAudioPreferences()});
-  $('soundBtn').addEventListener('click',function(){muted=!muted;saveAudioPreferences();this.textContent=muted?'×':'♪';this.setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');this.setAttribute('aria-pressed',muted?'true':'false');homeBgmUnlocked=true;if(muted){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else if(gameFlowActive())startGameBgm()});
+  $('soundBtn').addEventListener('click',function(){var turnOff=!(musicMuted&&effectsMuted);musicMuted=turnOff;effectsMuted=turnOff;muted=false;updateAudioUi();saveAudioPreferences();homeBgmUnlocked=true;if(turnOff){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else if(gameFlowActive())startGameBgm()});
   document.addEventListener('pointerdown',unlockHomeBgm,{once:true});
   document.addEventListener('keydown',unlockHomeBgm,{once:true});
   document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm()})});
@@ -871,91 +895,14 @@
   buildMathKeys();
 
   function generateMathProblem(lv){
-    var make=function(text,ans){return {text:text,ans:ans,key:text}},a,b,d,q,c1,c2,mode;
-    if(lv===1){
-      mode=rand(0,1);
-      if(mode===0){a=rand(2,30);b=rand(1,20);return make(a+' + '+b,a+b)}
-      a=rand(8,40);b=rand(1,a-1);return make(a+' - '+b,a-b)
-    }
-    if(lv===2){
-      mode=rand(0,4);
-      if(mode<=1){a=rand(10,69);b=rand(2,30);return make(a+' + '+b,a+b)}
-      if(mode===2){a=rand(20,99);b=rand(1,a-1);return make(a+' - '+b,a-b)}
-      if(mode===3){a=rand(2,9);b=rand(2,9);return make(a+' × '+b,a*b)}
-      d=rand(2,9);q=rand(2,9);a=d*q;return make(a+' ÷ '+d,q)
-    }
-    if(lv===3){
-      mode=rand(0,3);
-      if(mode===0){a=rand(20,99);b=rand(10,99);return make(a+' + '+b,a+b)}
-      if(mode===1){a=rand(30,120);b=rand(10,a-1);return make(a+' - '+b,a-b)}
-      if(mode===2){a=rand(3,12);b=rand(3,12);return make(a+' × '+b,a*b)}
-      d=rand(2,12);q=rand(3,12);a=d*q;return make(a+' ÷ '+d,q)
-    }
-    if(lv===4){
-      mode=rand(0,3);
-      if(mode===0){a=rand(100,299);b=rand(20,199);return make(a+' + '+b,a+b)}
-      if(mode===1){a=rand(120,399);b=rand(20,a-1);return make(a+' - '+b,a-b)}
-      if(mode===2){a=rand(11,25);b=rand(2,9);return make(a+' × '+b,a*b)}
-      d=rand(2,12);q=rand(10,30);a=d*q;return make(a+' ÷ '+d,q)
-    }
-    if(lv===5){
-      mode=rand(0,5);
-      if(mode===0){a=rand(150,499);b=rand(50,299);return make(a+' + '+b,a+b)}
-      if(mode===1){a=rand(200,599);b=rand(50,a-1);return make(a+' - '+b,a-b)}
-      if(mode===2){a=rand(12,35);b=rand(3,12);return make(a+' × '+b,a*b)}
-      if(mode===3){d=rand(3,15);q=rand(10,35);a=d*q;return make(a+' ÷ '+d,q)}
-      if(mode===4){a=rand(40,199);b=rand(20,99);c1=rand(5,50);return make(a+' + '+b+' - '+c1,a+b-c1)}
-      a=rand(100,299);b=rand(20,a-1);c1=rand(5,60);return make(a+' - '+b+' + '+c1,a-b+c1)
-    }
-    if(lv===6){
-      mode=rand(0,5);
-      if(mode===0){a=rand(250,800);b=rand(80,399);return make(a+' + '+b,a+b)}
-      if(mode===1){a=rand(300,800);b=rand(80,a-1);return make(a+' - '+b,a-b)}
-      if(mode===2){a=rand(15,30);b=rand(4,15);return make(a+' × '+b,a*b)}
-      if(mode===3){d=rand(4,15);q=rand(10,30);a=d*q;return make(a+' ÷ '+d,q)}
-      if(mode===4){a=rand(180,500);b=rand(80,250);c1=rand(30,120);return make(a+' + '+b+' - '+c1,a+b-c1)}
-      a=rand(15,30);b=rand(3,12);c1=rand(10,80);return make(a+' × '+b+' + '+c1,a*b+c1)
-    }
-    if(lv===7){
-      mode=rand(0,6);
-      if(mode===0){a=rand(300,900);b=rand(120,499);return make(a+' + '+b,a+b)}
-      if(mode===1){a=rand(350,900);b=rand(100,a-1);return make(a+' - '+b,a-b)}
-      if(mode===2){a=rand(20,60);b=rand(4,15);return make(a+' × '+b,a*b)}
-      if(mode===3){d=rand(4,20);q=rand(12,60);a=d*q;return make(a+' ÷ '+d,q)}
-      if(mode===4){a=rand(250,650);b=rand(100,350);c1=rand(50,180);return make(a+' + '+b+' - '+c1,a+b-c1)}
-      if(mode===5){a=rand(20,60);b=rand(4,15);c1=rand(20,120);return make(a+' × '+b+' - '+c1,a*b-c1)}
-      d=rand(4,15);q=rand(20,60);a=d*q;c1=rand(20,120);return make(a+' ÷ '+d+' + '+c1,q+c1)
-    }
-    if(lv===8){
-      mode=rand(0,7);
-      if(mode===0){a=rand(400,999);b=rand(150,599);return make(a+' + '+b,a+b)}
-      if(mode===1){a=rand(450,999);b=rand(120,a-1);return make(a+' - '+b,a-b)}
-      if(mode===2){a=rand(30,90);b=rand(5,18);return make(a+' × '+b,a*b)}
-      if(mode===3){d=rand(5,20);q=rand(20,90);a=d*q;return make(a+' ÷ '+d,q)}
-      if(mode===4){a=rand(350,750);b=rand(150,450);c1=rand(80,260);return make(a+' + '+b+' - '+c1,a+b-c1)}
-      if(mode===5){a=rand(30,90);b=rand(5,18);c1=rand(30,180);return make(a+' × '+b+' + '+c1,a*b+c1)}
-      if(mode===6){d=rand(5,18);q=rand(30,90);a=d*q;c1=rand(30,180);return make(a+' ÷ '+d+' + '+c1,q+c1)}
-      a=rand(250,600);b=rand(120,300);c1=rand(50,160);c2=rand(20,100);return make(a+' + '+b+' - '+c1+' + '+c2,a+b-c1+c2)
-    }
-    if(lv===9){
-      mode=rand(0,7);
-      if(mode===0){a=rand(1000,1999);b=rand(100,999);return make(a+' + '+b,a+b)}
-      if(mode===1){a=rand(1200,1999);b=rand(100,a-1);return make(a+' - '+b,a-b)}
-      if(mode===2){a=rand(100,299);b=rand(2,12);return make(a+' × '+b,a*b)}
-      if(mode===3){do{d=rand(3,18);q=rand(10,99);a=d*q}while(a<100||a>999);return make(a+' ÷ '+d,q)}
-      if(mode===4){a=rand(1000,1800);b=rand(200,800);c1=rand(80,350);return make(a+' + '+b+' - '+c1,a+b-c1)}
-      if(mode===5){a=rand(100,299);b=rand(2,12);c1=rand(20,150);return make(a+' × '+b+' + '+c1,a*b+c1)}
-      if(mode===6){do{d=rand(3,18);q=rand(10,99);a=d*q}while(a<100||a>999);c1=rand(20,150);return make(a+' ÷ '+d+' + '+c1,q+c1)}
-      a=rand(1000,1600);b=rand(200,700);c1=rand(100,400);c2=rand(30,180);return make(a+' + '+b+' - '+c1+' + '+c2,a+b-c1+c2)
-    }
-    // LV10: cap difficulty at the root Quick Math LV10 baseline.
-    mode=rand(0,5);
-    if(mode===0){a=rand(1200,2999);b=rand(300,2499);return make(a+' + '+b,a+b)}
-    if(mode===1){a=rand(1500,2999);b=rand(200,a-1);return make(a+' - '+b,a-b)}
-    if(mode===2){a=rand(100,399);b=rand(3,20);return make(a+' × '+b,a*b)}
-    if(mode===3){do{d=rand(3,25);q=rand(20,199);a=d*q}while(a<100||a>9999);return make(a+' ÷ '+d,q)}
-    if(mode===4){a=rand(1200,2999);b=rand(300,900);c1=rand(100,500);return make(a+' + '+b+' - '+c1,a+b-c1)}
-    a=rand(100,399);b=rand(3,20);c1=rand(50,250);return make(a+' × '+b+' + '+c1,a*b+c1)
+    var make=function(text,ans){return {text:text,ans:ans,key:text}},a,b,d,q;
+    var maximum=[0,20,40,70,100,150,200,250,300,400,500][lv]||500;
+    var mode=rand(0,lv<=2?1:3);
+    if(mode===0){a=rand(2,maximum);b=rand(1,maximum);return make(a+' + '+b,a+b)}
+    if(mode===1){a=rand(3,maximum);b=rand(1,a-1);return make(a+' - '+b,a-b)}
+    var factor=lv<=4?9:lv<=7?12:20;
+    if(mode===2){a=rand(2,factor);b=rand(2,factor);return make(a+' × '+b,a*b)}
+    d=rand(2,factor);q=rand(2,factor);a=d*q;return make(a+' ÷ '+d,q)
   }
 
   function makeMath(){
@@ -1031,8 +978,7 @@
     mathGameStartedAt=0
   }
 
-  var MEMORY_SHOW_MS=5000;
-  var MEMORY_ANSWER_MS=10000;
+  var MEMORY_SHOW_MS=6000;
   var MEMORY_ROUNDS=[
     {digits:4,points:4},
     {digits:4,points:4},
@@ -1067,6 +1013,12 @@
     $('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 10'
   }
   $('memoryStart').addEventListener('click',nextMemoryRound);
+  function renderMemoryDigits(value,masked){
+    var area=$('memoryNumber');area.innerHTML='';area.setAttribute('aria-label',masked?'數字已隱藏':value);
+    var split=value.length>6?Math.ceil(value.length/2):value.length;
+    for(var offset=0;offset<value.length;offset+=split){var row=document.createElement('div');row.className='memory-digit-row';
+      value.slice(offset,offset+split).split('').forEach(function(digit){var span=document.createElement('span');span.textContent=digit;span.setAttribute('aria-hidden','true');row.appendChild(span)});area.appendChild(row)}
+  }
   function nextMemoryRound(){
     if(memoryRound>=MEMORY_ROUNDS.length){endMemory();return}
     clearMemoryAnswerTimers();memoryAwaitingAnswer=false;
@@ -1074,37 +1026,31 @@
     $('memoryRound').textContent=memoryRound;$('memoryDigits').textContent=cfg.digits;
     $('memoryRoundPill').textContent=memoryRound+' / '+MEMORY_ROUNDS.length;
     $('memoryStart').classList.add('hidden');$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
-    $('memoryLabel').textContent='記住這串數字 · 5 秒';
+    $('memoryLabel').textContent='記住這串數字 · 6 秒';
     memoryValue=generateMemoryDigits(cfg.digits);
-    $('memoryNumber').textContent=memoryValue;
+    renderMemoryDigits(memoryValue,false);
     clearPlayTimer(memoryTimeout);
     memoryTimeout=playTimeout(function(){revealMemoryEntry(cfg)},MEMORY_SHOW_MS)
   }
   function revealMemoryEntry(cfg){
-    $('memoryNumber').textContent='•'.repeat(cfg.digits);
+    renderMemoryDigits('•'.repeat(cfg.digits),true);
     $('memoryLabel').textContent='把剛才的數字輸入回來';
     $('memoryEntry').classList.remove('hidden');$('memoryAnswerTimer').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus({preventScroll:true});
     memoryAwaitingAnswer=true;memoryAnswerStartedAt=playNow();
-    $('memoryAnswerTimer').textContent='作答 10.0 秒';
-    clearMemoryAnswerTimers();
-    memoryAnswerTicker=playInterval(function(){
-      if(!memoryAwaitingAnswer)return;
-      var left=Math.max(0,MEMORY_ANSWER_MS-(playNow()-memoryAnswerStartedAt));
-      $('memoryAnswerTimer').textContent='作答 '+(left/1000).toFixed(1)+' 秒'
-    },100);
-    memoryAnswerTimeout=playTimeout(function(){finishMemoryAnswer('',true)},MEMORY_ANSWER_MS)
+    $('memoryAnswerTimer').textContent='作答不限時 · 慢慢輸入就好';
+    clearMemoryAnswerTimers()
   }
   function finishMemoryAnswer(answer,timedOut){
     if(!memoryAwaitingAnswer)return;
     memoryAwaitingAnswer=false;clearMemoryAnswerTimers();
     var cfg=MEMORY_ROUNDS[memoryRound-1],ok=!timedOut&&answer===memoryValue;
-    var rt=timedOut?MEMORY_ANSWER_MS:Math.max(0,playNow()-memoryAnswerStartedAt);
+    var rt=Math.max(0,playNow()-memoryAnswerStartedAt);
     memoryRtTotal+=rt;
     if(ok){
       memoryCorrect++;memoryEarned+=cfg.points;memoryBestDigits=Math.max(memoryBestDigits,cfg.digits);correctTone()
     }else wrongTone();
     $('memoryCorrect').textContent=memoryCorrect;$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
-    $('memoryNumber').textContent=ok?'正確':'答案 '+memoryValue;
+    if(ok){$('memoryNumber').textContent='正確';$('memoryNumber').setAttribute('aria-label','正確')}else renderMemoryDigits(memoryValue,false);
     $('memoryLabel').textContent=ok?'記憶成功':(timedOut?'時間到 · 這回合的答案如下':'這回合的答案如下');
     memoryTimeout=playTimeout(function(){if(memoryRound>=MEMORY_ROUNDS.length)endMemory();else nextMemoryRound()},900)
   }
@@ -1136,7 +1082,6 @@
     finishMode('memory',Math.round(memoryEarned/total*100),{items:[['遊玩回合',memoryRound+' 回合'],['成功記住',memoryBestDigits?memoryBestDigits+' 位數':'這次先熟悉玩法'],['答對回合',memoryCorrect+' / '+memoryRound],['平均作答',memoryRound?(memoryRtTotal/memoryRound/1000).toFixed(1)+' 秒':'—']]})
   }
 
-  var LOGIC_ANSWER_MS=20000;
   function clearLogicTimer(){
     clearPlayTimer(logicTimer);logicTimer=null;clearPlayTimer(logicTimeout);logicTimeout=null
   }
@@ -1148,7 +1093,7 @@
     if(logicIndex>=logicSession.length){endLogic();return}
     clearLogicTimer();logicSelected=null;logicAnswered=false;var q=logicSession[logicIndex];
     $('logicPill').textContent=(logicIndex+1)+' / '+logicSession.length+' · '+q.type;
-    $('logicTimer').textContent='20.0 秒';
+    $('logicTimer').textContent='不限時';
     var prog=$('logicProgress');prog.innerHTML='';logicSession.forEach(function(_,i){var d=document.createElement('i');if(i<=logicIndex)d.className='on';prog.appendChild(d)});
     $('logicQuestion').textContent=q.q;var clues=$('logicClues');clues.innerHTML='';
     q.clues.forEach(function(c){var d=document.createElement('div');d.className='clue';d.textContent=c;clues.appendChild(d)});
@@ -1157,29 +1102,19 @@
       var b=document.createElement('button');b.type='button';b.className='choice';b.textContent=c;
       b.addEventListener('click',function(){
         if(logicAnswered)return;logicSelected=i;
-        choices.querySelectorAll('.choice').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected')
+        choices.querySelectorAll('.choice').forEach(function(x){x.classList.remove('selected')});b.classList.add('selected');finishLogicQuestion(false)
       });
       choices.appendChild(b)
     });
-    $('logicSubmit').disabled=false;logicStartedAt=playNow();
-    logicTimer=playInterval(function(){
-      if(logicAnswered)return;
-      var left=Math.max(0,LOGIC_ANSWER_MS-(playNow()-logicStartedAt));
-      $('logicTimer').textContent=(left/1000).toFixed(1)+' 秒'
-    },100);
-    logicTimeout=playTimeout(function(){finishLogicQuestion(true)},LOGIC_ANSWER_MS)
+    logicStartedAt=playNow()
   }
   function finishLogicQuestion(timedOut){
-    if(logicAnswered)return;logicAnswered=true;clearLogicTimer();$('logicSubmit').disabled=true;
+    if(logicAnswered)return;logicAnswered=true;clearLogicTimer();
     var q=logicSession[logicIndex],ok=!timedOut&&logicSelected!==null&&logicSelected===q.answer;
     if(ok){logicCorrect++;$('logicCorrectCount').textContent=logicCorrect;correctTone()}else wrongTone();
     logicIndex++;
     playTimeout(function(){if(logicIndex>=logicSession.length)endLogic();else renderLogic()},260)
   }
-  $('logicSubmit').addEventListener('click',function(){
-    if(logicAnswered||logicSelected===null)return;
-    finishLogicQuestion(false)
-  });
   function endLogic(){
     finishMode('logic',Math.round(logicCorrect/logicSession.length*100),{items:[['遊玩題數',logicSession.length+' 題'],['答對題數',logicCorrect+' / '+logicSession.length]]})
   }
@@ -1310,6 +1245,8 @@
     if(remaining.length<2)return;
     var mixed=shuffle(remaining);
     if(mixed.every(function(cell,i){return cell===remaining[i]}))mixed.push(mixed.shift());
+    var colors=['#fff0a6','#c9f2ff','#d8f7bd','#ffd0be','#e8dcff'];
+    mixed.forEach(function(cell){var old=cell.style.getPropertyValue('--cell-bg'),options=colors.filter(function(color){return color!==old});cell.style.setProperty('--cell-bg',options[rand(0,options.length-1)])});
     var index=0;grid.replaceChildren.apply(grid,cells.map(function(cell){return cell.disabled?cell:mixed[index++]}))
   }
   function answerSchulte(n,button){
@@ -1331,7 +1268,7 @@
     red:{word:'紅',label:'紅色',css:'#ef3f34'},
     blue:{word:'藍',label:'藍色',css:'#2878d8'},
     green:{word:'綠',label:'綠色',css:'#168f58'},
-    yellow:{word:'黃',label:'黃色',css:'#d49a00'}
+    yellow:{word:'黃',label:'黃色',css:'#ffdf00'}
   };
   function buildStroopSchedule(){
     var types=[];
@@ -1435,7 +1372,6 @@
     $('sessionBreakTitle').textContent=modeNames[mode]+'，玩好了';
     renderRating($('sessionBreakScore'),dailyRecords[mode]);
     $('sessionDots').textContent='已完成 '+completed+' / 7 關';$('sessionDots').setAttribute('aria-label','完成 '+completed+' / 7 關');
-    renderRecap($('sessionBreakStats'),dailyRecords[mode]);
     $('sessionNext').textContent=dailyQueue.length?'準備好了，下一關':'看看這趟回顧';
     $('sessionFinish').classList.toggle('hidden',!dailyQueue.length);
     $('sessionNextName').textContent=dailyQueue.length?'接下來：'+modeNames[dailyQueue[0]]+' · 先休息一下也可以':'七個小片刻，都完成了。'

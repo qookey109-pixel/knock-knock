@@ -77,10 +77,10 @@ for (const token of [
 
 const sessionFactoryMatch = html.match(/function buildLogicSession\(\)\{[\s\S]*?return \[([\s\S]*?)\]\s*\}/);
 assert(sessionFactoryMatch, 'Could not inspect logic session factory.');
-const generatedCount = (sessionFactoryMatch[1].match(/make(?:Order|Box|Pet|Code|Truth)Logic\(\)/g) || []).length;
+const generatedCount = (sessionFactoryMatch[1].match(/make(?:Order|Box|Pet|Code|Truth|Compare|Time|Pattern)Logic\(\)/g) || []).length;
 assert(generatedCount === 10, `Expected 10 generated logic questions per session, found ${generatedCount}.`);
 
-console.log('brain-game-qa: PASS — 5 logic generator families are formally unique and session length is 10.');
+console.log('brain-game-qa: PASS — 8 logic generator families are formally unique and session length is 10.');
 
 
 // Public rating boundaries: five slots, with no completion-only star.
@@ -88,3 +88,24 @@ const ratingSource = html.match(/function scoreToStars\(score\)\{([\s\S]*?)\n  \
 assert(ratingSource, 'Missing star rating conversion');
 const rate = new Function('score', ratingSource[1]);
 for (const [score, stars] of [[0,0],[1,1],[39,1],[40,2],[59,2],[60,3],[74,3],[75,4],[89,4],[90,5],[100,5]]) assert(rate(score) === stars, 'Incorrect stars for score ' + score);
+
+// Check the actual generated math expressions across all levels.
+const mathCode=html.slice(html.indexOf('function generateMathProblem('),html.indexOf('function makeMath()'));
+const generate=new Function('rand',mathCode+';return generateMathProblem')((a,b)=>Math.floor(Math.random()*(b-a+1))+a);
+for(let lv=1;lv<=10;lv++) for(let i=0;i<100;i++) {
+  const problem=generate(lv),parts=problem.text.split(' ');
+  assert(parts.length===3,'Every math problem must have exactly two operands');
+  assert(Number.isInteger(problem.ans)&&problem.ans>0,'Math answers must be positive integers');
+  assert(Number(parts[0])<=500 && Number(parts[2])<=500,'Math difficulty must stay within the easier range');
+}
+// New logic templates have one candidate satisfying their explicit rule.
+for(let start=0;start<7;start++) for(let offset=2;offset<=4;offset++) {
+  const target=(start+offset)%7,candidates=[target,(target+1)%7,(target+6)%7];
+  assert(candidates.filter(day=>day===(start+offset)%7).length===1,'Schedule question must have exactly one answer');
+}
+for(let first=2;first<=12;first++) for(let step=2;step<=6;step++) {
+  const target=first+step*4;
+  assert([target,target-step,target+step].filter(value=>value-(first+step*3)===step).length===1,'Pattern question must have exactly one answer');
+}
+const comparisonOrders=[['A','B','C'],['A','C','B'],['B','A','C'],['B','C','A'],['C','A','B'],['C','B','A']].filter(order=>order.indexOf('A')<order.indexOf('B')&&order.indexOf('B')<order.indexOf('C'));
+assert(comparisonOrders.length===1 && comparisonOrders[0][0]==='A','Transitive comparison must have one maximum');

@@ -130,8 +130,8 @@ async function runViewport(browser, viewport, name) {
   assert(await page.locator('#mathScore').count() === 0, `${name}: numeric score must be removed`);
   assert((await page.locator('#mathStreak').innerText()).trim() === '8', `${name}: Quick Math streak should track consecutive correct answers`);
   const source = await page.locator('html').evaluate(el => el.innerHTML);
-  assert(source.includes("if(lv===5)") && source.includes("' × '+b+' + '+c1"), `${name}: LV5+ must include multi-step arithmetic`);
-  assert(source.includes("if(lv===9)") && source.includes("a=rand(1000,1999)"), `${name}: LV9 must include four-digit arithmetic`);
+  assert(!source.includes("' × '+b+' + '+c1"), `${name}: math must not contain three-operand arithmetic`);
+  assert(source.includes('[0,20,40,70,100,150,200,250,300,400,500]'), `${name}: math should use the easier two-number progression`);
   assert(source.includes("MATH_MAX_LEVEL=10"), `${name}: Quick Math should cap at LV10`);
   assert(source.includes('#math{--chapter:#ff6b4a}') && source.includes('#odd{--chapter:#a78bfa}'), `${name}: game screens should expose chapter colors`);
   await assertA11y(page, `${name} math`);
@@ -145,13 +145,13 @@ async function runViewport(browser, viewport, name) {
   const shown = (await page.locator('#memoryNumber').innerText()).trim();
   assert(/^\d{4}$/.test(shown), `${name}: first memory round should show 4 digits`);
   await page.locator('#memoryEntry').waitFor({ state: 'visible', timeout: 7000 });
-  assert((await page.locator('#memoryAnswerTimer').innerText()).includes('作答'), `${name}: memory should show a visible answer countdown`);
+  assert((await page.locator('#memoryAnswerTimer').innerText()).includes('不限時'), `${name}: memory should show its untimed answer state`);
   for(const digit of shown) await page.locator('#memoryKeys button').filter({hasText:new RegExp('^'+digit+'$')}).click();
   await page.locator('#memorySubmit').click();
   await page.waitForFunction(() => document.getElementById('memoryNumber')?.textContent === '正確');
   const memorySource = await page.locator('html').evaluate(el => el.innerHTML);
-  assert(memorySource.includes('MEMORY_SHOW_MS=5000'), `${name}: memory exposure time should stay fixed at 5 seconds`);
-  assert(memorySource.includes('MEMORY_ANSWER_MS=10000'), `${name}: memory answer window should be 10 seconds`);
+  assert(memorySource.includes('MEMORY_SHOW_MS=6000'), `${name}: memory exposure time should stay fixed at 6 seconds`);
+  assert(!memorySource.includes('MEMORY_ANSWER_MS='), `${name}: memory must not have an answer deadline`);
   assert(memorySource.includes('{digits:9,points:9}') && !memorySource.includes('{digits:10,points:10}'), `${name}: memory should cap at 9 digits`);
   assert(memorySource.includes('{digits:4,points:4},\n    {digits:4,points:4}') && memorySource.includes('{digits:7,points:7},\n    {digits:7,points:7}'), `${name}: memory progression should repeat early difficulty steps`);
   assert(!memorySource.includes("mode:'mask'") && !memorySource.includes("mode:'reverse'"), `${name}: memory difficulty should not depend on MASK or REVERSE modes`);
@@ -170,12 +170,12 @@ async function runViewport(browser, viewport, name) {
   const middlePerson = firstClue[2];
   const logicChoices = page.locator('#logicChoices .choice');
   assert(await logicChoices.count() === 3, `${name}: ordering puzzle should have three choices`);
-  assert((await page.locator('#logicTimer').innerText()).trim().endsWith('秒'), `${name}: logic should show a visible answer timer`);
+  assert((await page.locator('#logicTimer').innerText()).trim()==='不限時', `${name}: logic should be untimed`);
   const logicSource = await page.locator('html').evaluate(el => el.innerHTML);
-  assert(logicSource.includes('LOGIC_ANSWER_MS=20000'), `${name}: logic questions should have a 20-second answer window`);
+  assert(!logicSource.includes('LOGIC_ANSWER_MS='), `${name}: logic must not have an answer deadline`);
+  assert(await page.locator('#logicSubmit').count()===0, `${name}: logic must not require a confirm button`);
   assert(!logicSource.includes('正確答案：') && !logicSource.includes("q.explain"), `${name}: logic should not display answer explanations after submission`);
   await logicChoices.filter({ hasText: new RegExp('^' + middlePerson + '$') }).click();
-  await page.locator('#logicSubmit').click();
   await page.waitForFunction(() => document.getElementById('logicCorrectCount')?.textContent === '1');
   await page.waitForFunction(() => document.getElementById('logicPill')?.textContent.startsWith('2 / 10'));
   assert(await page.locator('#logicFeedback').count() === 0, `${name}: logic explanation UI should be removed`);
@@ -225,6 +225,7 @@ async function runViewport(browser, viewport, name) {
   assert(await page.locator('.schulte-mode[data-schulte-mode="D"]').count() === 0, `${name}: Schulte odd/even mode D should remain removed`);
   assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: Schulte grid should contain 50 fixed cells`);
   assert((await page.locator('#schulteModePill').innerText()).includes('A · 1 → 50'), `${name}: standalone Schulte should start in mode A`);
+  const beforeColors=await page.locator('#schulteGrid button').evaluateAll(nodes=>Object.fromEntries(nodes.map(n=>[n.dataset.number,n.style.getPropertyValue('--cell-bg')])));
   const beforeOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
   const oneCell = page.locator('#schulteGrid .schulte-cell[data-number="1"]');
   const driftVars = await oneCell.locator('.schulte-float').evaluate(el => {
@@ -238,6 +239,8 @@ async function runViewport(browser, viewport, name) {
   const afterOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
   assert(beforeOrder.indexOf('1') === afterOrder.indexOf('1'), `${name}: completed Schulte number must stay in its original slot`);
   assert(beforeOrder.join(',') !== afterOrder.join(','), `${name}: unfinished numbers must change positions after a hit`);
+  const colorsChanged=await page.locator('#schulteGrid button:not(.done)').evaluateAll((nodes,before)=>nodes.every(n=>n.style.getPropertyValue('--cell-bg')!==before[n.dataset.number]),beforeColors);
+  assert(colorsChanged, `${name}: every unfinished Schulte number must change its background color`);
   assert(await oneCell.evaluate(el => el.classList.contains('done') && el.disabled), `${name}: completed Schulte cell should remain in place with a completed state`);
   assert(await page.locator('#schulteGrid .schulte-float').count() === 50, `${name}: all Schulte drift wrappers should remain present`);
   await page.locator('.schulte-mode[data-schulte-mode="B"]').click();
@@ -403,20 +406,22 @@ async function runChillJourney(browser) {
   await page.locator('#memory.active').waitFor();
   await page.locator('#memoryStart').click();
   for (let round=0; round<10; round++) {
-    const digits = await page.locator('#memoryNumber').innerText();
+    const digits = (await page.locator('#memoryNumber').innerText()).replace(/\s/g,'');
     if(round===0) {
       await page.clock.runFor(2000);
       await page.locator('#pauseBtn').click();
       await page.clock.runFor(12000);
-      assert((await page.locator('#memoryNumber').innerText()) === digits, 'memory exposure must freeze before answer entry');
+      assert((await page.locator('#memoryNumber').innerText()).replace(/\s/g,'') === digits, 'memory exposure must freeze before answer entry');
       await page.locator('#resumeBtn').click();
-      await page.clock.runFor(3100);
+      await page.clock.runFor(4100);
       const timerBefore = await page.locator('#memoryAnswerTimer').innerText();
       await page.locator('#pauseBtn').click();
       await page.clock.runFor(15000);
       assert((await page.locator('#memoryAnswerTimer').innerText()) === timerBefore, 'memory answer deadline must freeze');
       await page.locator('#resumeBtn').click();
-    } else await page.clock.runFor(5100);
+    } else await page.clock.runFor(6100);
+    if(round===0){await page.clock.runFor(60000);assert(await page.locator('#memoryKeys').isVisible(),'memory must wait indefinitely for an answer')}
+    if(round>=8)assert(await page.locator('#memoryNumber .memory-digit-row').count()===2,'long memory values must have two balanced rows');
     for(const digit of digits) await page.locator('#memoryKeys button').filter({hasText:new RegExp('^'+digit+'$')}).click();
     await page.locator('#memorySubmit').click();
     await page.clock.runFor(950);
@@ -424,11 +429,14 @@ async function runChillJourney(browser) {
   await page.locator('#sessionBreak.active').waitFor();
   await page.locator('#sessionNext').click();
   await page.locator('#logic.active').waitFor();
+  const logicTypes=new Set();
+  await page.clock.runFor(60000);assert((await page.locator('#logicPill').innerText()).startsWith('1 / 10'),'logic must not time out');
   for(let round=0;round<10;round++) {
+    logicTypes.add((await page.locator('#logicPill').innerText()).split(' · ')[1]);
     await page.locator('#logicChoices .choice').first().click();
-    await page.locator('#logicSubmit').click();
-    await page.clock.runFor(300);
+      await page.clock.runFor(300);
   }
+  assert(logicTypes.size===8,'every ten-question session must contain eight distinct logic types');
   await page.locator('#sessionBreak.active').waitFor();
   await page.locator('#sessionNext').click();
   for(let round=0;round<18;round++) {
@@ -507,6 +515,13 @@ async function runChillJourney(browser) {
   assert((await page.locator('#musicValue').innerText()) === '25%', 'music control must update its visible value');
   await page.reload();
   assert(await page.locator('#musicVolume').inputValue() === '25', 'music preference must survive reload');
+  await page.locator('.audio-settings > summary').click();
+  await page.locator('#musicToggle').click();
+  assert(await page.locator('#musicToggle').getAttribute('aria-pressed')==='true','music can be muted independently');
+  assert(await page.locator('#effectsToggle').getAttribute('aria-pressed')==='false','muting music must not mute effects');
+  await page.locator('#effectsToggle').click();
+  await page.reload();
+  assert(await page.locator('#musicToggle').getAttribute('aria-pressed')==='true' && await page.locator('#effectsToggle').getAttribute('aria-pressed')==='true','independent mute preferences must persist');
   assert(errors.length===0, 'runtime errors: '+errors.join('; '));
   await page.screenshot({path:'/tmp/brain7-chill-home-mobile.png',fullPage:true});
   await context.close();
@@ -525,8 +540,8 @@ async function runPhoneStage(browser) {
       if(mode==='memory') {
         assert(await page.locator('#memoryAnswer').getAttribute('readonly')!==null,'memory must avoid opening the OS keyboard');
         await page.locator('#memoryStart').click();
-        const digits=await page.locator('#memoryNumber').innerText();
-        await page.clock.runFor(5100);
+        const digits=(await page.locator('#memoryNumber').innerText()).replace(/\s/g,'');
+        await page.clock.runFor(6100);
         assert(await page.locator('#memoryKeys').isVisible(),'memory keypad must appear automatically after exposure');
         await page.locator('#memoryKeys button').filter({hasText:/^0$/}).click();
         await page.locator('#memoryKeys button').filter({hasText:/^0$/}).click();
@@ -537,6 +552,7 @@ async function runPhoneStage(browser) {
         for(const digit of digits) await page.keyboard.press(digit);
         assert(await page.locator('#memoryAnswer').inputValue()===digits,'physical keyboard must work without editing readonly input');
       }
+      assert(await page.locator('.audio-settings').isVisible(),'audio controls must remain available during gameplay');
       const size=await page.evaluate(() => {
         const screen=document.querySelector('.screen.active'),panel=screen.querySelector('.panel'),r=screen.getBoundingClientRect();
         return {bottom:r.bottom,height:innerHeight,outer:document.documentElement.scrollHeight,scroll:scrollY,extra:panel.scrollHeight-panel.clientHeight};
@@ -553,13 +569,28 @@ async function runPhoneStage(browser) {
       }
       await assertA11y(page,'phone '+mode);
       await page.screenshot({path:'/tmp/brain7-chill-stage-'+viewport.height+'-'+mode+'.png',fullPage:true});
+      if(mode==='memory') {
+        for(let round=1;round<=9;round++) {
+          await page.locator('#memorySubmit').click();
+          await page.clock.runFor(950);
+          const digits=(await page.locator('#memoryNumber').innerText()).replace(/\s/g,'');
+          if(round>=8){
+            const counts=await page.locator('#memoryNumber .memory-digit-row').evaluateAll(rows=>rows.map(row=>row.children.length));
+            assert(counts.join(',')===(round===8?'4,4':'5,4'),'8/9-digit exposure must be balanced over two lines');
+          }
+          await page.clock.runFor(6100);
+          const extra=await page.locator('#memory .panel').evaluate(el=>el.scrollHeight-el.clientHeight);
+          assert(extra<=2,'long-digit memory and keypad must fit phone height; overflow '+extra);
+          for(const digit of digits) await page.keyboard.press(digit);
+        }
+        await page.screenshot({path:'/tmp/brain7-chill-memory-nine-'+viewport.height+'.png',fullPage:true});
+      }
       if(mode==='logic'||mode==='odd') {
         const rounds=mode==='logic'?9:15;
         for(let round=0;round<rounds;round++) {
           if(mode==='logic') {
             await page.locator('#logicChoices .choice').first().click();
-            await page.locator('#logicSubmit').click();
-            await page.clock.runFor(300);
+                      await page.clock.runFor(300);
           } else {
             await page.locator('#oddGrid [data-odd="true"]').click();
             await page.clock.runFor(200);
