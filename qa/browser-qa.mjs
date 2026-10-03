@@ -48,6 +48,24 @@ async function runViewport(browser, viewport, name) {
 
   assert(await page.title() === '大人的腦部鍛鍊', `${name}: wrong page title`);
   assert((await page.locator('meta[name="color-scheme"]').getAttribute('content')) === 'light', `${name}: BRAIN/7 should use the light color scheme`);
+  assert((await page.locator('meta[name="application-name"]').getAttribute('content')) === 'BRAIN/7', `${name}: application identity metadata is missing`);
+  assert((await page.locator('link[rel="canonical"]').getAttribute('href')) === 'https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/', `${name}: canonical URL should target the public BRAIN/7 page`);
+  assert((await page.locator('link[rel="icon"]').getAttribute('href')) === './brain7-mark.svg', `${name}: BRAIN/7 favicon should be declared`);
+  assert((await page.locator('link[rel="manifest"]').getAttribute('href')) === './manifest.webmanifest', `${name}: web app manifest should be declared`);
+  assert((await page.locator('meta[property="og:title"]').getAttribute('content')) === 'BRAIN/7｜大人的腦部鍛鍊', `${name}: Open Graph title should expose the product identity`);
+  assert((await page.locator('#soundBtn').getAttribute('aria-pressed')) === 'false', `${name}: sound toggle should expose its initial state`);
+  const publicIdentity = await page.evaluate(async () => {
+    const [manifestResponse, iconResponse] = await Promise.all([fetch('./manifest.webmanifest'), fetch('./brain7-mark.svg')]);
+    const manifest = manifestResponse.ok ? await manifestResponse.json() : null;
+    return {
+      manifestOk: manifestResponse.ok,
+      iconOk: iconResponse.ok,
+      shortName: manifest && manifest.short_name,
+      iconSrc: manifest && manifest.icons && manifest.icons[0] && manifest.icons[0].src
+    };
+  });
+  assert(publicIdentity.manifestOk && publicIdentity.shortName === 'BRAIN/7', `${name}: manifest should load and identify BRAIN/7`);
+  assert(publicIdentity.iconOk && publicIdentity.iconSrc === './brain7-mark.svg', `${name}: identity icon should load and be linked from the manifest`);
   assert(await page.locator('.mode').count() === 7, `${name}: expected seven modes`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
