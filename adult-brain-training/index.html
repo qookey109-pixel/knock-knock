@@ -15,7 +15,10 @@
   <meta property="og:title" content="BRAIN/7｜大人的腦部鍛鍊">
   <meta property="og:description" content="慢慢玩，陪腦袋散個步。七個小遊戲、完成星星與溫柔的遊玩回顧。">
   <meta property="og:url" content="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:image" content="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/brain7-share.png">
+  <meta property="og:image:alt" content="BRAIN/7 — Take your time, seven little games">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/brain7-share.png">
   <meta name="twitter:title" content="BRAIN/7｜大人的腦部鍛鍊">
   <meta name="twitter:description" content="慢慢玩，陪腦袋散個步。七個小遊戲、完成星星與溫柔的遊玩回顧。">
   <title>大人的腦部鍛鍊</title>
@@ -322,7 +325,7 @@
     <div class="sound-controls"><button id="soundBtn" class="sound" type="button" aria-label="關閉聲音" aria-pressed="false">♪</button><details class="audio-settings"><summary aria-label="音樂與音效設定">聲音</summary><div class="audio-popover"><label for="musicVolume">音樂 <output id="musicValue">38%</output></label><input id="musicVolume" type="range" min="0" max="100" value="38"><label for="effectVolume">音效 <output id="effectValue">70%</output></label><input id="effectVolume" type="range" min="0" max="100" value="70"></div></details></div>
   </header>
 
-  <div id="playToolbar" class="play-toolbar hidden"><span id="sessionContext">隨心玩一關</span><div><button id="pauseBtn" class="secondary" type="button">休息一下</button><button id="finishEarlyBtn" class="back" type="button">先玩到這裡</button></div></div>
+  <div id="playToolbar" class="play-toolbar hidden"><span id="sessionContext">隨心玩一關</span><div><button id="pauseBtn" class="secondary" type="button">休息一下</button><button id="finishEarlyBtn" class="secondary" type="button">先玩到這裡</button></div></div>
   <section id="home" class="screen active">
     <div class="hero">
       <div class="eyebrow">TAKE YOUR TIME / SEVEN LITTLE GAMES</div>
@@ -655,7 +658,7 @@
     o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.035*effectVolume,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur)
   }
   function correctTone(){tone(680,.08);setTimeout(function(){tone(900,.1)},60)}
-  function wrongTone(){tone(190,.12)}
+  function wrongTone(){tone(340,.07)}
   async function loadGameBgm(){
     if(gameBgmBuffer)return gameBgmBuffer;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
