@@ -553,6 +553,21 @@ async function runPhoneStage(browser) {
       }
       await assertA11y(page,'phone '+mode);
       await page.screenshot({path:'/tmp/brain7-chill-stage-'+viewport.height+'-'+mode+'.png',fullPage:true});
+      if(mode==='logic'||mode==='odd') {
+        const rounds=mode==='logic'?9:15;
+        for(let round=0;round<rounds;round++) {
+          if(mode==='logic') {
+            await page.locator('#logicChoices .choice').first().click();
+            await page.locator('#logicSubmit').click();
+            await page.clock.runFor(300);
+          } else {
+            await page.locator('#oddGrid [data-odd="true"]').click();
+            await page.clock.runFor(200);
+          }
+          const extra=await page.locator('#'+mode+' .panel').evaluate(el=>el.scrollHeight-el.clientHeight);
+          assert(extra<=2,mode+' later question must fit the fixed phone stage; overflow '+extra);
+        }
+      }
       await page.locator('.back:visible').click();
     }
     assert(errors.length===0,'phone runtime errors: '+errors.join('; '));
