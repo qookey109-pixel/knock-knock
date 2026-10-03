@@ -1490,7 +1490,7 @@
     var records=dailySelection.map(function(m){return dailyRecords[m]}).filter(Boolean),completed=records.filter(function(r){return r.completed}).length;
     $('dailyScore').textContent='每關五星 · 七關回顧';
     $('dailyScore').setAttribute('aria-label','完成 '+completed+' / 7 關，每關最多五星');
-    $('dailyMessage').textContent=completed===7?'每關各有五顆星，看看這次的遊玩回顧。':'這次點亮 '+completed+' 顆星。玩到這裡，也是一趟散步。';
+    $('dailyMessage').textContent=completed===7?'每關各有五顆星，看看這次的遊玩回顧。':'這次完成 '+completed+' 關。玩到這裡，也是一趟散步。';
     $('dailyOverview').innerHTML='';
     addRecapItem($('dailyOverview'),'完成關卡',completed+' / 7');
     addRecapItem($('dailyOverview'),'遊玩時間',formatTime(records.reduce(function(sum,r){return sum+r.seconds},0)));
