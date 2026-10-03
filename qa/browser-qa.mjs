@@ -188,27 +188,34 @@ async function runViewport(browser, viewport, name) {
   assert(execStageBg !== 'rgba(0, 0, 0, 0)', `${name}: executive number stage should use a high-contrast jump color`);
   await assertA11y(page, `${name} executive`);
 
-  // Schulte: three modes, 50 targets, and full-field re-layout after every correct hit.
+  // Schulte: A/B only, 50 fixed cells, stronger drift, and completed cells stay in place.
   await page.locator('.back:visible').click();
   await page.locator('[data-mode="schulte"]').click();
   await page.locator('#schulte.active').waitFor();
-  assert(await page.locator('.schulte-mode').count() === 3, `${name}: Schulte should expose A/B/C modes only`);
-  assert(await page.locator('.schulte-mode[data-schulte-mode="D"]').count() === 0, `${name}: Schulte odd/even mode D should be removed`);
-  assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: Schulte grid should start with 50 cells`);
+  assert(await page.locator('.schulte-mode').count() === 2, `${name}: Schulte should expose A/B modes only`);
+  assert(await page.locator('.schulte-mode[data-schulte-mode="C"]').count() === 0, `${name}: Schulte offset mode C should be removed`);
+  assert(await page.locator('.schulte-mode[data-schulte-mode="D"]').count() === 0, `${name}: Schulte odd/even mode D should remain removed`);
+  assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: Schulte grid should contain 50 fixed cells`);
   assert((await page.locator('#schulteModePill').innerText()).includes('A · 1 → 50'), `${name}: standalone Schulte should start in mode A`);
   const beforeOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
-  await page.locator('#schulteGrid .schulte-cell[data-number="1"]').click();
+  const oneCell = page.locator('#schulteGrid .schulte-cell[data-number="1"]');
+  const driftVars = await oneCell.locator('.schulte-float').evaluate(el => {
+    const s = el.style;
+    return [s.getPropertyValue('--float-x1'),s.getPropertyValue('--float-x2'),s.getPropertyValue('--float-y1'),s.getPropertyValue('--float-y2')];
+  });
+  assert(driftVars.some(v => Math.abs(parseFloat(v)) >= 4), `${name}: Schulte drift should use visibly larger travel`);
+  await oneCell.click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '2');
-  assert(await page.locator('#schulteGrid .schulte-cell').count() === 49, `${name}: correct Schulte hit should remove one target`);
+  assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: correct Schulte hit should keep all 50 cells visible`);
   const afterOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
-  const beforeRemaining = beforeOrder.filter(n => n !== '1');
-  assert(afterOrder.length === 49 && beforeRemaining.join(',') !== afterOrder.join(','), `${name}: remaining Schulte cells should be re-laid out after a correct hit`);
-  assert(await page.locator('#schulteGrid .schulte-float').count() === 49, `${name}: remaining Schulte cells should retain drift wrappers`);
+  assert(beforeOrder.join(',') === afterOrder.join(','), `${name}: Schulte cell order should remain fixed after a correct hit`);
+  assert(await oneCell.evaluate(el => el.classList.contains('done') && el.disabled), `${name}: completed Schulte cell should remain in place with a completed state`);
+  assert(await page.locator('#schulteGrid .schulte-float').count() === 50, `${name}: all Schulte drift wrappers should remain present`);
   await page.locator('.schulte-mode[data-schulte-mode="B"]').click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '50');
   assert((await page.locator('#schulteModePill').innerText()).includes('B · 50 → 1'), `${name}: Schulte mode B should reverse the target order`);
   const schulteSource = await page.locator('html').evaluate(el => el.innerHTML);
-  assert(schulteSource.includes("['A','B','C'][rand(0,2)]") && !schulteSource.includes("奇數 1 → 99") && !schulteSource.includes("偶數 2 → 100"), `${name}: Schulte daily pool should contain only A/B/C`);
+  assert(schulteSource.includes("['A','B'][rand(0,1)]") && !schulteSource.includes('relayoutSchulteAfterHit'), `${name}: Schulte daily pool should use only A/B and never relayout completed hits`);
   await assertA11y(page, `${name} schulte`);
 
   // Stroop: 20 trials with fixed congruent/conflict mix and seconds-based reaction time.
