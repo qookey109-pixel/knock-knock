@@ -1,0 +1,19 @@
+{
+  "name": "BRAIN/7｜大人的腦部鍛鍊",
+  "short_name": "BRAIN/7",
+  "lang": "zh-Hant",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f3ea",
+  "theme_color": "#f7f3ea",
+  "description": "7 種短時間腦力小遊戲組成的一次完整訓練。",
+  "icons": [
+    {
+      "src": "./brain7-mark.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
