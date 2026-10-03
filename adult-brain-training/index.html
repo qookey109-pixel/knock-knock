@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f7f3ea">
   <meta name="color-scheme" content="light">
-  <meta name="description" content="大人的腦部鍛鍊：7 種短時間腦力小遊戲，包含快速心算、瞬間記憶、邏輯推理、規則切換、舒爾特方格、Stroop 與視覺抗干擾。">
+  <meta name="description" content="大人的腦部鍛鍊：7 種輕鬆腦力小遊戲，包含快速心算、瞬間記憶、邏輯推理、規則切換、舒爾特方格、Stroop 與視覺抗干擾。">
   <meta name="application-name" content="BRAIN/7">
   <link rel="canonical" href="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/">
   <link rel="icon" href="./brain7-mark.svg" type="image/svg+xml">
@@ -13,11 +13,11 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="zh_TW">
   <meta property="og:title" content="BRAIN/7｜大人的腦部鍛鍊">
-  <meta property="og:description" content="一次跑完 7 個腦內回路：速度、記憶、推理、切換、搜尋、抑制與抗干擾。">
+  <meta property="og:description" content="慢慢玩，陪腦袋散個步。七個小遊戲、完成星星與溫柔的遊玩回顧。">
   <meta property="og:url" content="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="BRAIN/7｜大人的腦部鍛鍊">
-  <meta name="twitter:description" content="一次跑完 7 個腦內回路：速度、記憶、推理、切換、搜尋、抑制與抗干擾。">
+  <meta name="twitter:description" content="慢慢玩，陪腦袋散個步。七個小遊戲、完成星星與溫柔的遊玩回顧。">
   <title>大人的腦部鍛鍊</title>
   <style>
     :root{
@@ -300,22 +300,36 @@
     @media(prefers-reduced-motion:reduce){
       *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
     }
+
+    .session-info{font-size:12px!important;line-height:1.7!important}
+    .sound-controls{display:flex;align-items:center;gap:12px}.audio-settings{position:relative;font-size:12px;font-weight:800}.audio-settings>summary{cursor:pointer;min-height:44px;display:flex;align-items:center;padding:0 8px}.audio-popover{position:absolute;right:0;top:50px;width:230px;padding:18px;border:1px solid var(--line);border-radius:16px;background:var(--surface);z-index:20;box-shadow:0 12px 30px #17171714}.audio-popover label{display:flex;justify-content:space-between;margin:8px 0}.audio-popover input{width:100%;accent-color:#526800}
+    .play-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:16px 0 0;font-size:12px;font-weight:800;color:var(--muted)}.play-toolbar>div{display:flex;align-items:center;gap:8px}.play-toolbar .secondary{min-height:44px;font-size:12px;padding:0 12px}.play-toolbar .back{font-size:12px}
+    .preview-demo{font-size:clamp(18px,3vw,24px);line-height:1.6;margin:14px 0;padding:14px;border-radius:12px;background:var(--surface2);font-weight:850}.home-preview{min-height:320px}.home-preview-copy{max-width:100%}
+    .completion-star{font-size:100px;line-height:1.2;color:#805c00;margin:20px auto}.completion-stars{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;font-size:clamp(28px,6vw,52px);margin:26px auto;color:#805c00}.unlit{color:#746d60}.session-dots{font-size:24px;gap:8px;color:#805c00}.result-unit{max-width:480px;margin:0 auto 22px;font-size:15px;line-height:1.8}.result .result-grid{max-width:620px;margin:0 auto;text-align:left}.recap-details{grid-column:1/-1;width:100%;margin:12px 0;text-align:left;border-top:1px solid var(--line);padding-top:10px}.recap-details summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:13px;font-weight:800;color:var(--muted)}.recap-details summary::before{content:'＋';margin-right:8px}.recap-details[open] summary::before{content:'−'}
+    .journey-row{display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:14px 0;text-align:left}.journey-row>span:last-of-type{font-size:12px;color:var(--muted)}.journey-star{font-size:24px;color:#805c00}.journey-row>.recap-details{grid-column:2/-1}.recent-plays{margin-top:28px;border-top:1px solid var(--line);padding-top:12px;font-size:13px;color:var(--muted)}.recent-plays summary{cursor:pointer;min-height:44px;font-weight:800}.history-row{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.7}
+    .pause-overlay{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:22px;background:#f7f3eaf2}.pause-card{width:min(100%,440px);padding:32px;border-radius:24px;border:1px solid var(--line);background:var(--surface);text-align:center}.pause-card h2{font-size:40px;letter-spacing:-.05em}.pause-card p{line-height:1.8;color:var(--muted);margin-bottom:24px}.is-paused .schulte-float{animation-play-state:paused!important}
+    .quiet-stat,#math .stats .stat:nth-child(3),#memory .stats .stat:nth-child(3),#schulte .stats .stat:nth-child(n+3),#executive .stats,#stroop .stats,#odd .stats{display:none}
+    #math .stats,#memory .stats{grid-template-columns:repeat(2,1fr)}#schulte .stats{grid-template-columns:repeat(2,1fr)}
+    @media(max-width:560px){.play-toolbar{align-items:flex-start;flex-direction:column;gap:8px}.play-toolbar>div{width:100%;justify-content:space-between}.brand p{max-width:75px;line-height:1.5}.brand{gap:8px}.sound-controls{gap:4px}.journey-row{grid-template-columns:24px 1fr}.journey-row>span:last-of-type{grid-column:2}.home-preview{min-height:290px}#schulte .panel{padding:10px}.schulte-mode-grid{margin-bottom:8px}.schulte-stats{margin-bottom:8px}.schulte-stats .stat{padding:8px 10px}.schulte-instruction{font-size:11px}.schulte-targetbar{position:sticky;top:6px;z-index:3;box-shadow:0 3px 10px #17171714}.schulte-cell{min-height:44px}.schulte-float{min-height:42px}}
+    .hidden{display:none!important}
+
   </style>
 </head>
 <body>
 <main class="app">
   <header class="top">
     <div class="brand"><h1>BRAIN<span>/7</span></h1><p>大人的腦部鍛鍊</p></div>
-    <button id="soundBtn" class="sound" type="button" aria-label="關閉聲音" aria-pressed="false">♪</button>
+    <div class="sound-controls"><button id="soundBtn" class="sound" type="button" aria-label="關閉聲音" aria-pressed="false">♪</button><details class="audio-settings"><summary aria-label="音樂與音效設定">聲音</summary><div class="audio-popover"><label for="musicVolume">音樂 <output id="musicValue">38%</output></label><input id="musicVolume" type="range" min="0" max="100" value="38"><label for="effectVolume">音效 <output id="effectValue">70%</output></label><input id="effectVolume" type="range" min="0" max="100" value="70"></div></details></div>
   </header>
 
+  <div id="playToolbar" class="play-toolbar hidden"><span id="sessionContext">隨心玩一關</span><div><button id="pauseBtn" class="secondary" type="button">休息一下</button><button id="finishEarlyBtn" class="back" type="button">先玩到這裡</button></div></div>
   <section id="home" class="screen active">
     <div class="hero">
-      <div class="eyebrow">FULL SESSION / SEVEN CIRCUITS</div>
-      <h2>一次，跑完<br><span>7 個腦內回路。</span></h2>
-      <p>不是題庫，也不是測驗報表。這是一套連續的 7 關腦力挑戰：速度、記憶、推理、切換、搜尋、抑制與抗干擾。</p>
+      <div class="eyebrow">TAKE YOUR TIME / SEVEN LITTLE GAMES</div>
+      <h2>慢慢玩，<br><span>腦袋散個步。</span></h2>
+      <p>7 個小遊戲，陪腦袋散個步。想玩一關，或慢慢走完七關都可以。每完成一關點亮一顆星，不評高低。</p>
       <div class="circuit-strip" aria-label="七關回路"><button type="button" data-preview-mode="math" aria-label="預覽快速心算"></button><button type="button" data-preview-mode="memory" aria-label="預覽瞬間記憶"></button><button type="button" data-preview-mode="logic" aria-label="預覽邏輯推理"></button><button type="button" data-preview-mode="executive" aria-label="預覽規則切換"></button><button type="button" data-preview-mode="schulte" aria-label="預覽舒爾特方格"></button><button type="button" data-preview-mode="stroop" aria-label="預覽 Stroop"></button><button type="button" data-preview-mode="odd" aria-label="預覽表裡不一"></button></div>
-      <div class="actions"><button id="dailyBtn" class="primary" type="button">開始完整 7 關</button></div>
+      <div class="actions"><button id="dailyBtn" class="primary" type="button">慢慢玩完 7 關</button></div><p class="session-info">完整遊玩長度依節奏而定 · 每關之間可以休息 · 隨時暫停</p>
     </div>
     <div class="home-select">
       <div class="modes" aria-label="選擇單項訓練">
@@ -332,18 +346,18 @@
         <div id="previewNumber" class="home-preview-number" aria-hidden="true">01</div>
         <div class="home-preview-copy">
           <h3 id="previewTitle">快速心算</h3>
-          <p id="previewText">每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。</p>
+          <div id="previewDemo" class="preview-demo" aria-label="玩法示例">8 + 6 = ?</div><p id="previewText">每級 60 秒。連續答對升級，從單步驟一路推到多步驟運算。</p>
           <div class="home-preview-foot"><span class="preview-dot"></span><span>左右切換回路 · 點擊進入</span></div><button id="previewPlay" class="secondary" type="button">進入這一關 →</button>
         </div>
       </aside>
     </div>
-    <div class="note">♪ 首頁輕音樂 · 關卡 Rag Time · 可隨時關閉聲音。<br>娛樂與練習用途，不作 IQ、醫療或認知功能診斷。</div>
+    <details id="recentPlays" class="recent-plays"><summary>最近的遊玩足跡</summary><div id="historyList"><p>第一顆星，從你想玩的那一關開始。</p></div></details><div class="note">♪ 首頁輕音樂 · 關卡 Rag Time · 可隨時關閉聲音。<br>娛樂與練習用途，不作 IQ、醫療或認知功能診斷。</div>
   </section>
 
   <section id="math" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div><div id="mathLevelMark" class="pill">LV 1 · 0/8</div></div>
     <div class="panel">
-      <div class="stats"><div class="stat"><span>時間</span><strong id="mathTime">60</strong></div><div class="stat"><span>分數</span><strong id="mathScore">0</strong></div><div class="stat"><span>連對</span><strong id="mathStreak">0</strong></div></div>
+      <div class="stats"><div class="stat"><span>時間</span><strong id="mathTime">60</strong></div><div class="stat"><span>已玩題數</span><strong id="mathPlayed">0</strong></div><div class="stat quiet-stat"><span>連對</span><strong id="mathStreak">0</strong></div></div>
       <div class="mini-instruction">每級 60 秒 · 8 題正確升級 · LV5 起加入多步驟運算 · 最高 LV10</div>
       <div id="mathProblem" class="big-problem">準備</div>
       <div class="answer-wrap"><input id="mathAnswer" class="answer-input" inputmode="none" autocomplete="off" readonly aria-label="答案；手機使用畫面數字鍵盤，電腦可直接使用數字鍵盤輸入"><button id="mathSubmit" class="primary" type="button">送出</button></div>
@@ -422,9 +436,9 @@
     <div class="panel result">
       <div class="eyebrow">SESSION PROGRESS</div>
       <h2 id="sessionBreakTitle" class="session-break-title">快速心算完成</h2>
-      <div id="sessionBreakScore" class="result-score">0</div>
-      <div class="result-unit">本關表現分數</div>
-      <div id="sessionDots" class="session-dots" aria-label="完整訓練進度"></div>
+      <div id="sessionBreakScore" class="completion-star" role="img" aria-label="完成一關">★</div>
+      <div class="result-unit">一關，一顆星。照自己的節奏就好。</div>
+      <div id="sessionDots" class="session-dots" role="img" aria-label="完整訓練進度"></div>
       <div id="sessionBreakStats" class="result-grid"></div>
       <div id="sessionNextName" class="session-next-name"></div>
       <div class="actions"><button id="sessionNext" class="primary" type="button">下一項</button></div>
@@ -433,23 +447,25 @@
 
   <section id="result" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2 id="resultTitle">訓練完成</h2></div></div>
-    <div class="panel result"><div class="eyebrow">TRAINING SCORE</div><div id="resultScore" class="result-score">0</div><div class="result-unit">遊戲表現分數</div><div id="resultGrid" class="result-grid"></div><div id="resultActions" class="actions"></div></div>
+    <div class="panel result"><div class="eyebrow">A LITTLE MOMENT FOR YOU</div><div id="resultScore" class="completion-star" role="img" aria-label="完成一關">★</div><div id="resultMessage" class="result-unit">一關，一顆星。謝謝你陪腦袋玩一下。</div><div id="resultGrid" class="result-grid"></div><div id="resultActions" class="actions"></div></div>
   </section>
 
   <section id="dailyResult" class="screen">
-    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>今日腦訓完成</h2></div></div>
-    <div class="panel result"><div class="eyebrow">DAILY SCORE</div><div id="dailyScore" class="result-score">0</div><div class="result-unit">7 項完整訓練平均</div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再練完整 7 項</button></div></div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>這趟散步，完成了</h2></div></div>
+    <div class="panel result"><div class="eyebrow">SEVEN LITTLE MOMENTS</div><div id="dailyScore" class="completion-stars" role="img"></div><div id="dailyMessage" class="result-unit">七顆星，記下今天的七個小片刻。</div><div id="dailyOverview" class="result-grid"></div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再散步一次</button></div></div>
   </section>
 </main>
+<div id="pauseOverlay" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="pause-card"><div class="eyebrow">TAKE A BREATH</div><h2 id="pauseTitle">休息一下。</h2><p>遊戲和計時都停在這裡。準備好了，再繼續。</p><button id="resumeBtn" class="primary" type="button">繼續玩</button></div></div>
 <div id="transitionBurst" class="transition-burst" aria-hidden="true"></div>
 
 <script>
 (function(){
   var screens=[].slice.call(document.querySelectorAll('.screen'));
-  var dailyMode=false,dailyQueue=[],dailySelection=[],dailyScores={};
+  var dailyMode=false,dailyQueue=[],dailySelection=[],dailyRecords={};
+  var currentMode=null,modeStartedAt=0,lastPlay=null;
   var muted=false,audioCtx=null;
-  var mathTimer=null,mathTime=60,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1,mathLevelCorrect=0,mathScore=0,mathStreak=0,mathMaxStreak=0,mathSeen=new Set(),mathOps=[],mathStepCount=1,mathQuestionStartedAt=0,mathTotalResponseMs=0,mathResponseCount=0,mathGameStartedAt=0,mathTransitioning=false,mathTransitionTimer=null;
-  var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null,memoryAnswerTimeout=null,memoryAnswerTicker=null,memoryAwaitingAnswer=false,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryScorePoints=0,memoryBestDigits=0;
+  var mathTimer=null,mathTime=60,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1,mathLevelCorrect=0,mathStreak=0,mathMaxStreak=0,mathSeen=new Set(),mathOps=[],mathStepCount=1,mathQuestionStartedAt=0,mathTotalResponseMs=0,mathResponseCount=0,mathGameStartedAt=0,mathTransitioning=false,mathTransitionTimer=null;
+  var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null,memoryAnswerTimeout=null,memoryAnswerTicker=null,memoryAwaitingAnswer=false,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryBestDigits=0;
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false,logicTimer=null,logicTimeout=null,logicStartedAt=0;
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false,execSchedule=[],execSwitchRtTotal=0,execSwitchRtCount=0,execRepeatRtTotal=0,execRepeatRtCount=0,execConflictCorrect=0,execConflictTotal=0;
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null,schulteSequence=[],schulteIndex=0,schulteMode='A',schulteModeDetail='',schulteFinished=false;
@@ -554,7 +570,77 @@
   var allModes=['math','memory','logic','executive','schulte','stroop','odd'];
   var modeNames={math:'快速心算',memory:'瞬間記憶',logic:'邏輯推理',executive:'規則切換',schulte:'舒爾特方格',stroop:'Stroop 顏色衝突',odd:'表裡不一'};
   var reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var burstTransitionActive=false;
+  var burstTransitionActive=false,hasEnteredGame=false;
+
+
+  var playTimers=new Map(),nextPlayTimer=1,paused=false,pauseStarted=0,pausedTotal=0,pauseFocus=null;
+  var musicVolume=.38,effectVolume=.70;
+  var previewExamples={math:'8 + 6 = ?',memory:'看一眼：3 8 1 7',logic:'A 在 B 前，C 在 B 後。誰在中間？',executive:'奇偶？大小？先看這回合的規則。',schulte:'01 → 02 → 03 · 找到下一個數字',stroop:'「紅」寫成藍色，就選藍色。',odd:'↑ 上　↓ 下　→ 左 · 哪個不一樣？'};
+  function playNow(){return (paused?pauseStarted:performance.now())-pausedTotal}
+  function armPlayTimer(id,t){
+    t.due=performance.now()+t.remaining;
+    t.native=setTimeout(function(){
+      if(paused||!playTimers.has(id))return;
+      if(!t.repeat)playTimers.delete(id);
+      t.fn();
+      if(t.repeat&&playTimers.has(id)){t.remaining=t.delay;armPlayTimer(id,t)}
+    },t.remaining)
+  }
+  function makePlayTimer(fn,delay,repeat){var id=nextPlayTimer++,t={fn:fn,delay:delay,remaining:delay,repeat:repeat,native:null,due:0};playTimers.set(id,t);if(!paused)armPlayTimer(id,t);return id}
+  function playTimeout(fn,delay){return makePlayTimer(fn,delay,false)}
+  function playInterval(fn,delay){return makePlayTimer(fn,delay,true)}
+  function clearPlayTimer(id){var t=playTimers.get(id);if(t){clearTimeout(t.native);playTimers.delete(id)}}
+  function pausePlay(){
+    if(paused||!currentMode)return;
+    paused=true;pauseStarted=performance.now();pauseFocus=document.activeElement;
+    playTimers.forEach(function(t){t.remaining=Math.max(0,t.due-pauseStarted);clearTimeout(t.native)});
+    $('pauseOverlay').classList.remove('hidden');document.querySelector('main').inert=true;document.body.classList.add('is-paused');
+    if(audioCtx)audioCtx.suspend().catch(function(){});
+    $('resumeBtn').focus()
+  }
+  function clearPause(){
+    if(paused)pausedTotal+=performance.now()-pauseStarted;
+    paused=false;document.querySelector('main').inert=false;document.body.classList.remove('is-paused');$('pauseOverlay').classList.add('hidden')
+  }
+  function resumePlay(){
+    if(!paused||document.hidden)return;
+    clearPause();playTimers.forEach(function(t,id){armPlayTimer(id,t)});
+    if(audioCtx)audioCtx.resume().catch(function(){});
+    if(pauseFocus&&pauseFocus.isConnected)pauseFocus.focus();
+    if(!muted)startGameBgm()
+  }
+  function formatTime(sec){var n=Math.max(0,Math.round(sec));return Math.floor(n/60)+' 分 '+n%60+' 秒'}
+  function starMarkup(count,total){var html='';for(var i=0;i<total;i++)html+='<span class="'+(i<count?'lit':'unlit')+'" aria-hidden="true">'+(i<count?'★':'☆')+'</span>';return html}
+  function addRecapItem(container,label,value){var box=document.createElement('div');box.className='result-box';var l=document.createElement('span'),v=document.createElement('strong');l.textContent=label;v.textContent=value;box.appendChild(l);box.appendChild(v);container.appendChild(box)}
+  function renderRecap(container,record){
+    container.innerHTML='';addRecapItem(container,'遊玩時間',formatTime(record.seconds));
+    var primary=record.items.filter(function(item){return !/答對|平均|一次/.test(item[0])});
+    primary.slice(0,2).forEach(function(item){addRecapItem(container,item[0],item[1])});
+    var extra=record.items.filter(function(item){return primary.slice(0,2).indexOf(item)<0});
+    if(extra.length){var details=document.createElement('details');details.className='recap-details';var summary=document.createElement('summary');summary.textContent='看看這次的小細節';details.appendChild(summary);var body=document.createElement('div');body.className='result-grid';extra.forEach(function(item){addRecapItem(body,item[0],item[1])});details.appendChild(body);container.appendChild(details)}
+  }
+  function readHistory(){try{var data=JSON.parse(localStorage.getItem('brain7-play-history')||'[]');return Array.isArray(data)?data.filter(function(x){return x&&typeof x.date==='string'&&typeof x.label==='string'&&Number.isFinite(x.seconds)&&Number.isInteger(x.stars)&&x.stars>=0&&x.stars<=7}).slice(0,20):[]}catch(e){return []}}
+  function savePlay(records){
+    if(!records.length)return;
+    var history=readHistory();history.unshift({date:new Date().toISOString(),label:records.length===1?modeNames[records[0].mode]:'七關散步',stars:records.filter(function(r){return r.completed}).length,seconds:records.reduce(function(sum,r){return sum+r.seconds},0)});
+    try{localStorage.setItem('brain7-play-history',JSON.stringify(history.slice(0,20)))}catch(e){}
+    renderHistory()
+  }
+  function renderHistory(){var list=$('historyList'),history=readHistory();list.innerHTML='';if(!history.length){var p=document.createElement('p');p.textContent='第一顆星，從你想玩的那一關開始。紀錄只留在這個瀏覽器。';list.appendChild(p);return}
+    history.slice(0,5).forEach(function(item){var row=document.createElement('p');row.className='history-row';var d=new Date(item.date);row.textContent=(Number.isNaN(d.getTime())?'':d.toLocaleDateString('zh-TW',{month:'numeric',day:'numeric'}))+' · '+item.label+' · '+item.stars+' 顆完成星 · '+formatTime(item.seconds);list.appendChild(row)})
+  }
+  function goHome(){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm();renderHistory()}
+  function finishEarly(){
+    if(!currentMode)return;
+    var mode=currentMode,record={mode:mode,completed:false,seconds:Math.max(0,(playNow()-modeStartedAt)/1000),items:[['遊玩狀態','這次先玩到這裡']]};
+    stopAll();lastPlay=record;
+    if(dailyMode){dailyRecords[mode]=record;dailyQueue=[];showDailyResult()}else{savePlay([record]);showResult(mode,null,{items:record.items})}
+  }
+  $('pauseBtn').addEventListener('click',pausePlay);$('resumeBtn').addEventListener('click',resumePlay);$('finishEarlyBtn').addEventListener('click',finishEarly);
+  $('pauseOverlay').addEventListener('keydown',function(e){if(e.key==='Tab'){e.preventDefault();$('resumeBtn').focus()}if(e.key==='Escape'){e.preventDefault();e.stopPropagation();resumePlay()}});
+  document.addEventListener('visibilitychange',function(){if(document.hidden)pausePlay()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&currentMode&&!paused){e.preventDefault();pausePlay()}});
+  renderHistory();
 
   function $(id){return document.getElementById(id)}
   function applyScreen(id){screens.forEach(function(s){s.classList.toggle('active',s.id===id)});window.scrollTo(0,0)}
@@ -563,10 +649,10 @@
     else applyScreen(id);
   }
   function tone(freq,dur){
-    if(muted)return;var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    if(muted||paused||effectVolume===0)return;var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
     var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;
-    o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.035,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur)
+    o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.035*effectVolume,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur)
   }
   function correctTone(){tone(680,.08);setTimeout(function(){tone(900,.1)},60)}
   function wrongTone(){tone(190,.12)}
@@ -587,11 +673,11 @@
     return ['math','memory','logic','executive','schulte','stroop','odd','sessionBreak','result','dailyResult'].some(function(id){return $(id)&&$(id).classList.contains('active')});
   }
   async function startGameBgm(){
-    if(muted||gameBgmSource)return;
+    if(muted||paused||musicVolume===0||gameBgmSource)return;
     var token=gameBgmToken,buffer=await loadGameBgm();
-    if(!buffer||muted||token!==gameBgmToken||!gameFlowActive())return;
+    if(!buffer||muted||paused||musicVolume===0||token!==gameBgmToken||!gameFlowActive())return;
     var src=audioCtx.createBufferSource(),g=audioCtx.createGain();
-    src.buffer=buffer;src.loop=true;g.gain.value=.38;
+    src.buffer=buffer;src.loop=true;g.gain.value=musicVolume;
     src.connect(g);g.connect(audioCtx.destination);src.start(0);
     gameBgmSource=src;gameBgmGain=g;
   }
@@ -599,7 +685,7 @@
     if(homeBgmTimer){clearInterval(homeBgmTimer);homeBgmTimer=null}
   }
   function scheduleHomePhrase(){
-    if(muted||!homeBgmUnlocked||!$('home').classList.contains('active'))return;
+    if(muted||musicVolume===0||!homeBgmUnlocked||!$('home').classList.contains('active'))return;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
     var now=audioCtx.currentTime;
@@ -607,12 +693,12 @@
     notes.forEach(function(freq,i){
       var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=now+i*.46;
       o.type=i%2===0?'sine':'triangle';o.frequency.setValueAtTime(freq,t);
-      g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.008,t+.035);g.gain.exponentialRampToValueAtTime(.0001,t+.36);
+      g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.008*(musicVolume/.38),t+.035);g.gain.exponentialRampToValueAtTime(.0001,t+.36);
       o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+.4);
     })
   }
   function startHomeBgm(){
-    if(muted||!homeBgmUnlocked||!$('home').classList.contains('active')||homeBgmTimer)return;
+    if(muted||musicVolume===0||!homeBgmUnlocked||!$('home').classList.contains('active')||homeBgmTimer)return;
     stopGameBgm();scheduleHomePhrase();homeBgmTimer=setInterval(scheduleHomePhrase,3900)
   }
   function unlockHomeBgm(){
@@ -621,36 +707,36 @@
   }
   function mathTapTone(){tone(520,.035)}
   function transitionClick(){
-    if(muted)return;
+    if(muted||paused||effectVolume===0)return;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
     var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;
     o.type='square';o.frequency.setValueAtTime(1540,t);o.frequency.exponentialRampToValueAtTime(820,t+.028);
-    g.gain.setValueAtTime(.028,t);g.gain.exponentialRampToValueAtTime(.001,t+.04);
+    g.gain.setValueAtTime(.028*effectVolume,t);g.gain.exponentialRampToValueAtTime(.001,t+.04);
     o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+.045);
   }
   function transitionWhoosh(){
-    if(muted||!audioCtx)return;
+    if(muted||paused||effectVolume===0||!audioCtx)return;
     var t=audioCtx.currentTime,dur=.24,len=Math.max(1,Math.floor(audioCtx.sampleRate*dur));
     var buffer=audioCtx.createBuffer(1,len,audioCtx.sampleRate),data=buffer.getChannelData(0);
     for(var i=0;i<len;i++){var p=i/len;data[i]=(Math.random()*2-1)*Math.sin(Math.PI*p)*(1-p*.35)}
     var src=audioCtx.createBufferSource(),filter=audioCtx.createBiquadFilter(),g=audioCtx.createGain();
     src.buffer=buffer;filter.type='bandpass';filter.Q.value=.7;
     filter.frequency.setValueAtTime(650,t);filter.frequency.exponentialRampToValueAtTime(2400,t+dur);
-    g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(.032,t+.075);g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(.032*effectVolume,t+.075);g.gain.exponentialRampToValueAtTime(.001,t+dur);
     src.connect(filter);filter.connect(g);g.connect(audioCtx.destination);src.start(t);src.stop(t+dur);
   }
   function transitionThump(){
-    if(muted)return;
+    if(muted||paused||effectVolume===0)return;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
     if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
     var t=audioCtx.currentTime,o=audioCtx.createOscillator(),g=audioCtx.createGain();
     o.type='sine';o.frequency.setValueAtTime(126,t);o.frequency.exponentialRampToValueAtTime(48,t+.17);
-    g.gain.setValueAtTime(.065,t);g.gain.exponentialRampToValueAtTime(.001,t+.21);
+    g.gain.setValueAtTime(.065*effectVolume,t);g.gain.exponentialRampToValueAtTime(.001,t+.21);
     o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+.22);
     var snap=audioCtx.createOscillator(),sg=audioCtx.createGain();
     snap.type='triangle';snap.frequency.setValueAtTime(240,t);snap.frequency.exponentialRampToValueAtTime(92,t+.07);
-    sg.gain.setValueAtTime(.018,t);sg.gain.exponentialRampToValueAtTime(.001,t+.09);
+    sg.gain.setValueAtTime(.018*effectVolume,t);sg.gain.exponentialRampToValueAtTime(.001,t+.09);
     snap.connect(sg);sg.connect(audioCtx.destination);snap.start(t);snap.stop(t+.1);
   }
   function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
@@ -679,7 +765,9 @@
     return layer;
   }
   function enterModeWithBurst(mode,source){
-    if(!mode)return;
+    if(!mode||burstTransitionActive)return;
+    if(hasEnteredGame){startMode(mode);return}
+    hasEnteredGame=true;
     stopHomeBgm();transitionClick();
     if(reduceMotion){
       setTimeout(function(){transitionThump();startMode(mode)},35);
@@ -695,7 +783,17 @@
     },650);
   }
 
-  $('soundBtn').addEventListener('click',function(){muted=!muted;this.textContent=muted?'×':'♪';this.setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');this.setAttribute('aria-pressed',muted?'true':'false');homeBgmUnlocked=true;if(muted){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else if(gameFlowActive())startGameBgm()});
+  function saveAudioPreferences(){try{localStorage.setItem('brain7-audio',JSON.stringify({music:musicVolume,effects:effectVolume,muted:muted}))}catch(e){}}
+  function updateAudioUi(){
+    $('musicVolume').value=Math.round(musicVolume*100);$('effectVolume').value=Math.round(effectVolume*100);
+    $('musicValue').textContent=Math.round(musicVolume*100)+'%';$('effectValue').textContent=Math.round(effectVolume*100)+'%';
+    $('soundBtn').textContent=muted?'×':'♪';$('soundBtn').setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');$('soundBtn').setAttribute('aria-pressed',String(muted))
+  }
+  try{var pref=JSON.parse(localStorage.getItem('brain7-audio')||'null');if(pref){if(Number.isFinite(pref.music))musicVolume=Math.max(0,Math.min(1,pref.music));if(Number.isFinite(pref.effects))effectVolume=Math.max(0,Math.min(1,pref.effects));muted=pref.muted===true}}catch(e){}
+  updateAudioUi();
+  $('musicVolume').addEventListener('input',function(){musicVolume=Number(this.value)/100;updateAudioUi();saveAudioPreferences();if(gameBgmGain)gameBgmGain.gain.value=musicVolume;if(musicVolume===0){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else startGameBgm()});
+  $('effectVolume').addEventListener('input',function(){effectVolume=Number(this.value)/100;updateAudioUi();saveAudioPreferences()});
+  $('soundBtn').addEventListener('click',function(){muted=!muted;saveAudioPreferences();this.textContent=muted?'×':'♪';this.setAttribute('aria-label',muted?'開啟聲音':'關閉聲音');this.setAttribute('aria-pressed',muted?'true':'false');homeBgmUnlocked=true;if(muted){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else if(gameFlowActive())startGameBgm()});
   document.addEventListener('pointerdown',unlockHomeBgm,{once:true});
   document.addEventListener('keydown',unlockHomeBgm,{once:true});
   document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm()})});
@@ -709,12 +807,14 @@
     $('previewLabel').textContent=b.dataset.label||'';$('previewTitle').textContent=b.querySelector('h3').textContent;
     $('previewText').textContent=b.dataset.preview||b.querySelector('p').textContent;
     preview.dataset.selectedMode=mode;
+    $('previewPlay').textContent='開始'+modeNames[mode]+' →';
+    $('previewDemo').textContent=previewExamples[mode];
     preview.classList.remove('is-pulsing');void preview.offsetWidth;preview.classList.add('is-pulsing');
     clearTimeout(preview._pulseTimer);preview._pulseTimer=setTimeout(function(){preview.classList.remove('is-pulsing')},220);
   }
   homeModeButtons.forEach(function(b){
-    b.addEventListener('mouseenter',function(){previewMode(this.dataset.mode)});
-    b.addEventListener('focus',function(){previewMode(this.dataset.mode)});
+    // Selection changes only through explicit controls, never hover.
+    
   });
   var circuitStrip=document.querySelector('.circuit-strip');
   circuitStrip.addEventListener('click',function(e){
@@ -726,8 +826,7 @@
   var homePreview=$('homePreview');
   $('previewPlay').addEventListener('click',function(e){
     e.stopPropagation();
-    var active=document.querySelector('.mode.is-active');
-    var mode=active&&active.dataset.mode?active.dataset.mode:(homePreview.dataset.selectedMode||'math');
+    var mode=homePreview.dataset.selectedMode||'math';
     dailyMode=false;
     enterModeWithBurst(mode,this);
   });
@@ -745,10 +844,13 @@
   homePreview.addEventListener('keydown',function(e){
     if(e.key==='ArrowRight'){e.preventDefault();stepPreview(1)}
     if(e.key==='ArrowLeft'){e.preventDefault();stepPreview(-1)}
-    if(e.key==='Enter'||e.key===' '){e.preventDefault();$('previewPlay').click()}
+    if(e.target===homePreview&&(e.key==='Enter'||e.key===' ')){e.preventDefault();$('previewPlay').click()}
   });
   homeModeButtons.forEach(function(b){b.addEventListener('click',function(){dailyMode=false;enterModeWithBurst(this.dataset.mode,this)})});
   $('dailyBtn').addEventListener('click',function(){
+    if(burstTransitionActive)return;
+    if(hasEnteredGame){startDaily();return}
+    hasEnteredGame=true;
     var source=this;
     stopHomeBgm();transitionClick();
     if(reduceMotion){setTimeout(function(){transitionThump();startDaily()},35);return}
@@ -761,16 +863,29 @@
   });
   $('dailyAgain').addEventListener('click',startDaily);
 
-  function stopAll(){clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;clearTimeout(memoryTimeout);memoryTimeout=null;clearTimeout(memoryAnswerTimeout);memoryAnswerTimeout=null;clearInterval(memoryAnswerTicker);memoryAnswerTicker=null;memoryAwaitingAnswer=false;clearInterval(logicTimer);logicTimer=null;clearTimeout(logicTimeout);logicTimeout=null;clearInterval(schulteTimer);schulteTimer=null}
-  function startDaily(){stopAll();dailyMode=true;dailyScores={};dailySelection=allModes.slice();dailyQueue=dailySelection.slice();startNextDaily()}
+  function stopAll(){
+    playTimers.forEach(function(t){clearTimeout(t.native)});playTimers.clear();
+    clearPause();
+    currentMode=null;
+    $('playToolbar').classList.add('hidden');
+    clearPlayTimer(mathTimer);mathTimer=null;clearPlayTimer(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;clearPlayTimer(memoryTimeout);memoryTimeout=null;clearPlayTimer(memoryAnswerTimeout);memoryAnswerTimeout=null;clearPlayTimer(memoryAnswerTicker);memoryAnswerTicker=null;memoryAwaitingAnswer=false;clearPlayTimer(logicTimer);logicTimer=null;clearPlayTimer(logicTimeout);logicTimeout=null;clearPlayTimer(schulteTimer);schulteTimer=null}
+  function startDaily(){stopAll();dailyMode=true;dailyRecords={};dailySelection=allModes.slice();dailyQueue=dailySelection.slice();startNextDaily()}
   function startNextDaily(){if(!dailyQueue.length){showDailyResult();return}startMode(dailyQueue.shift())}
   function startMode(mode){
     stopAll();stopHomeBgm();
+    currentMode=mode;modeStartedAt=playNow();
+    $('playToolbar').classList.remove('hidden');
+    $('sessionContext').textContent=dailyMode?'第 '+(dailySelection.length-dailyQueue.length)+' / 7 關 · '+modeNames[mode]:'隨心玩一關 · '+modeNames[mode];
     if(mode==='math')startMath();if(mode==='memory')startMemory();if(mode==='logic')startLogic();if(mode==='executive')startExecutive();
     if(mode==='schulte')startSchulte();if(mode==='stroop')startStroop();if(mode==='odd')startOdd();
-    startGameBgm()
+    startGameBgm();if(document.hidden)pausePlay()
   }
-  function finishMode(mode,score,stats){dailyScores[mode]=score;if(dailyMode){showDailyBreak(mode,score,stats);return}showResult(mode,score,stats)}
+  function finishMode(mode,unused,stats){
+    var record={mode:mode,completed:true,seconds:Math.max(0,(playNow()-modeStartedAt)/1000),items:stats.items||[]};
+    stopAll();dailyRecords[mode]=record;lastPlay=record;
+    if(dailyMode){showDailyBreak(mode,null,stats);return}
+    savePlay([record]);showResult(mode,null,stats)
+  }
 
   var MATH_TARGET_PER_LEVEL=8;
   var MATH_LEVEL_SECONDS=60;
@@ -889,56 +1004,49 @@
     mathSeen.add(p.key);mathAnswerValue=p.ans;
     mathOps=['+','-','×','÷'].filter(function(op){return p.text.indexOf(' '+op+' ')>=0});
     mathStepCount=(p.text.match(/[+\-×÷]/g)||[]).length||1;
-    mathQuestionStartedAt=performance.now();
+    mathQuestionStartedAt=playNow();
     $('mathProblem').textContent=p.text;
     $('mathProblem').style.fontSize=p.text.length>12?'clamp(38px,10vw,68px)':'';
     $('mathAnswer').value='';
   }
 
   function startMathLevelTimer(){
-    clearInterval(mathTimer);mathTime=MATH_LEVEL_SECONDS;$('mathTime').textContent=String(mathTime);
-    mathTimer=setInterval(function(){
+    clearPlayTimer(mathTimer);mathTime=MATH_LEVEL_SECONDS;$('mathTime').textContent=String(mathTime);
+    mathTimer=playInterval(function(){
       mathTime--;$('mathTime').textContent=String(Math.max(0,mathTime));
       if(mathTime<=0)endMath(false)
     },1000)
   }
-  function mathQuestionBaseScore(){
-    if(mathStepCount>=3)return 24;
-    if(mathStepCount===2)return 18;
-    if(mathOps.indexOf('÷')>=0)return 14;
-    if(mathOps.indexOf('×')>=0)return 12;
-    return 10
-  }
   function advanceMathLevel(){
-    mathTransitioning=true;clearInterval(mathTimer);mathTimer=null;
-    mathScore+=mathTime;$('mathScore').textContent=mathScore;
+    mathTransitioning=true;clearPlayTimer(mathTimer);mathTimer=null;
+    $('mathPlayed').textContent=mathCorrect+mathWrong;
     if(mathLevel>=MATH_MAX_LEVEL){endMath(true);return}
     mathLevel++;mathLevelCorrect=0;updateMathLevelMark();
     $('mathProblem').textContent='LEVEL '+mathLevel;$('mathAnswer').value='';
-    tone(523.25,.09);setTimeout(function(){tone(659.25,.09)},80);setTimeout(function(){tone(783.99,.15)},160);
-    mathTransitionTimer=setTimeout(function(){if(!$('math').classList.contains('active'))return;makeMath();startMathLevelTimer()},650)
+    tone(523.25,.09);playTimeout(function(){tone(659.25,.09)},80);playTimeout(function(){tone(783.99,.15)},160);
+    mathTransitionTimer=playTimeout(function(){if(paused||!$('math').classList.contains('active'))return;makeMath();startMathLevelTimer()},650)
   }
   function startMath(){
-    show('math');clearInterval(mathTimer);clearTimeout(mathTransitionTimer);
-    mathTime=MATH_LEVEL_SECONDS;mathCorrect=0;mathWrong=0;mathLevel=1;mathLevelCorrect=0;mathScore=0;mathStreak=0;mathMaxStreak=0;mathSeen=new Set();mathOps=[];mathStepCount=1;mathQuestionStartedAt=0;mathTotalResponseMs=0;mathResponseCount=0;mathGameStartedAt=performance.now();mathTransitioning=false;
-    $('mathTime').textContent='60';$('mathScore').textContent='0';$('mathStreak').textContent='0';updateMathLevelMark();makeMath();startMathLevelTimer()
+    show('math');clearPlayTimer(mathTimer);clearPlayTimer(mathTransitionTimer);
+    mathTime=MATH_LEVEL_SECONDS;mathCorrect=0;mathWrong=0;mathLevel=1;mathLevelCorrect=0;mathStreak=0;mathMaxStreak=0;mathSeen=new Set();mathOps=[];mathStepCount=1;mathQuestionStartedAt=0;mathTotalResponseMs=0;mathResponseCount=0;mathGameStartedAt=playNow();mathTransitioning=false;
+    $('mathTime').textContent='60';$('mathPlayed').textContent='0';$('mathStreak').textContent='0';updateMathLevelMark();makeMath();startMathLevelTimer()
   }
   function submitMath(){
     if(!mathTimer||mathTransitioning)return;
     var v=$('mathAnswer').value.trim();if(v==='')return;
-    var responseMs=Math.max(0,performance.now()-mathQuestionStartedAt);mathTotalResponseMs+=responseMs;mathResponseCount++;
+    var responseMs=Math.max(0,playNow()-mathQuestionStartedAt);mathTotalResponseMs+=responseMs;mathResponseCount++;
     if(Number(v)===mathAnswerValue){
       mathCorrect++;mathLevelCorrect++;mathStreak++;mathMaxStreak=Math.max(mathMaxStreak,mathStreak);
-      mathScore+=mathQuestionBaseScore()+Math.max(0,mathLevel-1)+Math.min(Math.max(0,mathStreak-1),10);
-      $('mathScore').textContent=mathScore;$('mathStreak').textContent=mathStreak;correctTone();updateMathLevelMark();
+
+      $('mathPlayed').textContent=mathCorrect+mathWrong;$('mathStreak').textContent=mathStreak;correctTone();updateMathLevelMark();
       if(mathLevelCorrect>=MATH_TARGET_PER_LEVEL)advanceMathLevel();else makeMath()
     }else{
-      mathWrong++;mathStreak=0;mathScore=Math.max(0,mathScore-3);$('mathScore').textContent=mathScore;$('mathStreak').textContent='0';wrongTone();makeMath()
+      mathWrong++;mathStreak=0;$('mathPlayed').textContent=mathCorrect+mathWrong;$('mathStreak').textContent='0';wrongTone();makeMath()
     }
   }
   $('mathSubmit').addEventListener('click',submitMath);
   document.addEventListener('keydown',function(e){
-    if(!$('math').classList.contains('active')||mathTransitioning||e.ctrlKey||e.metaKey||e.altKey)return;
+    if(paused||e.target.closest('.audio-settings')||!$('math').classList.contains('active')||mathTransitioning||e.ctrlKey||e.metaKey||e.altKey)return;
     var input=$('mathAnswer'),digit=/^\d$/.test(e.key)?e.key:(/^Numpad\d$/.test(e.code)?e.code.slice(-1):null);
     if(digit!==null){
       e.preventDefault();mathTapTone();input.value=(input.value+digit).slice(0,7);return
@@ -955,23 +1063,7 @@
   });
   function endMath(completed){
     if(!mathGameStartedAt)return;
-    clearInterval(mathTimer);mathTimer=null;clearTimeout(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;
-    var tries=mathCorrect+mathWrong,acc=tries?Math.round(mathCorrect/tries*100):0,avgSec=mathResponseCount?mathTotalResponseMs/mathResponseCount/1000:0;
-    var elapsedSec=Math.max(0,Math.round((performance.now()-mathGameStartedAt)/1000)),minutes=Math.floor(elapsedSec/60),seconds=elapsedSec%60,totalTime=minutes+':'+String(seconds).padStart(2,'0');
-    // BRAIN/7 needs a 0–100 comparable score; raw Quick Math score remains visible to the player.
-    var progress=((mathLevel-1)*MATH_TARGET_PER_LEVEL+mathLevelCorrect)/(MATH_MAX_LEVEL*MATH_TARGET_PER_LEVEL);
-    var normalized=Math.max(0,Math.min(100,Math.round(progress*55+acc*.30+Math.min(15,mathMaxStreak)*1)));
-    if(completed)normalized=Math.max(normalized,95);
-    finishMode('math',normalized,{
-      a:String(mathScore),b:acc+'%',c:'LV '+mathLevel,
-      items:[
-        ['總分',String(mathScore)],
-        ['正確率',acc+'%'],
-        ['平均反應',mathResponseCount?avgSec.toFixed(1)+'s':'—'],
-        ['最高連對',String(mathMaxStreak)],
-        ['總時間',totalTime]
-      ]
-    });
+    finishMode('math',null,{items:[['玩了幾題',String(mathCorrect+mathWrong)],['走到哪裡','LV '+mathLevel],['答對題數',String(mathCorrect)],['平均作答',mathResponseCount?(mathTotalResponseMs/mathResponseCount/1000).toFixed(1)+' 秒':'—']]});
     mathGameStartedAt=0
   }
 
@@ -989,7 +1081,6 @@
     {digits:8,points:8},
     {digits:9,points:9}
   ];
-  var MEMORY_TOTAL_POINTS=MEMORY_ROUNDS.reduce(function(sum,r){return sum+r.points},0);
 
   function generateMemoryDigits(count){
     var value='',tries=0;
@@ -1001,12 +1092,12 @@
     return value
   }
   function clearMemoryAnswerTimers(){
-    clearTimeout(memoryAnswerTimeout);memoryAnswerTimeout=null;
-    clearInterval(memoryAnswerTicker);memoryAnswerTicker=null
+    clearPlayTimer(memoryAnswerTimeout);memoryAnswerTimeout=null;
+    clearPlayTimer(memoryAnswerTicker);memoryAnswerTicker=null
   }
   function startMemory(){
-    show('memory');clearTimeout(memoryTimeout);memoryTimeout=null;clearMemoryAnswerTimers();memoryAwaitingAnswer=false;
-    memoryRound=0;memoryCorrect=0;memoryValue='';memoryRtTotal=0;memoryScorePoints=0;memoryBestDigits=0;
+    show('memory');clearPlayTimer(memoryTimeout);memoryTimeout=null;clearMemoryAnswerTimers();memoryAwaitingAnswer=false;
+    memoryRound=0;memoryCorrect=0;memoryValue='';memoryRtTotal=0;memoryBestDigits=0;
     $('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
     $('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';
     $('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 10'
@@ -1022,36 +1113,36 @@
     $('memoryLabel').textContent='記住這串數字 · 5 秒';
     memoryValue=generateMemoryDigits(cfg.digits);
     $('memoryNumber').textContent=memoryValue;
-    clearTimeout(memoryTimeout);
-    memoryTimeout=setTimeout(function(){revealMemoryEntry(cfg)},MEMORY_SHOW_MS)
+    clearPlayTimer(memoryTimeout);
+    memoryTimeout=playTimeout(function(){revealMemoryEntry(cfg)},MEMORY_SHOW_MS)
   }
   function revealMemoryEntry(cfg){
     $('memoryNumber').textContent='•'.repeat(cfg.digits);
     $('memoryLabel').textContent='把剛才的數字輸入回來';
     $('memoryEntry').classList.remove('hidden');$('memoryAnswerTimer').classList.remove('hidden');$('memoryAnswer').value='';$('memoryAnswer').focus();
-    memoryAwaitingAnswer=true;memoryAnswerStartedAt=performance.now();
+    memoryAwaitingAnswer=true;memoryAnswerStartedAt=playNow();
     $('memoryAnswerTimer').textContent='作答 10.0 秒';
     clearMemoryAnswerTimers();
-    memoryAnswerTicker=setInterval(function(){
+    memoryAnswerTicker=playInterval(function(){
       if(!memoryAwaitingAnswer)return;
-      var left=Math.max(0,MEMORY_ANSWER_MS-(performance.now()-memoryAnswerStartedAt));
+      var left=Math.max(0,MEMORY_ANSWER_MS-(playNow()-memoryAnswerStartedAt));
       $('memoryAnswerTimer').textContent='作答 '+(left/1000).toFixed(1)+' 秒'
     },100);
-    memoryAnswerTimeout=setTimeout(function(){finishMemoryAnswer('',true)},MEMORY_ANSWER_MS)
+    memoryAnswerTimeout=playTimeout(function(){finishMemoryAnswer('',true)},MEMORY_ANSWER_MS)
   }
   function finishMemoryAnswer(answer,timedOut){
     if(!memoryAwaitingAnswer)return;
     memoryAwaitingAnswer=false;clearMemoryAnswerTimers();
     var cfg=MEMORY_ROUNDS[memoryRound-1],ok=!timedOut&&answer===memoryValue;
-    var rt=timedOut?MEMORY_ANSWER_MS:Math.max(0,performance.now()-memoryAnswerStartedAt);
+    var rt=timedOut?MEMORY_ANSWER_MS:Math.max(0,playNow()-memoryAnswerStartedAt);
     memoryRtTotal+=rt;
     if(ok){
-      memoryCorrect++;memoryScorePoints+=cfg.points;memoryBestDigits=Math.max(memoryBestDigits,cfg.digits);correctTone()
+      memoryCorrect++;memoryBestDigits=Math.max(memoryBestDigits,cfg.digits);correctTone()
     }else wrongTone();
     $('memoryCorrect').textContent=memoryCorrect;$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
     $('memoryNumber').textContent=ok?'正確':'答案 '+memoryValue;
     $('memoryLabel').textContent=ok?'記憶成功':(timedOut?'時間到 · 這回合的答案如下':'這回合的答案如下');
-    memoryTimeout=setTimeout(function(){if(memoryRound>=MEMORY_ROUNDS.length)endMemory();else nextMemoryRound()},900)
+    memoryTimeout=playTimeout(function(){if(memoryRound>=MEMORY_ROUNDS.length)endMemory();else nextMemoryRound()},900)
   }
   function submitMemory(){
     if(!memoryAwaitingAnswer||$('memoryEntry').classList.contains('hidden'))return;
@@ -1061,23 +1152,12 @@
   $('memorySubmit').addEventListener('click',submitMemory);
   $('memoryAnswer').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();submitMemory()}});
   function endMemory(){
-    clearTimeout(memoryTimeout);memoryTimeout=null;clearMemoryAnswerTimers();memoryAwaitingAnswer=false;
-    var score=Math.round(memoryScorePoints/MEMORY_TOTAL_POINTS*100);
-    var avgRt=memoryRound?memoryRtTotal/memoryRound/1000:0;
-    finishMode('memory',score,{
-      a:memoryCorrect+'/'+MEMORY_ROUNDS.length,b:score+'%',c:(memoryBestDigits||0)+' 位',
-      items:[
-        ['正確',memoryCorrect+'/'+MEMORY_ROUNDS.length],
-        ['加權分數',score],
-        ['最高成功位數',(memoryBestDigits||0)+' 位'],
-        ['平均作答',avgRt?avgRt.toFixed(1)+' 秒':'—']
-      ]
-    })
+    finishMode('memory',null,{items:[['遊玩回合',memoryRound+' 回合'],['成功記住',memoryBestDigits?memoryBestDigits+' 位數':'這次先熟悉玩法'],['答對回合',memoryCorrect+' / '+memoryRound],['平均作答',memoryRound?(memoryRtTotal/memoryRound/1000).toFixed(1)+' 秒':'—']]})
   }
 
   var LOGIC_ANSWER_MS=20000;
   function clearLogicTimer(){
-    clearInterval(logicTimer);logicTimer=null;clearTimeout(logicTimeout);logicTimeout=null
+    clearPlayTimer(logicTimer);logicTimer=null;clearPlayTimer(logicTimeout);logicTimeout=null
   }
   function startLogic(){
     show('logic');clearLogicTimer();logicSession=buildLogicSession();logicIndex=0;logicCorrect=0;logicSelected=null;logicAnswered=false;
@@ -1100,32 +1180,27 @@
       });
       choices.appendChild(b)
     });
-    $('logicSubmit').disabled=false;logicStartedAt=performance.now();
-    logicTimer=setInterval(function(){
+    $('logicSubmit').disabled=false;logicStartedAt=playNow();
+    logicTimer=playInterval(function(){
       if(logicAnswered)return;
-      var left=Math.max(0,LOGIC_ANSWER_MS-(performance.now()-logicStartedAt));
+      var left=Math.max(0,LOGIC_ANSWER_MS-(playNow()-logicStartedAt));
       $('logicTimer').textContent=(left/1000).toFixed(1)+' 秒'
     },100);
-    logicTimeout=setTimeout(function(){finishLogicQuestion(true)},LOGIC_ANSWER_MS)
+    logicTimeout=playTimeout(function(){finishLogicQuestion(true)},LOGIC_ANSWER_MS)
   }
   function finishLogicQuestion(timedOut){
     if(logicAnswered)return;logicAnswered=true;clearLogicTimer();$('logicSubmit').disabled=true;
     var q=logicSession[logicIndex],ok=!timedOut&&logicSelected!==null&&logicSelected===q.answer;
     if(ok){logicCorrect++;$('logicCorrectCount').textContent=logicCorrect;correctTone()}else wrongTone();
     logicIndex++;
-    setTimeout(function(){if(logicIndex>=logicSession.length)endLogic();else renderLogic()},260)
+    playTimeout(function(){if(logicIndex>=logicSession.length)endLogic();else renderLogic()},260)
   }
   $('logicSubmit').addEventListener('click',function(){
     if(logicAnswered||logicSelected===null)return;
     finishLogicQuestion(false)
   });
   function endLogic(){
-    clearLogicTimer();
-    var score=Math.round(logicCorrect/logicSession.length*100);
-    finishMode('logic',score,{
-      a:logicCorrect+'/'+logicSession.length,b:score+'%',c:'20 秒/題',
-      items:[['答對題數',logicCorrect+'/'+logicSession.length],['正確率',score+'%'],['每題上限','20 秒']]
-    })
+    finishMode('logic',null,{items:[['遊玩題數',logicSession.length+' 題'],['答對題數',logicCorrect+' / '+logicSession.length]]})
   }
 
   var EXEC_TOTAL_ROUNDS=18;
@@ -1179,12 +1254,12 @@
     }
     $('execNumber').textContent=execValue;
     $('execHint').textContent=switched?'規則剛剛改變。先確認規則，再決定左右。':(execRound>=7&&execIsConflictValue(execValue)?'這個數字在兩種規則下的左右答案不同。':'依照目前規則作答。');
-    execAnswered=false;execStartedAt=performance.now()
+    execAnswered=false;execStartedAt=playNow()
   }
   function answerExecutive(side){
     if(execAnswered||execRound<1)return;
     execAnswered=true;
-    var rt=Math.max(0,performance.now()-execStartedAt);execRtTotal+=rt;
+    var rt=Math.max(0,playNow()-execStartedAt);execRtTotal+=rt;
     var correctSide=execRuleType==='parity'?(execValue%2===1?'left':'right'):(execValue<5?'left':'right');
     var ok=side===correctSide,switched=execRound>1&&execRuleType!==execPrevRule,conflict=execIsConflictValue(execValue);
     if(switched){execSwitchRtTotal+=rt;execSwitchRtCount++}else{execRepeatRtTotal+=rt;execRepeatRtCount++}
@@ -1192,35 +1267,18 @@
     if(ok){execCorrect++;if(switched)execSwitchCorrect++;correctTone()}else wrongTone();
     $('execCorrect').textContent=execCorrect;$('execSwitch').textContent=execSwitchCorrect+'/'+execSwitchTotal;
     $('execRt').textContent=(execRtTotal/execRound/1000).toFixed(2)+' 秒';
-    setTimeout(nextExecutive,180)
+    playTimeout(nextExecutive,180)
   }
   $('execLeft').addEventListener('click',function(){answerExecutive('left')});
   $('execRight').addEventListener('click',function(){answerExecutive('right')});
   document.addEventListener('keydown',function(e){
-    if(!$('executive').classList.contains('active'))return;
+    if(paused||e.target.closest('.audio-settings')||!$('executive').classList.contains('active'))return;
     var tag=(document.activeElement&&document.activeElement.tagName||'').toLowerCase();if(tag==='input'||tag==='textarea')return;
     if(e.key==='ArrowLeft'){e.preventDefault();answerExecutive('left')}
     if(e.key==='ArrowRight'){e.preventDefault();answerExecutive('right')}
   });
   function endExecutive(){
-    var acc=Math.round(execCorrect/EXEC_TOTAL_ROUNDS*100),avgRt=execRound?Math.round(execRtTotal/execRound):0;
-    var switchAcc=execSwitchTotal?Math.round(execSwitchCorrect/execSwitchTotal*100):0;
-    var speedPct=Math.max(0,Math.min(100,Math.round((2400-avgRt)/16)));
-    var score=Math.max(0,Math.min(100,Math.round(acc*.55+switchAcc*.25+speedPct*.20)));
-    var avgSwitch=execSwitchRtCount?Math.round(execSwitchRtTotal/execSwitchRtCount):0;
-    var avgRepeat=execRepeatRtCount?Math.round(execRepeatRtTotal/execRepeatRtCount):0;
-    var switchCost=avgSwitch&&avgRepeat?avgSwitch-avgRepeat:0;
-    var costText=(switchCost>0?'+':'')+(switchCost/1000).toFixed(2)+' 秒';
-    finishMode('executive',score,{
-      a:execCorrect+'/'+EXEC_TOTAL_ROUNDS,b:acc+'%',c:switchAcc+'%',
-      items:[
-        ['正確',execCorrect+'/'+EXEC_TOTAL_ROUNDS],
-        ['正確率',acc+'%'],
-        ['切換命中',switchAcc+'%'],
-        ['切換成本',costText],
-        ['平均反應',(avgRt/1000).toFixed(2)+' 秒']
-      ]
-    })
+    finishMode('executive',null,{items:[['遊玩題數',execRound+' 題'],['答對題數',execCorrect+' / '+execRound],['平均作答',execRound?(execRtTotal/execRound/1000).toFixed(2)+' 秒':'—']]})
   }
 
   function buildSchulteSequence(mode){
@@ -1255,13 +1313,13 @@
   }
 
   function startSchulte(modeOverride){
-    show('schulte');clearInterval(schulteTimer);schulteTimer=null;schulteFinished=false;
+    show('schulte');clearPlayTimer(schulteTimer);schulteTimer=null;schulteFinished=false;
     schulteMode=modeOverride||((dailyMode?['A','B'][rand(0,1)]:'A'));
-    schulteSequence=buildSchulteSequence(schulteMode);schulteIndex=0;schulteWrong=0;schulteStart=performance.now();
+    schulteSequence=buildSchulteSequence(schulteMode);schulteIndex=0;schulteWrong=0;schulteStart=playNow();
     setSchulteModeUi();$('schulteWrong').textContent='0';$('schulteTime').textContent='0.0 秒';updateSchulteHud();
     var grid=$('schulteGrid');grid.innerHTML='';
     shuffle(schulteSequence.slice()).forEach(function(n,i){grid.appendChild(makeSchulteCell(n,i))});
-    schulteTimer=setInterval(function(){$('schulteTime').textContent=((performance.now()-schulteStart)/1000).toFixed(1)+' 秒'},100)
+    schulteTimer=playInterval(function(){$('schulteTime').textContent=((playNow()-schulteStart)/1000).toFixed(1)+' 秒'},100)
   }
   document.querySelectorAll('.schulte-mode').forEach(function(b){b.addEventListener('click',function(){startSchulte(this.dataset.schulteMode)})});
   function answerSchulte(n,button){
@@ -1270,20 +1328,9 @@
     if(n!==target){schulteWrong++;$('schulteWrong').textContent=schulteWrong;wrongTone();return}
     correctTone();button.classList.add('done');button.disabled=true;button.setAttribute('aria-label','已完成數字 '+n);schulteIndex++;updateSchulteHud();
     if(schulteIndex>=schulteSequence.length){
-      schulteFinished=true;clearInterval(schulteTimer);schulteTimer=null;
-      var sec=(performance.now()-schulteStart)/1000,accuracy=50/(50+schulteWrong)*100;
-      var pace=Math.max(0,Math.min(100,Math.round(130-sec*.7)));
-      var score=Math.max(0,Math.min(100,Math.round(accuracy*.72+pace*.28)));
-      finishMode('schulte',score,{
-        a:'50/50',b:schulteWrong+' 錯',c:sec.toFixed(1)+' 秒',
-        items:[
-          ['模式',schulteMode+' · '+schulteModeDetail],
-          ['完成','50 / 50'],
-          ['錯誤',String(schulteWrong)],
-          ['總時間',sec.toFixed(1)+' 秒'],
-          ['平均每題',(sec/50).toFixed(2)+' 秒']
-        ]
-      })
+      schulteFinished=true;clearPlayTimer(schulteTimer);schulteTimer=null;
+      var sec=(playNow()-schulteStart)/1000;
+      finishMode('schulte',null,{items:[['搜尋方向',schulteModeDetail],['找到目標','50 / 50'],['平均搜尋',(sec/50).toFixed(2)+' 秒']]})
     }
   }
 
@@ -1321,38 +1368,21 @@
     var w=$('stroopWord');w.textContent=stroopDefs[wordKey].word;w.style.color=stroopDefs[stroopColor].css;w.dataset.color=stroopColor;w.dataset.word=wordKey;
     $('stroopPill').textContent=stroopRound+' / '+STROOP_TOTAL;
     var tag=$('stroopTrialTag');tag.textContent=stroopCurrentType==='conflict'?'衝突題':'一致題';tag.className='stroop-trial-tag '+stroopCurrentType;
-    stroopStartedAt=performance.now()
+    stroopStartedAt=playNow()
   }
   document.querySelectorAll('#stroopChoices .choice').forEach(function(b){b.addEventListener('click',function(){answerStroop(this.dataset.color)})});
   function answerStroop(color){
     if(stroopLocked)return;stroopLocked=true;
-    var rt=performance.now()-stroopStartedAt;stroopRtTotal+=rt;var ok=color===stroopColor;
+    var rt=playNow()-stroopStartedAt;stroopRtTotal+=rt;var ok=color===stroopColor;
     if(stroopCurrentType==='conflict'){stroopConflictTotal++;stroopConflictRt+=rt;if(ok)stroopConflictCorrect++}
     else{stroopCongruentCount++;stroopCongruentRt+=rt}
     if(ok){stroopCorrect++;correctTone()}else{stroopWrong++;wrongTone()}
     $('stroopCorrect').textContent=stroopCorrect;$('stroopConflict').textContent=stroopConflictCorrect+'/'+stroopConflictTotal;
     $('stroopRt').textContent=(stroopRtTotal/stroopRound/1000).toFixed(2)+' 秒';
-    setTimeout(nextStroop,180)
+    playTimeout(nextStroop,180)
   }
   function endStroop(){
-    var acc=Math.round(stroopCorrect/STROOP_TOTAL*100),avg=stroopRtTotal/STROOP_TOTAL;
-    var conflictAcc=stroopConflictTotal?Math.round(stroopConflictCorrect/stroopConflictTotal*100):0;
-    var avgConflict=stroopConflictTotal?stroopConflictRt/stroopConflictTotal:0;
-    var avgCongruent=stroopCongruentCount?stroopCongruentRt/stroopCongruentCount:0;
-    var interference=avgConflict&&avgCongruent?avgConflict-avgCongruent:0;
-    var speed=Math.max(0,Math.min(100,Math.round((2200-avg)/16)));
-    var score=Math.max(0,Math.min(100,Math.round(acc*.55+conflictAcc*.30+speed*.15)));
-    var interferenceText=(interference>0?'+':'')+(interference/1000).toFixed(2)+' 秒';
-    finishMode('stroop',score,{
-      a:stroopCorrect+'/'+STROOP_TOTAL,b:acc+'%',c:conflictAcc+'%',
-      items:[
-        ['正確',stroopCorrect+'/'+STROOP_TOTAL],
-        ['正確率',acc+'%'],
-        ['衝突命中',conflictAcc+'%'],
-        ['平均反應',(avg/1000).toFixed(2)+' 秒'],
-        ['干擾成本',interferenceText]
-      ]
-    })
+    finishMode('stroop',null,{items:[['遊玩題數',stroopRound+' 題'],['答對題數',stroopCorrect+' / '+stroopRound],['平均作答',stroopRound?(stroopRtTotal/stroopRound/1000).toFixed(2)+' 秒':'—']]})
   }
 
   var ODD_TOTAL=16;
@@ -1384,75 +1414,67 @@
       b.innerHTML='<span class="odd-arrow">'+d.arrow+'</span><span class="odd-label">'+labelDir.label+'</span>';
       b.addEventListener('click',(function(isOdd){return function(){answerOdd(isOdd)}})(mismatch));grid.appendChild(b)
     }
-    oddStartedAt=performance.now()
+    oddStartedAt=playNow()
   }
   function answerOdd(isOdd){
     if(oddLocked)return;
     if(!isOdd){
       oddWrong++;oddRoundHadError=true;$('oddWrong').textContent=oddWrong;wrongTone();return
     }
-    oddLocked=true;var rt=performance.now()-oddStartedAt;oddCorrect++;oddRtTotal+=rt;
+    oddLocked=true;var rt=playNow()-oddStartedAt;oddCorrect++;oddRtTotal+=rt;
     if(!oddRoundHadError)oddFirstHit++;
     if(oddCurrentCells===24){oddDenseRtTotal+=rt;oddDenseCount++}
     $('oddCorrect').textContent=oddFirstHit+'/'+oddCorrect;
     $('oddRt').textContent=(oddRtTotal/oddCorrect/1000).toFixed(2)+' 秒';
-    correctTone();setTimeout(nextOdd,180)
+    correctTone();playTimeout(nextOdd,180)
   }
   function endOdd(){
-    var avg=oddCorrect?oddRtTotal/oddCorrect:0;
-    var firstHitRate=Math.round(oddFirstHit/ODD_TOTAL*100);
-    var accuracy=Math.round(ODD_TOTAL/(ODD_TOTAL+oddWrong||1)*100);
-    var denseAvg=oddDenseCount?oddDenseRtTotal/oddDenseCount:0;
-    var speed=Math.max(0,Math.min(100,Math.round((4500-avg)/35)));
-    var score=Math.max(0,Math.min(100,Math.round(accuracy*.45+firstHitRate*.35+speed*.20)));
-    finishMode('odd',score,{
-      a:oddFirstHit+'/'+ODD_TOTAL,b:oddWrong+' 錯',c:(avg/1000).toFixed(2)+' 秒',
-      items:[
-        ['首擊命中',oddFirstHit+'/'+ODD_TOTAL],
-        ['正確率',accuracy+'%'],
-        ['錯誤點擊',String(oddWrong)],
-        ['平均搜尋',(avg/1000).toFixed(2)+' 秒'],
-        ['24 格平均',denseAvg?(denseAvg/1000).toFixed(2)+' 秒':'—']
-      ]
-    })
+    finishMode('odd',null,{items:[['找到目標',oddCorrect+' 個'],['平均搜尋',oddCorrect?(oddRtTotal/oddCorrect/1000).toFixed(2)+' 秒':'—'],['一次找到',oddFirstHit+' / '+oddCorrect]]})
   }
 
-  function showDailyBreak(mode,score,stats){
-    var completed=dailySelection.length-dailyQueue.length;
+  function showDailyBreak(mode,unused,stats){
+    var completed=Object.keys(dailyRecords).length;
     show('sessionBreak');
     $('sessionProgressPill').textContent=completed+' / '+dailySelection.length;
-    $('sessionBreakTitle').textContent=modeNames[mode]+'完成';
-    $('sessionBreakScore').textContent=score;
-    $('sessionBreakStats').innerHTML=stats.items
-      ? stats.items.map(function(item){return '<div class="result-box"><span>'+item[0]+'</span><strong>'+item[1]+'</strong></div>'}).join('')
-      : '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div>'+
-        '<div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div>'+
-        '<div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
-    var dots=$('sessionDots');dots.innerHTML='';
-    dailySelection.forEach(function(_,i){var d=document.createElement('i');if(i<completed)d.className='done';dots.appendChild(d)});
-    if(dailyQueue.length){
-      $('sessionNext').textContent='下一項';
-      $('sessionNextName').textContent='接下來：'+modeNames[dailyQueue[0]];
-    }else{
-      $('sessionNext').textContent='查看完整結果';
-      $('sessionNextName').textContent='7 項完整訓練已完成';
-    }
+    $('sessionBreakTitle').textContent=modeNames[mode]+'，玩好了';
+    $('sessionBreakScore').textContent='★';
+    $('sessionDots').innerHTML=starMarkup(completed,7);$('sessionDots').setAttribute('aria-label','完成 '+completed+' / 7 關');
+    renderRecap($('sessionBreakStats'),dailyRecords[mode]);
+    $('sessionNext').textContent=dailyQueue.length?'準備好了，下一關':'看看這趟回顧';
+    $('sessionNextName').textContent=dailyQueue.length?'接下來：'+modeNames[dailyQueue[0]]+' · 先休息一下也可以':'七個小片刻，都完成了。'
   }
   $('sessionNext').addEventListener('click',function(){
     if(dailyQueue.length)startNextDaily();else showDailyResult();
   });
 
-  function showResult(mode,score,stats){
-    show('result');$('resultTitle').textContent=modeNames[mode]+'完成';$('resultScore').textContent=score;
-    $('resultGrid').innerHTML=stats.items
-      ? stats.items.map(function(item){return '<div class="result-box"><span>'+item[0]+'</span><strong>'+item[1]+'</strong></div>'}).join('')
-      : '<div class="result-box"><span>RESULT</span><strong>'+stats.a+'</strong></div><div class="result-box"><span>ACCURACY</span><strong>'+stats.b+'</strong></div><div class="result-box"><span>LEVEL</span><strong>'+stats.c+'</strong></div>';
-    var a=$('resultActions');a.innerHTML='';var retry=document.createElement('button');retry.className='primary';retry.type='button';retry.textContent='再玩一次';retry.addEventListener('click',function(){dailyMode=false;startMode(mode)});
-    var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='回首頁';home.addEventListener('click',function(){stopAll();stopGameBgm();show('home');startHomeBgm()});a.appendChild(retry);a.appendChild(home)
+  function showResult(mode,unused,stats){
+    show('result');$('resultTitle').textContent=modeNames[mode]+'，玩好了';
+    $('resultScore').textContent=lastPlay.completed?'★':'☆';
+    $('resultScore').setAttribute('aria-label',lastPlay.completed?'完成一關':'這次先玩到這裡');
+    $('resultMessage').textContent=lastPlay.completed?'完成一關，留下一顆星。沒有評等，只有你的小片刻。':'先玩到這裡也很好。下次想玩時，再來就好。';
+    renderRecap($('resultGrid'),lastPlay);
+    var a=$('resultActions');a.innerHTML='';
+    var retry=document.createElement('button');retry.className='primary';retry.type='button';retry.textContent='再玩一次';retry.addEventListener('click',function(){dailyMode=false;startMode(mode)});
+    var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='換一關玩';home.addEventListener('click',goHome);a.appendChild(retry);a.appendChild(home)
   }
   function showDailyResult(){
-    show('dailyResult');dailyMode=false;var total=0;dailySelection.forEach(function(m){total+=(dailyScores[m]||0)});$('dailyScore').textContent=Math.round(total/dailySelection.length);
-    $('dailySummary').innerHTML='';dailySelection.forEach(function(m){var s=dailyScores[m]||0,d=document.createElement('div');d.className='summary-row';d.innerHTML='<span>'+modeNames[m]+'</span><div class="bar"><b style="width:'+s+'%"></b></div><strong>'+s+'</strong>';$('dailySummary').appendChild(d)})
+    show('dailyResult');dailyMode=false;
+    var records=dailySelection.map(function(m){return dailyRecords[m]}).filter(Boolean),completed=records.filter(function(r){return r.completed}).length;
+    $('dailyScore').innerHTML=starMarkup(completed,7);
+    $('dailyScore').setAttribute('aria-label','完成 '+completed+' / 7 關');
+    $('dailyMessage').textContent=completed===7?'七顆星，記下今天的七個小片刻。':'這次點亮 '+completed+' 顆星。玩到這裡，也是一趟散步。';
+    $('dailyOverview').innerHTML='';
+    addRecapItem($('dailyOverview'),'完成關卡',completed+' / 7');
+    addRecapItem($('dailyOverview'),'遊玩時間',formatTime(records.reduce(function(sum,r){return sum+r.seconds},0)));
+    $('dailySummary').innerHTML='';
+    dailySelection.forEach(function(m){var row=document.createElement('div');row.className='journey-row';var record=dailyRecords[m];
+      var icon=document.createElement('span');icon.className='journey-star';icon.textContent=record&&record.completed?'★':'☆';icon.setAttribute('aria-hidden','true');row.appendChild(icon);
+      var name=document.createElement('strong');name.textContent=modeNames[m];row.appendChild(name);
+      var status=document.createElement('span');status.textContent=record?(record.completed?'完成 · ':'玩過 · ')+formatTime(record.seconds):'留待下次';row.appendChild(status);
+      if(record){var details=document.createElement('details');details.className='recap-details';var summary=document.createElement('summary');summary.textContent='看看這關';details.appendChild(summary);var body=document.createElement('div');body.className='result-grid';record.items.forEach(function(item){addRecapItem(body,item[0],item[1])});details.appendChild(body);row.appendChild(details)}
+      $('dailySummary').appendChild(row)
+    });
+    savePlay(records)
   }
 })();
 </script>
