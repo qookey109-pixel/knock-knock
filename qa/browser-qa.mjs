@@ -70,6 +70,7 @@ async function runViewport(browser, viewport, name) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
   await assertA11y(page, `${name} home`);
+  await page.screenshot({path:'/tmp/brain7-chill-home-'+name+'.png',fullPage:true});
 
   // Home interactive circuit preview
   assert(await page.locator('[data-preview-mode]').count() === 7, `${name}: expected seven circuit preview controls`);
@@ -91,7 +92,7 @@ async function runViewport(browser, viewport, name) {
 
 
   // Daily Training contract: the public session must run all seven games in sequence.
-  assert((await page.locator('#home .hero p').innerText()).includes('7 關腦力挑戰'), `${name}: home copy must describe the seven-game session`);
+  assert((await page.locator('#home .hero p:not(.session-info)').innerText()).includes('7 個小遊戲'), `${name}: home copy must describe the seven-game session`);
   await page.locator('#dailyBtn').click();
   await page.locator('#math.active').waitFor();
   assert((await page.locator('#math .gamehead h2').innerText()) === '快速心算', `${name}: Daily Training must start with Quick Math`);
@@ -101,7 +102,7 @@ async function runViewport(browser, viewport, name) {
   // Math: root Quick Math rules — 60 sec per level, 8 correct to advance, score + streak.
   await page.locator('[data-mode="math"]').click();
   // Full-screen radial transition should exist during animated entry.
-  assert(await page.locator('#transitionBurst .burst-rays').count() === 1, `${name}: full-screen radial transition should render on game entry`);
+  assert(await page.locator('#transitionBurst .burst-rays').count() === 0, `${name}: repeat entry should skip the full-screen burst`);
   await page.locator('#math.active').waitFor();
   assert((await page.locator('#mathTime').innerText()).trim() === '60', `${name}: Quick Math should start each level at 60 seconds`);
   assert((await page.locator('#mathLevelMark').innerText()).trim() === 'LV 1 · 0/8', `${name}: Quick Math should require 8 correct answers per level`);
@@ -122,7 +123,8 @@ async function runViewport(browser, viewport, name) {
   }
   await page.waitForFunction(() => document.getElementById('mathLevelMark')?.textContent === 'LV 2 · 0/8');
   await page.waitForFunction(() => !document.getElementById('mathProblem')?.textContent.startsWith('LEVEL'));
-  assert(Number(await page.locator('#mathScore').innerText()) > 0, `${name}: Quick Math score should increase`);
+  assert((await page.locator('#mathPlayed').innerText()).trim() === '8', `${name}: math should count played questions without a score`);
+  assert(await page.locator('#mathScore').count() === 0, `${name}: numeric score must be removed`);
   assert((await page.locator('#mathStreak').innerText()).trim() === '8', `${name}: Quick Math streak should track consecutive correct answers`);
   const source = await page.locator('html').evaluate(el => el.innerHTML);
   assert(source.includes("if(lv===5)") && source.includes("' × '+b+' + '+c1"), `${name}: LV5+ must include multi-step arithmetic`);
@@ -344,6 +346,150 @@ async function runReducedMotion(browser) {
   await context.close();
 }
 
+async function runChillJourney(browser) {
+  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
+  const page = await context.newPage();
+  const errors = [];
+  page.on('pageerror', e => errors.push(e.message));
+  await page.clock.install();
+  await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
+  await page.locator('[data-preview-mode="schulte"]').click();
+  await page.locator('[data-mode="memory"]').hover();
+  assert((await page.locator('#previewTitle').innerText()) === '舒爾特方格', 'hover must not change an explicitly chosen preview');
+  await page.locator('#previewPlay').click();
+  await page.clock.runFor(40);
+  await page.locator('#schulte.active').waitFor();
+  await page.locator('#pauseBtn').click();
+  const pausedTime = await page.locator('#schulteTime').innerText();
+  await page.clock.runFor(10000);
+  assert((await page.locator('#schulteTime').innerText()) === pausedTime, 'Schulte clock must freeze while paused');
+  await assertA11y(page, 'pause dialog');
+  await page.keyboard.press('Escape');
+  assert(await page.locator('#pauseOverlay').isHidden(), 'Escape must resume without immediately pausing again');
+  await page.clock.runFor(150);
+  assert(parseFloat(await page.locator('#schulteTime').innerText()) < 2, 'paused seconds must be excluded from elapsed time');
+  await page.locator('#finishEarlyBtn').click();
+  await page.locator('#result.active').waitFor();
+  assert((await page.locator('#resultScore').innerText()) === '☆', 'unfinished play must not be given a completion star');
+  await page.locator('.back:visible').click();
+
+  // Whole session: all seven real start -> play -> recap loops, including wrong answers.
+  await page.locator('#dailyBtn').click();
+  await page.locator('#math.active').waitFor();
+  await page.clock.runFor(1200);
+  await page.locator('#pauseBtn').click();
+  const mathTime = await page.locator('#mathTime').innerText();
+  await page.clock.runFor(120000);
+  assert((await page.locator('#mathTime').innerText()) === mathTime, 'math deadline must not expire while paused');
+  const mathValue = await page.locator('#mathAnswer').inputValue();
+  await page.keyboard.press('7');
+  assert((await page.locator('#mathAnswer').inputValue()) === mathValue, 'paused game must reject keyboard answers');
+  await page.locator('#resumeBtn').click();
+  await page.evaluate(() => {Object.defineProperty(document,'hidden',{configurable:true,get:()=>true});document.dispatchEvent(new Event('visibilitychange'))});
+  assert(await page.locator('#pauseOverlay').isVisible(), 'hidden tab must pause the game');
+  await page.clock.runFor(15000);
+  assert((await page.locator('#mathTime').innerText()) === mathTime, 'hidden tab time must not count toward deadline');
+  await page.evaluate(() => {delete document.hidden;document.dispatchEvent(new Event('visibilitychange'))});
+  assert(await page.locator('#pauseOverlay').isVisible(), 'returning to a tab must wait for manual resume');
+  await page.locator('#resumeBtn').click();
+  await page.clock.runFor(60000);
+  await page.locator('#sessionBreak.active').waitFor();
+  assert((await page.locator('#sessionBreakScore').innerText()) === '★', 'playing to the time limit earns a completion star regardless of accuracy');
+  await page.locator('#sessionNext').click();
+  await page.locator('#memory.active').waitFor();
+  await page.locator('#memoryStart').click();
+  for (let round=0; round<10; round++) {
+    const digits = await page.locator('#memoryNumber').innerText();
+    if(round===0) {
+      await page.clock.runFor(2000);
+      await page.locator('#pauseBtn').click();
+      await page.clock.runFor(12000);
+      assert((await page.locator('#memoryNumber').innerText()) === digits, 'memory exposure must freeze before answer entry');
+      await page.locator('#resumeBtn').click();
+      await page.clock.runFor(3100);
+      const timerBefore = await page.locator('#memoryAnswerTimer').innerText();
+      await page.locator('#pauseBtn').click();
+      await page.clock.runFor(15000);
+      assert((await page.locator('#memoryAnswerTimer').innerText()) === timerBefore, 'memory answer deadline must freeze');
+      await page.locator('#resumeBtn').click();
+    } else await page.clock.runFor(5100);
+    await page.locator('#memoryAnswer').fill(digits);
+    await page.locator('#memorySubmit').click();
+    await page.clock.runFor(950);
+  }
+  await page.locator('#sessionBreak.active').waitFor();
+  await page.locator('#sessionNext').click();
+  await page.locator('#logic.active').waitFor();
+  for(let round=0;round<10;round++) {
+    await page.locator('#logicChoices .choice').first().click();
+    await page.locator('#logicSubmit').click();
+    await page.clock.runFor(300);
+  }
+  await page.locator('#sessionBreak.active').waitFor();
+  await page.locator('#sessionNext').click();
+  for(let round=0;round<18;round++) {
+    const rule=await page.locator('#execRule').innerText(),n=Number(await page.locator('#execNumber').innerText());
+    const left=rule.includes('奇數 / 偶數')?n%2===1:n<5;
+    await page.locator(left?'#execLeft':'#execRight').click();
+    await page.clock.runFor(200);
+  }
+  await page.locator('#sessionBreak.active').waitFor();
+  await page.locator('#sessionNext').click();
+  const reverse=(await page.locator('#schulteModePill').innerText()).startsWith('B');
+  for(let i=0;i<50;i++) await page.locator(`#schulteGrid [data-number="${reverse?50-i:i+1}"]`).click();
+  await page.locator('#sessionBreak.active').waitFor();
+  await page.locator('#sessionNext').click();
+  for(let round=0;round<20;round++) {
+    const color=await page.locator('#stroopWord').getAttribute('data-color');
+    await page.locator(`#stroopChoices [data-color="${color}"]`).click();
+    await page.clock.runFor(200);
+  }
+  await page.locator('#sessionBreak.active').waitFor();
+  await page.locator('#sessionNext').click();
+  for(let round=0;round<16;round++) {
+    await page.locator('#oddGrid [data-odd="true"]').click();
+    await page.clock.runFor(200);
+  }
+  await page.locator('#sessionBreak.active').waitFor();
+  await page.locator('#sessionNext').click();
+  await page.locator('#dailyResult.active').waitFor();
+  assert(await page.locator('#dailyScore .lit').count() === 7, 'full session must show seven completion stars');
+  assert(await page.locator('#dailySummary .journey-row').count() === 7, 'full recap must show every game');
+  assert(!/分數|總分|評分|DAILY SCORE/.test(await page.locator('#dailyResult').innerText()), 'recap must not rank or score the player');
+  await assertA11y(page, 'seven-star recap');
+  await page.screenshot({path:'/tmp/brain7-chill-recap-mobile.png',fullPage:true});
+  await page.locator('.back:visible').click();
+  await page.locator('#recentPlays > summary').click();
+  assert((await page.locator('#historyList').innerText()).includes('7 顆完成星'), 'history must record the full journey');
+  await page.reload();
+  await page.locator('#recentPlays > summary').click();
+  assert((await page.locator('#historyList').innerText()).includes('7 顆完成星'), 'history must survive reload');
+
+  // Leaving during a delayed next-question callback must cancel it.
+  await page.locator('[data-mode="odd"]').click();
+  await page.locator('#odd.active').waitFor();
+  await page.locator('#oddGrid [data-odd="true"]').click();
+  await page.locator('.back:visible').click();
+  await page.clock.runFor(1000);
+  assert(await page.locator('#home.active').isVisible(), 'old round callback must not restore a departed game');
+  assert((await page.locator('#oddPill').textContent()).startsWith('1 / 16'), 'old round callback must not advance after leaving');
+  await page.locator('#dailyBtn').click();
+  await page.locator('#math.active').waitFor();
+  await page.locator('#finishEarlyBtn').click();
+  await page.locator('#dailyResult.active').waitFor();
+  assert(await page.locator('#dailyScore .lit').count() === 0, 'early session exit must not claim completed games');
+  assert((await page.locator('#dailyResult .gamehead h2').innerText()) === '這次先玩到這裡', 'early session recap should describe an unfinished journey');
+  await page.locator('.back:visible').click();
+  await page.locator('.audio-settings > summary').click();
+  await page.locator('#musicVolume').evaluate(el => {el.value='25';el.dispatchEvent(new Event('input',{bubbles:true}))});
+  assert((await page.locator('#musicValue').innerText()) === '25%', 'music control must update its visible value');
+  await page.reload();
+  assert(await page.locator('#musicVolume').inputValue() === '25', 'music preference must survive reload');
+  assert(errors.length===0, 'runtime errors: '+errors.join('; '));
+  await page.screenshot({path:'/tmp/brain7-chill-home-mobile.png',fullPage:true});
+  await context.close();
+}
+
 const browser = await chromium.launch({ headless: true });
 try {
   await runViewport(browser, { width: 390, height: 844 }, 'mobile');
@@ -353,7 +499,9 @@ try {
   await runAwardResponsiveShell(browser, 414, 896, '414px');
   await runAwardResponsiveShell(browser, 768, 1024, '768px');
   await runReducedMotion(browser);
+  await runChillJourney(browser);
   console.log('browser-qa: PASS — 7 games, mobile + desktop, accessibility, and reduced-motion checks passed.');
 } finally {
   await browser.close();
 }
+
