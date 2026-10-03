@@ -121,13 +121,16 @@ async function runViewport(browser, viewport, name) {
   await page.locator('#memoryStart').click();
   const shown = (await page.locator('#memoryNumber').innerText()).trim();
   assert(/^\d{4}$/.test(shown), `${name}: first memory round should show 4 digits`);
-  await page.locator('#memoryEntry').waitFor({ state: 'visible', timeout: 4000 });
+  await page.locator('#memoryEntry').waitFor({ state: 'visible', timeout: 7000 });
+  assert((await page.locator('#memoryAnswerTimer').innerText()).includes('作答'), `${name}: memory should show a visible answer countdown`);
   await page.locator('#memoryAnswer').fill(shown);
   await page.locator('#memorySubmit').click();
   await page.waitForFunction(() => document.getElementById('memoryNumber')?.textContent === '正確');
   const memorySource = await page.locator('html').evaluate(el => el.innerHTML);
-  assert(memorySource.includes('MEMORY_SHOW_MS=2000'), `${name}: memory exposure time should stay fixed at 2 seconds`);
-  assert(memorySource.includes('{digits:13,points:13}'), `${name}: memory final round should reach 13 digits`);
+  assert(memorySource.includes('MEMORY_SHOW_MS=5000'), `${name}: memory exposure time should stay fixed at 5 seconds`);
+  assert(memorySource.includes('MEMORY_ANSWER_MS=10000'), `${name}: memory answer window should be 10 seconds`);
+  assert(memorySource.includes('{digits:9,points:9}') && !memorySource.includes('{digits:10,points:10}'), `${name}: memory should cap at 9 digits`);
+  assert(memorySource.includes('{digits:4,points:4},\n    {digits:4,points:4}') && memorySource.includes('{digits:7,points:7},\n    {digits:7,points:7}'), `${name}: memory progression should repeat early difficulty steps`);
   assert(!memorySource.includes("mode:'mask'") && !memorySource.includes("mode:'reverse'"), `${name}: memory difficulty should not depend on MASK or REVERSE modes`);
   await assertA11y(page, `${name} memory`);
 
