@@ -27,7 +27,7 @@ Inputs must feel immediate. Correct/incorrect feedback must be understandable wi
 The project may use established cognitive-task patterns, but presentation, pacing, completion rituals, progression, audiovisual language, and combination into a daily ritual should form a distinct authored product.
 
 ### 3. Visual system
-Typography, spacing, cards, game HUD, completion-star presentation, states, motion, and sound should share one design language.
+Typography, spacing, cards, game HUD, five-star rating presentation, states, motion, and sound should share one design language.
 
 ### 4. Difficulty design
 Difficulty should grow through cognitive load, interference, dependency, and time pressure—not only larger numbers or more content.
@@ -47,8 +47,8 @@ A version is submission-ready only when:
 
 - all seven games have complete start → play → result loops;
 - Daily Training can complete all seven games end-to-end;
-- completion stars reward finishing a game, never speed or accuracy;
-- recaps show descriptive play statistics without numeric scores, ranks, or performance grades;
+- each game shows five star slots, rated using its original 0–100 scoring formula;
+- recaps foreground stars and descriptive statistics; numeric scores appear only in optional details;
 - timers and delayed callbacks freeze during pauses and stop on exit;
 - animation and sound are cohesive rather than decorative;
 - mobile and desktop browser QA pass;
@@ -61,7 +61,7 @@ A version is submission-ready only when:
 
 ## Chill direction — 2026-10-03
 
-The user requests a relaxing game rather than a scored test. A star records a completed game; it is not a rating. All seven completed games light seven stars regardless of accuracy. Ending early preserves a gentle recap but does not claim completion.
+The user requests a relaxing game rather than a scored test. The latest user correction requires up to five stars per game based on answer score. Preserve the original per-mode scoring formulas. Score thresholds: 0 = no lit stars; 1–39 = one; 40–59 = two; 60–74 = three; 75–89 = four; 90–100 = five. Every result has five slots. Ending early is explicitly unrated. The seven-game recap shows each game separately; it does not assign an overall grade. Legacy completion-only history remains labelled as legacy, never reinterpreted as a rating.
 
 Preserve memory exposure 5s, answer window 10s, max 9 digits; logic 20s per question with no answer explanations; Schulte A/B only with 50 fixed cells and strong drift. Pause is available across all games and on hidden tabs.
 

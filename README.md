@@ -4,7 +4,7 @@
 
 [玩 BRAIN/7](https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/) · [原版快速心算](https://qookey109-pixel.github.io/quick-math-brain-training/)
 
-- 完成一關點亮一顆星，七關旅程共有七顆星；星星不評高低。
+- 每關最高五顆星，沿用原本答題分數換算；七關回顧分別呈現各關星等。0 分不亮星，1–39／40–59／60–74／75–89／90–100 分分別為一至五星。
 - 結尾回顧遊玩時間與各關活動，答題細節可自行展開。
 - 隨時暫停，離開分頁自動暫停；回來後手動繼續。
 - 最近遊玩紀錄、音樂與音效偏好只儲存在目前瀏覽器。
@@ -16,6 +16,6 @@
 
 ## 開發與驗收
 
-純 HTML / CSS / JavaScript。GitHub Actions 執行邏輯、手機／桌面瀏覽器、無障礙與 Lighthouse QA，包含完整七關、暫停計時、完成星星及紀錄持久化驗收。
+純 HTML / CSS / JavaScript。GitHub Actions 執行邏輯、手機／桌面瀏覽器、無障礙與 Lighthouse QA，包含完整七關、暫停計時、五星評等及紀錄持久化驗收。
 
 娛樂與練習用途，不作 IQ、醫療或認知功能診斷。

@@ -13,14 +13,14 @@
   <meta property="og:type" content="website">
   <meta property="og:locale" content="zh_TW">
   <meta property="og:title" content="BRAIN/7｜大人的腦部鍛鍊">
-  <meta property="og:description" content="慢慢玩，陪腦袋散個步。七個小遊戲、完成星星與溫柔的遊玩回顧。">
+  <meta property="og:description" content="慢慢玩，陪腦袋散個步。七個小遊戲、每關五星與溫柔的遊玩回顧。">
   <meta property="og:url" content="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/">
   <meta property="og:image" content="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/brain7-share.png">
   <meta property="og:image:alt" content="BRAIN/7 — Take your time, seven little games">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/brain7-share.png">
   <meta name="twitter:title" content="BRAIN/7｜大人的腦部鍛鍊">
-  <meta name="twitter:description" content="慢慢玩，陪腦袋散個步。七個小遊戲、完成星星與溫柔的遊玩回顧。">
+  <meta name="twitter:description" content="慢慢玩，陪腦袋散個步。七個小遊戲、每關五星與溫柔的遊玩回顧。">
   <title>大人的腦部鍛鍊</title>
   <style>
     :root{
@@ -316,6 +316,8 @@
     @media(max-width:560px){.play-toolbar{align-items:flex-start;flex-direction:column;gap:8px}.play-toolbar>div{width:100%;justify-content:space-between}.brand p{max-width:75px;line-height:1.5}.brand{gap:8px}.sound-controls{gap:4px}.journey-row{grid-template-columns:24px 1fr}.journey-row>span:last-of-type{grid-column:2}.home-preview{min-height:290px}#schulte .panel{padding:10px}.schulte-mode-grid{margin-bottom:8px}.schulte-stats{margin-bottom:8px}.schulte-stats .stat{padding:8px 10px}.schulte-instruction{font-size:11px}.schulte-targetbar{position:sticky;top:6px;z-index:3;box-shadow:0 3px 10px #17171714}.schulte-cell{min-height:44px}.schulte-float{min-height:42px}}
     .daily-summary{gap:0}.journey-row{display:block;padding:0;border-bottom:1px solid var(--line)}.journey-heading{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:76px;padding:12px 0;list-style:none;cursor:pointer}.journey-heading::-webkit-details-marker{display:none}.journey-heading strong{font-size:15px}.journey-time{font-size:12px;color:var(--muted)}details.journey-row .journey-time::after{content:' ＋'}details.journey-row[open] .journey-time::after{content:' −'}.journey-row .result-grid{padding:0 0 16px 36px}
     @media(max-width:560px){.journey-heading{grid-template-columns:24px minmax(0,1fr);gap:4px 10px;min-height:78px}.journey-star{grid-row:1/3}.journey-time{grid-column:2}.journey-row .result-grid{padding-left:34px}}
+    .completion-star{font-size:clamp(32px,9vw,56px);letter-spacing:.05em;white-space:nowrap}.completion-star .unlit{color:#746d60}.completion-stars{font-size:20px;font-weight:850}.journey-rating{grid-column:2/-1;display:flex;gap:5px;font-size:22px;color:#805c00}.journey-star{font-size:12px;font-weight:800}.journey-heading{grid-template-columns:26px minmax(0,1fr) auto;gap:4px 10px}.journey-heading .journey-star{grid-row:1/3}.rating-guide{margin-top:24px;font-size:12px;line-height:1.8;color:var(--muted)}.rating-guide summary{min-height:44px;cursor:pointer;font-weight:800}
+    @media(max-width:560px){.journey-heading{grid-template-columns:24px minmax(0,1fr)}.journey-heading .journey-star{grid-row:1/4}.journey-time{grid-column:2}.journey-rating{grid-column:2}}
     .hidden{display:none!important}
 
   </style>
@@ -332,7 +334,7 @@
     <div class="hero">
       <div class="eyebrow">TAKE YOUR TIME / SEVEN LITTLE GAMES</div>
       <h2>慢慢玩，<br><span>腦袋散個步。</span></h2>
-      <p>7 個小遊戲，陪腦袋散個步。想玩一關，或慢慢走完七關都可以。每完成一關點亮一顆星，不評高低。</p>
+      <p>7 個小遊戲，陪腦袋散個步。想玩一關，或慢慢走完七關都可以。每關最多五顆星，依答題表現點亮。照自己的節奏玩就好。</p>
       <div class="circuit-strip" aria-label="七關回路"><button type="button" data-preview-mode="math" aria-label="預覽快速心算"></button><button type="button" data-preview-mode="memory" aria-label="預覽瞬間記憶"></button><button type="button" data-preview-mode="logic" aria-label="預覽邏輯推理"></button><button type="button" data-preview-mode="executive" aria-label="預覽規則切換"></button><button type="button" data-preview-mode="schulte" aria-label="預覽舒爾特方格"></button><button type="button" data-preview-mode="stroop" aria-label="預覽 Stroop"></button><button type="button" data-preview-mode="odd" aria-label="預覽表裡不一"></button></div>
       <div class="actions"><button id="dailyBtn" class="primary" type="button">慢慢玩完 7 關</button></div><p class="session-info">完整遊玩長度依節奏而定 · 每關之間可以休息 · 隨時暫停</p>
     </div>
@@ -356,7 +358,7 @@
         </div>
       </aside>
     </div>
-    <details id="recentPlays" class="recent-plays"><summary>最近的遊玩足跡</summary><div id="historyList"><p>第一顆星，從你想玩的那一關開始。</p></div></details><div class="note">♪ 首頁輕音樂 · 關卡 Rag Time · 可隨時關閉聲音。<br>娛樂與練習用途，不作 IQ、醫療或認知功能診斷。</div>
+    <details class="rating-guide"><summary>星星怎麼算？</summary><p>各關先換算為 0–100 的遊戲分數，再點亮五顆星。0 分尚未點亮；1–39 分一星、40–59 分二星、60–74 分三星、75–89 分四星、90–100 分五星。</p><p>心算看難度進度、正確率與連對；記憶依成功記住的位數加權；推理看答對比例；規則切換、顏色衝突與表裡不一兼看正確率和速度；舒爾特看錯誤次數與搜尋時間。暫停時間不列入。中途結束不評星。</p></details><details id="recentPlays" class="recent-plays"><summary>最近的遊玩足跡</summary><div id="historyList"><p>這次的星光，從你想玩的那一關開始。</p></div></details><div class="note">♪ 首頁輕音樂 · 關卡 Rag Time · 可隨時關閉聲音。<br>娛樂與練習用途，不作 IQ、醫療或認知功能診斷。</div>
   </section>
 
   <section id="math" class="screen">
@@ -442,7 +444,7 @@
       <div class="eyebrow">SESSION PROGRESS</div>
       <h2 id="sessionBreakTitle" class="session-break-title">快速心算完成</h2>
       <div id="sessionBreakScore" class="completion-star" role="img" aria-label="完成一關">★</div>
-      <div class="result-unit">一關，一顆星。照自己的節奏就好。</div>
+      <div class="result-unit">每關五顆星，記下這次的答題表現。</div>
       <div id="sessionDots" class="session-dots" role="img" aria-label="完整訓練進度"></div>
       <div id="sessionBreakStats" class="result-grid"></div>
       <div id="sessionNextName" class="session-next-name"></div>
@@ -452,12 +454,12 @@
 
   <section id="result" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2 id="resultTitle">訓練完成</h2></div></div>
-    <div class="panel result"><div class="eyebrow">A LITTLE MOMENT FOR YOU</div><div id="resultScore" class="completion-star" role="img" aria-label="完成一關">★</div><div id="resultMessage" class="result-unit">一關，一顆星。謝謝你陪腦袋玩一下。</div><div id="resultGrid" class="result-grid"></div><div id="resultActions" class="actions"></div></div>
+    <div class="panel result"><div class="eyebrow">A LITTLE MOMENT FOR YOU</div><div id="resultScore" class="completion-star" role="img" aria-label="完成一關">★</div><div id="resultMessage" class="result-unit">每關最多五顆星。謝謝你陪腦袋玩一下。</div><div id="resultGrid" class="result-grid"></div><div id="resultActions" class="actions"></div></div>
   </section>
 
   <section id="dailyResult" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>這趟散步，完成了</h2></div></div>
-    <div class="panel result"><div class="eyebrow">SEVEN LITTLE MOMENTS</div><div id="dailyScore" class="completion-stars" role="img"></div><div id="dailyMessage" class="result-unit">七顆星，記下今天的七個小片刻。</div><div id="dailyOverview" class="result-grid"></div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再散步一次</button></div></div>
+    <div class="panel result"><div class="eyebrow">SEVEN LITTLE MOMENTS</div><div id="dailyScore" class="completion-stars" role="img"></div><div id="dailyMessage" class="result-unit">每關各有五顆星，看看這次的遊玩回顧。</div><div id="dailyOverview" class="result-grid"></div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再散步一次</button></div></div>
   </section>
 </main>
 <div id="pauseOverlay" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="pause-card"><div class="eyebrow">TAKE A BREATH</div><h2 id="pauseTitle">休息一下。</h2><p>遊戲和計時都停在這裡。準備好了，再繼續。</p><button id="resumeBtn" class="primary" type="button">繼續玩</button></div></div>
@@ -470,7 +472,7 @@
   var currentMode=null,modeStartedAt=0,lastPlay=null;
   var muted=false,audioCtx=null;
   var mathTimer=null,mathTime=60,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1,mathLevelCorrect=0,mathStreak=0,mathMaxStreak=0,mathSeen=new Set(),mathOps=[],mathStepCount=1,mathQuestionStartedAt=0,mathTotalResponseMs=0,mathResponseCount=0,mathGameStartedAt=0,mathTransitioning=false,mathTransitionTimer=null;
-  var memoryRound=0,memoryCorrect=0,memoryValue='',memoryTimeout=null,memoryAnswerTimeout=null,memoryAnswerTicker=null,memoryAwaitingAnswer=false,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryBestDigits=0;
+  var memoryRound=0,memoryEarned=0,memoryCorrect=0,memoryValue='',memoryTimeout=null,memoryAnswerTimeout=null,memoryAnswerTicker=null,memoryAwaitingAnswer=false,memoryAnswerStartedAt=0,memoryRtTotal=0,memoryBestDigits=0;
   var logicIndex=0,logicCorrect=0,logicSelected=null,logicAnswered=false,logicTimer=null,logicTimeout=null,logicStartedAt=0;
   var execRound=0,execCorrect=0,execSwitchCorrect=0,execSwitchTotal=0,execRuleType='parity',execPrevRule=null,execValue=0,execStartedAt=0,execRtTotal=0,execAnswered=false,execSchedule=[],execSwitchRtTotal=0,execSwitchRtCount=0,execRepeatRtTotal=0,execRepeatRtCount=0,execConflictCorrect=0,execConflictTotal=0;
   var schulteNext=1,schulteWrong=0,schulteStart=0,schulteTimer=null,schulteSequence=[],schulteIndex=0,schulteMode='A',schulteModeDetail='',schulteFinished=false;
@@ -615,24 +617,34 @@
     if(!muted)startGameBgm()
   }
   function formatTime(sec){var n=Math.max(0,Math.round(sec));return Math.floor(n/60)+' 分 '+n%60+' 秒'}
+  // A zero score lights no stars; all ratings use the same explicit boundaries.
+  function scoreToStars(score){
+    if(!Number.isFinite(score)||score<=0)return 0;
+    if(score>=90)return 5;
+    if(score>=75)return 4;
+    if(score>=60)return 3;
+    if(score>=40)return 2;
+    return 1
+  }
+  function renderRating(el,record){el.innerHTML=starMarkup(record&&record.completed?record.stars:0,5);el.setAttribute('aria-label',record&&record.completed?'本關 '+record.stars+' / 5 星':'本關尚未評星')}
   function starMarkup(count,total){var html='';for(var i=0;i<total;i++)html+='<span class="'+(i<count?'lit':'unlit')+'" aria-hidden="true">'+(i<count?'★':'☆')+'</span>';return html}
   function addRecapItem(container,label,value){var box=document.createElement('div');box.className='result-box';var l=document.createElement('span'),v=document.createElement('strong');l.textContent=label;v.textContent=value;box.appendChild(l);box.appendChild(v);container.appendChild(box)}
   function renderRecap(container,record){
     container.innerHTML='';addRecapItem(container,'遊玩時間',formatTime(record.seconds));
-    var primary=record.items.filter(function(item){return !/答對|平均|一次/.test(item[0])});
+    var primary=record.items.filter(function(item){return !/答對|平均|一次|得分/.test(item[0])});
     primary.slice(0,2).forEach(function(item){addRecapItem(container,item[0],item[1])});
     var extra=record.items.filter(function(item){return primary.slice(0,2).indexOf(item)<0});
     if(extra.length){var details=document.createElement('details');details.className='recap-details';var summary=document.createElement('summary');summary.textContent='看看這次的小細節';details.appendChild(summary);var body=document.createElement('div');body.className='result-grid';extra.forEach(function(item){addRecapItem(body,item[0],item[1])});details.appendChild(body);container.appendChild(details)}
   }
-  function readHistory(){try{var data=JSON.parse(localStorage.getItem('brain7-play-history')||'[]');return Array.isArray(data)?data.filter(function(x){return x&&typeof x.date==='string'&&typeof x.label==='string'&&Number.isFinite(x.seconds)&&Number.isInteger(x.stars)&&x.stars>=0&&x.stars<=7}).slice(0,20):[]}catch(e){return []}}
+  function readHistory(){try{var data=JSON.parse(localStorage.getItem('brain7-play-history')||'[]');return Array.isArray(data)?data.filter(function(x){return x&&typeof x.date==='string'&&typeof x.label==='string'&&Number.isFinite(x.seconds)&&Number.isInteger(x.stars)&&x.stars>=0&&x.stars<=(x.ratingVersion===1?35:7)}).slice(0,20):[]}catch(e){return []}}
   function savePlay(records){
     if(!records.length)return;
-    var history=readHistory();history.unshift({date:new Date().toISOString(),label:records.length===1?modeNames[records[0].mode]:'七關散步',stars:records.filter(function(r){return r.completed}).length,seconds:records.reduce(function(sum,r){return sum+r.seconds},0)});
+    var history=readHistory();history.unshift({date:new Date().toISOString(),label:records.length===1?modeNames[records[0].mode]:'七關散步',ratingVersion:1,completed:records.filter(function(r){return r.completed}).length,ratedGames:records.filter(function(r){return r.completed}).length,stars:records.reduce(function(sum,r){return sum+(r.completed?r.stars:0)},0),seconds:records.reduce(function(sum,r){return sum+r.seconds},0)});
     try{localStorage.setItem('brain7-play-history',JSON.stringify(history.slice(0,20)))}catch(e){}
     renderHistory()
   }
-  function renderHistory(){var list=$('historyList'),history=readHistory();list.innerHTML='';if(!history.length){var p=document.createElement('p');p.textContent='第一顆星，從你想玩的那一關開始。紀錄只留在這個瀏覽器。';list.appendChild(p);return}
-    history.slice(0,5).forEach(function(item){var row=document.createElement('p');row.className='history-row';var d=new Date(item.date);row.textContent=(Number.isNaN(d.getTime())?'':d.toLocaleDateString('zh-TW',{month:'numeric',day:'numeric'}))+' · '+item.label+' · '+item.stars+' 顆完成星 · '+formatTime(item.seconds);list.appendChild(row)})
+  function renderHistory(){var list=$('historyList'),history=readHistory();list.innerHTML='';if(!history.length){var p=document.createElement('p');p.textContent='這次的星光，從你想玩的那一關開始。紀錄只留在這個瀏覽器。';list.appendChild(p);return}
+    history.slice(0,5).forEach(function(item){var row=document.createElement('p');row.className='history-row';var d=new Date(item.date);row.textContent=(Number.isNaN(d.getTime())?'':d.toLocaleDateString('zh-TW',{month:'numeric',day:'numeric'}))+' · '+item.label+' · '+(item.ratingVersion===1?(item.ratedGames?'星等合計 '+item.stars+' / '+(item.ratedGames*5)+' · 完成 '+item.completed+' 關':'尚未評星'):'完成 '+item.stars+' 關（舊版紀錄）')+' · '+formatTime(item.seconds);list.appendChild(row)})
   }
   function goHome(){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm();renderHistory()}
   function finishEarly(){
@@ -885,8 +897,9 @@
     if(mode==='schulte')startSchulte();if(mode==='stroop')startStroop();if(mode==='odd')startOdd();
     startGameBgm();if(document.hidden)pausePlay()
   }
-  function finishMode(mode,unused,stats){
-    var record={mode:mode,completed:true,seconds:Math.max(0,(playNow()-modeStartedAt)/1000),items:stats.items||[]};
+  function finishMode(mode,score,stats){
+    score=Math.max(0,Math.min(100,Math.round(score)));
+    var record={mode:mode,completed:true,score:score,stars:scoreToStars(score),seconds:Math.max(0,(playNow()-modeStartedAt)/1000),items:(stats.items||[]).concat([['本關得分',score+' / 100']])};
     stopAll();dailyRecords[mode]=record;lastPlay=record;
     if(dailyMode){showDailyBreak(mode,null,stats);return}
     savePlay([record]);showResult(mode,null,stats)
@@ -1068,7 +1081,10 @@
   });
   function endMath(completed){
     if(!mathGameStartedAt)return;
-    finishMode('math',null,{items:[['玩了幾題',String(mathCorrect+mathWrong)],['走到哪裡','LV '+mathLevel],['答對題數',String(mathCorrect)],['平均作答',mathResponseCount?(mathTotalResponseMs/mathResponseCount/1000).toFixed(1)+' 秒':'—']]});
+    var acc=(mathCorrect+mathWrong)?Math.round(mathCorrect/(mathCorrect+mathWrong)*100):0;
+    var progress=((mathLevel-1)*MATH_TARGET_PER_LEVEL+mathLevelCorrect)/(MATH_MAX_LEVEL*MATH_TARGET_PER_LEVEL);
+    var score=Math.round(progress*55+acc*.30+Math.min(15,mathMaxStreak));if(completed)score=Math.max(score,95);
+    finishMode('math',score,{items:[['玩了幾題',String(mathCorrect+mathWrong)],['走到哪裡','LV '+mathLevel],['答對題數',String(mathCorrect)],['平均作答',mathResponseCount?(mathTotalResponseMs/mathResponseCount/1000).toFixed(1)+' 秒':'—']]});
     mathGameStartedAt=0
   }
 
@@ -1102,7 +1118,7 @@
   }
   function startMemory(){
     show('memory');clearPlayTimer(memoryTimeout);memoryTimeout=null;clearMemoryAnswerTimers();memoryAwaitingAnswer=false;
-    memoryRound=0;memoryCorrect=0;memoryValue='';memoryRtTotal=0;memoryBestDigits=0;
+    memoryRound=0;memoryEarned=0;memoryCorrect=0;memoryValue='';memoryRtTotal=0;memoryBestDigits=0;
     $('memoryCorrect').textContent='0';$('memoryStart').classList.remove('hidden');$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
     $('memoryNumber').textContent='••••';$('memoryLabel').textContent='準備好後開始';
     $('memoryRound').textContent='1';$('memoryDigits').textContent='4';$('memoryRoundPill').textContent='1 / 10'
@@ -1142,7 +1158,7 @@
     var rt=timedOut?MEMORY_ANSWER_MS:Math.max(0,playNow()-memoryAnswerStartedAt);
     memoryRtTotal+=rt;
     if(ok){
-      memoryCorrect++;memoryBestDigits=Math.max(memoryBestDigits,cfg.digits);correctTone()
+      memoryCorrect++;memoryEarned+=cfg.points;memoryBestDigits=Math.max(memoryBestDigits,cfg.digits);correctTone()
     }else wrongTone();
     $('memoryCorrect').textContent=memoryCorrect;$('memoryEntry').classList.add('hidden');$('memoryAnswerTimer').classList.add('hidden');
     $('memoryNumber').textContent=ok?'正確':'答案 '+memoryValue;
@@ -1157,7 +1173,8 @@
   $('memorySubmit').addEventListener('click',submitMemory);
   $('memoryAnswer').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();submitMemory()}});
   function endMemory(){
-    finishMode('memory',null,{items:[['遊玩回合',memoryRound+' 回合'],['成功記住',memoryBestDigits?memoryBestDigits+' 位數':'這次先熟悉玩法'],['答對回合',memoryCorrect+' / '+memoryRound],['平均作答',memoryRound?(memoryRtTotal/memoryRound/1000).toFixed(1)+' 秒':'—']]})
+    var total=MEMORY_ROUNDS.reduce(function(sum,r){return sum+r.points},0);
+    finishMode('memory',Math.round(memoryEarned/total*100),{items:[['遊玩回合',memoryRound+' 回合'],['成功記住',memoryBestDigits?memoryBestDigits+' 位數':'這次先熟悉玩法'],['答對回合',memoryCorrect+' / '+memoryRound],['平均作答',memoryRound?(memoryRtTotal/memoryRound/1000).toFixed(1)+' 秒':'—']]})
   }
 
   var LOGIC_ANSWER_MS=20000;
@@ -1205,7 +1222,7 @@
     finishLogicQuestion(false)
   });
   function endLogic(){
-    finishMode('logic',null,{items:[['遊玩題數',logicSession.length+' 題'],['答對題數',logicCorrect+' / '+logicSession.length]]})
+    finishMode('logic',Math.round(logicCorrect/logicSession.length*100),{items:[['遊玩題數',logicSession.length+' 題'],['答對題數',logicCorrect+' / '+logicSession.length]]})
   }
 
   var EXEC_TOTAL_ROUNDS=18;
@@ -1283,7 +1300,9 @@
     if(e.key==='ArrowRight'){e.preventDefault();answerExecutive('right')}
   });
   function endExecutive(){
-    finishMode('executive',null,{items:[['遊玩題數',execRound+' 題'],['答對題數',execCorrect+' / '+execRound],['平均作答',execRound?(execRtTotal/execRound/1000).toFixed(2)+' 秒':'—']]})
+    var acc=Math.round(execCorrect/EXEC_TOTAL_ROUNDS*100),switchAcc=execSwitchTotal?Math.round(execSwitchCorrect/execSwitchTotal*100):0;
+    var avg=execRound?Math.round(execRtTotal/execRound):0,speed=Math.max(0,Math.min(100,Math.round((2400-avg)/16)));
+    finishMode('executive',Math.round(acc*.55+switchAcc*.25+speed*.20),{items:[['遊玩題數',execRound+' 題'],['答對題數',execCorrect+' / '+execRound],['平均作答',execRound?(execRtTotal/execRound/1000).toFixed(2)+' 秒':'—']]})
   }
 
   function buildSchulteSequence(mode){
@@ -1335,7 +1354,8 @@
     if(schulteIndex>=schulteSequence.length){
       schulteFinished=true;clearPlayTimer(schulteTimer);schulteTimer=null;
       var sec=(playNow()-schulteStart)/1000;
-      finishMode('schulte',null,{items:[['搜尋方向',schulteModeDetail],['找到目標','50 / 50'],['平均搜尋',(sec/50).toFixed(2)+' 秒']]})
+      var accuracy=50/(50+schulteWrong)*100,pace=Math.max(0,Math.min(100,Math.round(130-sec*.7)));
+      finishMode('schulte',Math.round(accuracy*.72+pace*.28),{items:[['搜尋方向',schulteModeDetail],['找到目標','50 / 50'],['平均搜尋',(sec/50).toFixed(2)+' 秒']]})
     }
   }
 
@@ -1387,7 +1407,9 @@
     playTimeout(nextStroop,180)
   }
   function endStroop(){
-    finishMode('stroop',null,{items:[['遊玩題數',stroopRound+' 題'],['答對題數',stroopCorrect+' / '+stroopRound],['平均作答',stroopRound?(stroopRtTotal/stroopRound/1000).toFixed(2)+' 秒':'—']]})
+    var acc=Math.round(stroopCorrect/STROOP_TOTAL*100),conflict=stroopConflictTotal?Math.round(stroopConflictCorrect/stroopConflictTotal*100):0;
+    var avg=stroopRtTotal/STROOP_TOTAL,speed=Math.max(0,Math.min(100,Math.round((2200-avg)/16)));
+    finishMode('stroop',Math.round(acc*.55+conflict*.30+speed*.15),{items:[['遊玩題數',stroopRound+' 題'],['答對題數',stroopCorrect+' / '+stroopRound],['平均作答',stroopRound?(stroopRtTotal/stroopRound/1000).toFixed(2)+' 秒':'—']]})
   }
 
   var ODD_TOTAL=16;
@@ -1434,7 +1456,9 @@
     correctTone();playTimeout(nextOdd,180)
   }
   function endOdd(){
-    finishMode('odd',null,{items:[['找到目標',oddCorrect+' 個'],['平均搜尋',oddCorrect?(oddRtTotal/oddCorrect/1000).toFixed(2)+' 秒':'—'],['一次找到',oddFirstHit+' / '+oddCorrect]]})
+    var avg=oddCorrect?oddRtTotal/oddCorrect:0,firstHit=Math.round(oddFirstHit/ODD_TOTAL*100),accuracy=Math.round(ODD_TOTAL/(ODD_TOTAL+oddWrong)*100);
+    var speed=Math.max(0,Math.min(100,Math.round((4500-avg)/35)));
+    finishMode('odd',Math.round(accuracy*.45+firstHit*.35+speed*.20),{items:[['找到目標',oddCorrect+' 個'],['平均搜尋',oddCorrect?(oddRtTotal/oddCorrect/1000).toFixed(2)+' 秒':'—'],['一次找到',oddFirstHit+' / '+oddCorrect]]})
   }
 
   function showDailyBreak(mode,unused,stats){
@@ -1442,8 +1466,8 @@
     show('sessionBreak');
     $('sessionProgressPill').textContent=completed+' / '+dailySelection.length;
     $('sessionBreakTitle').textContent=modeNames[mode]+'，玩好了';
-    $('sessionBreakScore').textContent='★';
-    $('sessionDots').innerHTML=starMarkup(completed,7);$('sessionDots').setAttribute('aria-label','完成 '+completed+' / 7 關');
+    renderRating($('sessionBreakScore'),dailyRecords[mode]);
+    $('sessionDots').textContent='已完成 '+completed+' / 7 關';$('sessionDots').setAttribute('aria-label','完成 '+completed+' / 7 關');
     renderRecap($('sessionBreakStats'),dailyRecords[mode]);
     $('sessionNext').textContent=dailyQueue.length?'準備好了，下一關':'看看這趟回顧';
     $('sessionNextName').textContent=dailyQueue.length?'接下來：'+modeNames[dailyQueue[0]]+' · 先休息一下也可以':'七個小片刻，都完成了。'
@@ -1454,9 +1478,8 @@
 
   function showResult(mode,unused,stats){
     show('result');$('resultTitle').textContent=modeNames[mode]+'，玩好了';
-    $('resultScore').textContent=lastPlay.completed?'★':'☆';
-    $('resultScore').setAttribute('aria-label',lastPlay.completed?'完成一關':'這次先玩到這裡');
-    $('resultMessage').textContent=lastPlay.completed?'完成一關，留下一顆星。沒有評等，只有你的小片刻。':'先玩到這裡也很好。下次想玩時，再來就好。';
+    renderRating($('resultScore'),lastPlay);
+    $('resultMessage').textContent=lastPlay.completed?'這關點亮 '+lastPlay.stars+' / 5 顆星。下次想玩時，再來就好。':'先玩到這裡也很好。下次想玩時，再來就好。';
     renderRecap($('resultGrid'),lastPlay);
     var a=$('resultActions');a.innerHTML='';
     var retry=document.createElement('button');retry.className='primary';retry.type='button';retry.textContent='再玩一次';retry.addEventListener('click',function(){dailyMode=false;startMode(mode)});
@@ -1465,9 +1488,9 @@
   function showDailyResult(){
     show('dailyResult');dailyMode=false;
     var records=dailySelection.map(function(m){return dailyRecords[m]}).filter(Boolean),completed=records.filter(function(r){return r.completed}).length;
-    $('dailyScore').innerHTML=starMarkup(completed,7);
-    $('dailyScore').setAttribute('aria-label','完成 '+completed+' / 7 關');
-    $('dailyMessage').textContent=completed===7?'七顆星，記下今天的七個小片刻。':'這次點亮 '+completed+' 顆星。玩到這裡，也是一趟散步。';
+    $('dailyScore').textContent='每關五星 · 七關回顧';
+    $('dailyScore').setAttribute('aria-label','完成 '+completed+' / 7 關，每關最多五星');
+    $('dailyMessage').textContent=completed===7?'每關各有五顆星，看看這次的遊玩回顧。':'這次完成 '+completed+' 關。玩到這裡，也是一趟散步。';
     $('dailyOverview').innerHTML='';
     addRecapItem($('dailyOverview'),'完成關卡',completed+' / 7');
     addRecapItem($('dailyOverview'),'遊玩時間',formatTime(records.reduce(function(sum,r){return sum+r.seconds},0)));
@@ -1475,9 +1498,9 @@
     $('dailyResult').querySelector('.gamehead h2').textContent=completed===7?'這趟散步，完成了':'這次先玩到這裡';
     dailySelection.forEach(function(m){var record=dailyRecords[m],row=document.createElement(record?'details':'div');row.className='journey-row';
       var heading=document.createElement(record?'summary':'div');heading.className='journey-heading';
-      var icon=document.createElement('span');icon.className='journey-star';icon.textContent=record&&record.completed?'★':'☆';icon.setAttribute('aria-hidden','true');heading.appendChild(icon);
+      var icon=document.createElement('span');icon.className='journey-star';icon.textContent=String(allModes.indexOf(m)+1).padStart(2,'0');icon.setAttribute('aria-hidden','true');heading.appendChild(icon);
       var name=document.createElement('strong');name.textContent=modeNames[m];heading.appendChild(name);
-      var status=document.createElement('span');status.className='journey-time';status.textContent=record?(record.completed?'完成 · ':'玩過 · ')+formatTime(record.seconds):'留待下次';heading.appendChild(status);row.appendChild(heading);
+      var status=document.createElement('span');status.className='journey-time';status.textContent=record?(record.completed?'完成 · ':'玩過 · ')+formatTime(record.seconds):'留待下次';heading.appendChild(status);var rating=document.createElement('span');rating.className='journey-rating';rating.setAttribute('role','img');renderRating(rating,record);heading.appendChild(rating);row.appendChild(heading);
       if(record){var body=document.createElement('div');body.className='result-grid';record.items.forEach(function(item){addRecapItem(body,item[0],item[1])});row.appendChild(body)}
       $('dailySummary').appendChild(row)
     });
