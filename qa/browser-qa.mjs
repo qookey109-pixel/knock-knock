@@ -92,39 +92,20 @@ async function runViewport(browser, viewport, name) {
   assert(publicIdentity.iconOk && publicIdentity.iconSrc === './brain7-mark.svg', `${name}: identity icon should load and be linked from the manifest`);
   assert(await page.locator('.mode').count() === 7, `${name}: expected seven modes`);
   assert(await page.locator('.rating-guide').count() === 0, `${name}: star conversion explanation should be removed`);
-  const starCopy = await page.locator('#home .hero p').first().innerText();
-  assert(starCopy.includes('每關最多五顆星。') && !starCopy.includes('依答題表現點亮'), `${name}: home should show only the star rating, without an explanation`);
+  assert((await page.locator('#home .hero h2').innerText()).trim() === 'Knock Knock', `${name}: homepage hero should only expose the Knock Knock title`);
+  assert(await page.locator('#home .hero > p:not(.session-info)').count() === 0, `${name}: homepage intro copy should stay removed`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
   await assertA11y(page, `${name} home`);
   await page.screenshot({path:'/tmp/brain7-chill-home-'+name+'.png',fullPage:true});
 
-  // Home interactive circuit preview
+  // Simplified Knock Knock homepage: no side preview or decorative circuit UI.
   assert(await page.locator('.circuit-strip').count() === 0, `${name}: unlabeled color strip should be removed`);
-  assert(await page.locator('#previewSelect option').count() === 7, `${name}: expected seven named preview choices`);
+  assert(await page.locator('#homePreview').isHidden(), `${name}: legacy side preview must remain hidden`);
   assert(await page.locator('.mode-start').count() === 7, `${name}: each game card must state its action`);
-  await page.locator('#previewSelect').selectOption('schulte');
-  assert((await page.locator('#previewIndex').innerText()).trim() === '05', `${name}: preview index should switch to 05`);
-  assert((await page.locator('#previewLabel').innerText()).trim() === 'SEARCH', `${name}: preview label should switch to SEARCH`);
-  assert((await page.locator('#previewTitle').innerText()).trim() === '舒爾特方格', `${name}: preview title should switch to Schulte`);
-  await page.locator('#previewPlay').click();
-  await acceptReady(page);
-  await page.locator('#schulte.active').waitFor();
-  assert(await page.locator('#transitionBurst .burst-rays').count() === 0, 'first entry must use the gentle transition');
-  assert(await page.evaluate(() => document.activeElement === document.querySelector('#schulte h2')), 'screen entry must focus its heading');
-  await exitToHome(page);
-  await page.locator('#home.active').waitFor();
-  await page.locator('#previewSelect').selectOption('math');
-  const homePreview = page.locator('#homePreview');
-  await homePreview.focus();
-  await homePreview.press('ArrowRight');
-  await page.waitForFunction(() => document.getElementById('previewIndex')?.textContent.trim() === '02');
-  assert((await page.locator('#previewIndex').innerText()).trim() === '02', `${name}: keyboard preview should advance to 02`);
-  await page.locator('#previewSelect').selectOption('math');
-
 
   // Daily Training contract: the public session must run all seven games in sequence.
-  assert((await page.locator('#home .hero p:not(.session-info)').innerText()).includes('7 個小遊戲'), `${name}: home copy must describe the seven-game session`);
+  assert((await page.locator('#dailyBtn').innerText()).includes('7 關'), `${name}: daily button must describe the seven-game session`);
   await page.locator('#dailyBtn').click();
   await acceptReady(page);
   await page.locator('#math.active').waitFor();
@@ -333,19 +314,18 @@ async function runNarrowHome(browser) {
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
   const metrics = await page.evaluate(() => {
-    const preview = document.getElementById('homePreview').getBoundingClientRect();
-    const modes = document.querySelector('.modes').getBoundingClientRect();
-    const play = document.getElementById('previewPlay').getBoundingClientRect();
+    const mode = document.querySelector('.mode').getBoundingClientRect();
+    const daily = document.getElementById('dailyBtn').getBoundingClientRect();
     return {
       overflow: document.documentElement.scrollWidth - window.innerWidth,
-      previewTop: preview.top,
-      modesTop: modes.top,
-      playHeight: play.height
+      modeHeight: mode.height,
+      dailyHeight: daily.height,
+      previewHidden: document.getElementById('homePreview').hidden || getComputedStyle(document.getElementById('homePreview')).display === 'none'
     };
   });
   assert(metrics.overflow <= 1, `narrow-mobile: horizontal overflow detected (${metrics.overflow}px)`);
-  assert(metrics.previewTop < metrics.modesTop, 'narrow-mobile: preview should appear before the mode list');
-  assert(metrics.playHeight >= 44, `narrow-mobile: preview action is too small (${metrics.playHeight}px)`);
+  assert(metrics.previewHidden, 'narrow-mobile: legacy preview must stay hidden');
+  assert(metrics.modeHeight >= 44 && metrics.dailyHeight >= 44, 'narrow-mobile: primary game actions must remain touch-safe');
   await assertA11y(page, 'narrow-mobile home');
   await context.close();
 }
@@ -357,20 +337,19 @@ async function runAwardResponsiveShell(browser, width, height, label) {
   const shell = await page.evaluate(() => {
     const daily = document.getElementById('dailyBtn').getBoundingClientRect();
     const sound = document.getElementById('soundBtn').getBoundingClientRect();
-    const picker = document.getElementById('previewSelect').getBoundingClientRect();
     return {
       overflow: document.documentElement.scrollWidth - window.innerWidth,
       dailyHeight: daily.height,
       soundWidth: sound.width,
       soundHeight: sound.height,
-      pickerHeight: picker.height,
+      previewHidden: document.getElementById('homePreview').hidden || getComputedStyle(document.getElementById('homePreview')).display === 'none',
       heroBadges: document.querySelectorAll('.hero-chip').length
     };
   });
   assert(shell.overflow <= 1, `${label}: horizontal overflow detected (${shell.overflow}px)`);
   assert(shell.dailyHeight >= 44, `${label}: primary action is too small`);
   assert(shell.soundWidth >= 44 && shell.soundHeight >= 44, `${label}: sound control is below 44px`);
-  assert(shell.pickerHeight >= 44, `${label}: named preview picker must be at least 44px`);
+  assert(shell.previewHidden, `${label}: legacy side preview must stay hidden`);
   assert(shell.heroBadges === 0, `${label}: homepage should not regress to SaaS-style hero badges`);
   await page.locator('[data-mode="math"]').click();
   await acceptReady(page);
@@ -405,10 +384,7 @@ async function runChillJourney(browser) {
   page.on('pageerror', e => errors.push(e.message));
   await page.clock.install();
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
-  await page.locator('#previewSelect').selectOption('schulte');
-  await page.locator('[data-mode="memory"]').hover();
-  assert((await page.locator('#previewTitle').innerText()) === '舒爾特方格', 'hover must not change an explicitly chosen preview');
-  await page.locator('#previewPlay').click();
+  await page.locator('[data-mode="schulte"]').click();
   await acceptReady(page);
   await page.clock.runFor(40);
   await page.locator('#schulte.active').waitFor();
