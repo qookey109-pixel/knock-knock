@@ -749,6 +749,17 @@
       body.is-game #memory .key.special{font-size:17px}
     }
 
+
+    /* Keep reading and answering in predictable places. */
+    #logic .narrative-sentence{display:block}
+    #logic .clue-copy{min-width:0}
+    #logic .clue-copy strong{font-weight:950;color:#173c2d}
+    #logic .logic-q strong{font-weight:950;text-decoration:underline;text-decoration-color:#39785b55;text-underline-offset:.15em}
+    @media(max-width:680px){
+      body.is-game #logic .panel{display:flex;flex-direction:column}
+      body.is-game #logic .logic-progress,body.is-game #logic .logic-q,body.is-game #logic .clues{flex-shrink:0}
+      body.is-game #logic .choices{margin-top:auto;flex-shrink:0;grid-template-rows:repeat(2,58px);min-height:126px}
+    }
 </style>
 </head>
 <body>
@@ -1544,14 +1555,26 @@
     show('logic');clearLogicTimer();logicSession=buildLogicSession();logicIndex=0;logicCorrect=0;logicSelected=null;logicAnswered=false;
     $('logicCorrectCount').textContent='0';renderLogic()
   }
+  function renderLogicNarrative(area,text){
+    area.textContent='';
+    var terms=LOGIC_PEOPLE.concat(LOGIC_PETS,LOGIC_OBJECTS,['只有','不同','不在','不養','不是','一定','前面','後面','相加','奇數','最多','等於']);
+    var pattern=new RegExp('('+terms.join('|')+'|\\d+)','g');
+    text.split(/(?<=。)/).filter(Boolean).forEach(function(sentence){
+      var line=document.createElement('span');line.className='narrative-sentence';
+      sentence.split(pattern).forEach(function(part){
+        if(!part)return;var node=document.createElement(terms.indexOf(part)>=0||/^\\d+$/.test(part)?'strong':'span');
+        node.textContent=part;line.appendChild(node)
+      });area.appendChild(line)
+    })
+  }
   function renderLogic(){
     if(logicIndex>=logicSession.length){endLogic();return}
     clearLogicTimer();logicSelected=null;logicAnswered=false;var q=logicSession[logicIndex];
     $('logicPill').textContent=(logicIndex+1)+' / '+logicSession.length+' · '+q.type;
     $('logicTimer').textContent='不限時';
     var prog=$('logicProgress');prog.innerHTML='';logicSession.forEach(function(_,i){var d=document.createElement('i');if(i<=logicIndex)d.className='on';prog.appendChild(d)});
-    $('logicQuestion').textContent=q.q;var clues=$('logicClues');clues.innerHTML='';
-    q.clues.forEach(function(c){var d=document.createElement('div');d.className='clue';d.textContent=c;clues.appendChild(d)});
+    renderLogicNarrative($('logicQuestion'),q.q);var clues=$('logicClues');clues.innerHTML='';
+    q.clues.forEach(function(c){var d=document.createElement('div');d.className='clue';var copy=document.createElement('span');copy.className='clue-copy';renderLogicNarrative(copy,c);d.appendChild(copy);clues.appendChild(d)});
     var choices=$('logicChoices');choices.innerHTML='';
     q.choices.forEach(function(c,i){
       var b=document.createElement('button');b.type='button';b.className='choice';b.textContent=c;

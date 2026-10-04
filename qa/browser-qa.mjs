@@ -645,6 +645,8 @@ async function runPhoneStage(browser) {
         await page.screenshot({path:'/tmp/brain7-chill-memory-nine-'+viewport.height+'.png',fullPage:true});
       }
       if(mode==='logic'||mode==='odd') {
+        const dockY=mode==='logic'?await page.locator('#logicChoices').evaluate(el=>el.getBoundingClientRect().top):null;
+        if(mode==='logic')assert(await page.locator('#logicClues strong').count()>0,'logic clues highlight named people and key conditions');
         const rounds=mode==='logic'?9:15;
         for(let round=0;round<rounds;round++) {
           if(mode==='logic') {
@@ -656,6 +658,10 @@ async function runPhoneStage(browser) {
           }
           const extra=await page.locator('#'+mode+' .panel').evaluate(el=>el.scrollHeight-el.clientHeight);
           assert(extra<=2,mode+' later question must fit the fixed phone stage; overflow '+extra);
+          if(mode==='logic'){
+            const nextY=await page.locator('#logicChoices').evaluate(el=>el.getBoundingClientRect().top);
+            assert(Math.abs(nextY-dockY)<=1,'logic answer positions must remain fixed between questions');
+          }
         }
       }
       await exitToHome(page);
