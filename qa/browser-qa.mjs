@@ -555,8 +555,7 @@ async function runChillJourney(browser) {
   await savedMathRow.locator('summary').click();
   assert((await savedMathRow.innerText()).includes('平均作答'),'saved game recap should retain its detailed performance data');
   assert(!(await page.evaluate(() => !!localStorage.getItem('brain7-daily-checkpoint'))), 'finished journey recap should clear its checkpoint');
-  await page.locator('#dailySummary .journey-row summary').first().click();
-  await page.getByRole('button', {name:'再玩快速心算',exact:true}).click();
+  await savedMathRow.getByRole('button', {name:'再玩快速心算',exact:true}).click();
   await page.locator('#math.active').waitFor();
   assert((await page.locator('#sessionContext').innerText()).includes('隨心玩一關'), 'recap replay must be standalone');
   await exitToHome(page);
