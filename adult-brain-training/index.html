@@ -687,6 +687,12 @@
     @media(max-width:680px){.kk-shape-grid{opacity:.15}}
     @media(prefers-reduced-motion:reduce){.kk-shape-grid canvas{animation:none!important}.kk-celebrate{display:none}.audio-popover{animation:none!important}}
 
+
+    #schulteGrid{position:relative;isolation:isolate}
+    #schulteGrid .schulte-cell{position:relative;transition:background-color 650ms ease,border-color 180ms ease;transform:none}
+    #schulteGrid .schulte-cell.done{z-index:2}
+    #schulteGrid .schulte-cell:active{transform:none}
+    @media(prefers-reduced-motion:reduce){#schulteGrid .schulte-cell{transition:none}}
   </style>
 </head>
 <body>
@@ -710,7 +716,7 @@
         <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 6 秒，作答不限時；最高 9 位數。"><span class="mode-index">02</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="18" y="19" width="55" height="65" rx="6"/><path d="M73 31h10v54a8 8 0 0 1-8 8H31v-9M30 35h30M30 47h18M30 59h27"/><circle cx="57" cy="71" r="3"/></svg><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 6 秒，慢慢完整輸入；最高 9 位數。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
         <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M23 70V29h22v22h31v23H54V52H23M45 29h30v22"/><circle cx="23" cy="70" r="5"/><circle cx="76" cy="29" r="5"/></svg><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
         <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M19 34h61l-12-12M80 34L68 46M81 72H20l12-12M20 72l12 12"/><path d="M35 51v6M65 51v6"/></svg><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
-        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標。兩種搜尋方向，數字持續大幅漂動，答對的數字固定，其餘換位。"><span class="mode-index">05</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="18" y="18" width="66" height="66" rx="7"/><path d="M40 18v66M62 18v66M18 40h66M18 62h66"/><circle cx="51" cy="51" r="5"/></svg><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、兩種方向；數字持續漂動，答對的數字固定，其餘換位。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標。兩種搜尋方向，數字持續大幅漂動，答對的數字固定，其餘滑動換位。"><span class="mode-index">05</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="18" y="18" width="66" height="66" rx="7"/><path d="M40 18v66M62 18v66M18 40h66M18 62h66"/><circle cx="51" cy="51" r="5"/></svg><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、兩種方向；數字持續漂動，答對的數字固定，其餘換位。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
         <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#a62b74" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M26 77L45 23h11l19 54M34 56h32"/><path d="M23 85h56"/><circle cx="78" cy="26" r="8" fill="currentColor" stroke="none"/></svg><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
         <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="從 16 格一路增加到 24 格。每回合只有 1 個箭頭與文字不一致。"><span class="mode-index">07</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M24 30h48M60 18l12 12-12 12M72 70H24M36 58L24 70l12 12"/><path d="M29 49h4M48 49h4M67 49h4"/></svg><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>從 16 到 24 格，找出唯一一個箭頭與文字不一致的訊號。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
       </div>
@@ -725,7 +731,7 @@
         </div>
       </aside>
     </div>
-    <details id="recentPlays" class="recent-plays"><summary>最近的遊玩足跡</summary><div id="historyList"><p>這次的星光，從你想玩的那一關開始。</p></div></details><div class="note">♪ 咚咚敲門音效 · 首頁輕音樂 · 關卡 Rag Time · 聲音可獨立調整。<br>娛樂與練習用途，不作 IQ、醫療或認知功能診斷。</div>
+    <div class="note">♪ 咚咚敲門音效 · 首頁輕音樂 · 關卡 Rag Time · 聲音可獨立調整。</div>
   </section>
 
   <section id="math" class="screen kk-room">
@@ -774,7 +780,7 @@
         <button type="button" class="schulte-mode" data-schulte-mode="B"><b>B</b><span>50 → 1</span></button>
       </div>
       <div class="stats schulte-stats hidden" aria-hidden="true"><div class="stat"><span>目前目標</span><strong id="schulteNext">1</strong></div><div class="stat"><span>已完成</span><strong id="schulteDone">0 / 50</strong></div><div class="stat"><span>錯誤</span><strong id="schulteWrong">0</strong></div><div class="stat"><span>時間</span><strong id="schulteTime">0.0 秒</strong></div></div>
-      <div class="mini-instruction schulte-instruction">找出目前目標。數字會持續較大幅度漂動；答對的數字留在原位，其餘數字重新換位。</div>
+      <div class="mini-instruction schulte-instruction">找出目前目標。數字會持續較大幅度漂動；答對的數字留在原位，其餘數字滑動到新的位置。</div>
       <div class="schulte-targetbar"><span>現在找</span><strong id="schulteTargetBig">1</strong></div>
       <div id="schulteGrid" class="schulte-grid" aria-label="動態舒爾特搜尋場"></div>
     </div>
@@ -999,7 +1005,7 @@
   function clearPlayTimer(id){var t=playTimers.get(id);if(t){clearTimeout(t.native);playTimers.delete(id)}}
   function pausePlay(){
     if(paused||!currentMode)return;
-    stopKnockSound();paused=true;pauseStarted=performance.now();pauseFocus=document.activeElement;
+    stopKnockSound();schulteTravel('pause');paused=true;pauseStarted=performance.now();pauseFocus=document.activeElement;
     playTimers.forEach(function(t){t.remaining=Math.max(0,t.due-pauseStarted);clearTimeout(t.native)});
     $('pauseOverlay').classList.remove('hidden');document.querySelector('main').inert=true;document.body.classList.add('is-paused');
     if(audioCtx)audioCtx.suspend().catch(function(){});
@@ -1011,7 +1017,7 @@
   }
   function resumePlay(){
     if(!paused||document.hidden)return;
-    clearPause();playTimers.forEach(function(t,id){armPlayTimer(id,t)});
+    clearPause();schulteTravel('play');playTimers.forEach(function(t,id){armPlayTimer(id,t)});
     if(audioCtx)audioCtx.resume().catch(function(){});
     if(pauseFocus&&pauseFocus.isConnected)pauseFocus.focus();
     if(!muted)startGameBgm()
@@ -1043,7 +1049,7 @@
     try{localStorage.setItem('brain7-play-history',JSON.stringify(history.slice(0,20)))}catch(e){}
     renderHistory()
   }
-  function renderHistory(){var list=$('historyList'),history=readHistory();list.innerHTML='';if(!history.length){var p=document.createElement('p');p.textContent='這次的星光，從你想玩的那一關開始。紀錄只留在這個瀏覽器。';list.appendChild(p);return}
+  function renderHistory(){var list=$('historyList');if(!list)return;var history=readHistory();list.innerHTML='';if(!history.length){var p=document.createElement('p');p.textContent='這次的星光，從你想玩的那一關開始。紀錄只留在這個瀏覽器。';list.appendChild(p);return}
     history.slice(0,5).forEach(function(item){var row=document.createElement('p');row.className='history-row';var d=new Date(item.date);row.textContent=(Number.isNaN(d.getTime())?'':d.toLocaleDateString('zh-TW',{month:'numeric',day:'numeric'}))+' · '+item.label+' · '+(item.ratingVersion===1?(item.ratedGames?'星等合計 '+item.stars+' / '+(item.ratedGames*5)+' · 完成 '+item.completed+' 關':'尚未評星'):'完成 '+item.stars+' 關（舊版紀錄）')+' · '+formatTime(item.seconds);list.appendChild(row)})
   }
   function goHome(focusSelection,selectedMode){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm();renderHistory();refreshResumeControl();if(focusSelection){if(selectedMode&&homeModeButtons.some(function(b){return b.dataset.mode===selectedMode}))previewMode(selectedMode);requestAnimationFrame(function(){$('homeSelect').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});var target=selectedMode?document.querySelector('.mode[data-mode="'+selectedMode+'"]'):document.querySelector('.mode');if(target)target.focus({preventScroll:true})})}}
@@ -1230,7 +1236,7 @@
   $('dailyAgain').addEventListener('click',startDaily);
 
   function stopAll(){
-    stopKnockSound();
+    stopKnockSound();schulteTravel('cancel');
     playTimers.forEach(function(t){clearTimeout(t.native)});playTimers.clear();
     clearPause();
     currentMode=null;
@@ -1614,7 +1620,7 @@
   }
 
   function startSchulte(modeOverride){
-    show('schulte');clearPlayTimer(schulteTimer);schulteTimer=null;schulteFinished=false;
+    schulteTravel('cancel');show('schulte');clearPlayTimer(schulteTimer);schulteTimer=null;schulteFinished=false;
     schulteMode=modeOverride||((dailyMode?['A','B'][rand(0,1)]:'A'));
     schulteSequence=buildSchulteSequence(schulteMode);schulteIndex=0;schulteWrong=0;schulteStart=playNow();
     setSchulteModeUi();$('schulteWrong').textContent='0';$('schulteTime').textContent='0.0 秒';updateSchulteHud();
@@ -1623,20 +1629,46 @@
     schulteTimer=playInterval(function(){$('schulteTime').textContent=((playNow()-schulteStart)/1000).toFixed(1)+' 秒'},100)
   }
   document.querySelectorAll('.schulte-mode').forEach(function(b){b.addEventListener('click',function(){startSchulte(this.dataset.schulteMode)})});
+  function schulteTravel(action){
+    document.querySelectorAll('#schulteGrid .schulte-cell').forEach(function(cell){
+      cell.getAnimations().forEach(function(animation){if(animation.id==='schulte-travel')animation[action]()})
+    })
+  }
   function reshuffleSchulteRemaining(){
     var grid=$('schulteGrid'),cells=Array.from(grid.children),remaining=cells.filter(function(cell){return !cell.disabled});
     if(remaining.length<2)return;
-    var mixed=shuffle(remaining);
+    // Keep the visual positions of live buttons, even if a previous journey is still running.
+    var before=new Map(),driftTimes=new Map();
+    remaining.forEach(function(cell){
+      before.set(cell,cell.getBoundingClientRect());
+      var drift=cell.firstElementChild.getAnimations()[0];if(drift)driftTimes.set(cell,drift.currentTime);
+    });
+    schulteTravel('cancel');
+    var mixed=shuffle(remaining.slice());
     if(mixed.every(function(cell,i){return cell===remaining[i]}))mixed.push(mixed.shift());
     var colors=['#fff0a6','#c9f2ff','#d8f7bd','#ffd0be','#e8dcff'];
     mixed.forEach(function(cell){var old=cell.style.getPropertyValue('--cell-bg'),options=colors.filter(function(color){return color!==old});cell.style.setProperty('--cell-bg',options[rand(0,options.length-1)])});
-    var index=0;grid.replaceChildren.apply(grid,cells.map(function(cell){return cell.disabled?cell:mixed[index++]}))
+    var index=0;grid.replaceChildren.apply(grid,cells.map(function(cell){return cell.disabled?cell:mixed[index++]}));
+    var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    mixed.forEach(function(cell,i){
+      var drift=cell.firstElementChild.getAnimations()[0];if(drift&&driftTimes.has(cell))drift.currentTime=driftTimes.get(cell);
+      if(reduced)return;
+      var from=before.get(cell),to=cell.getBoundingClientRect(),dx=from.left-to.left,dy=from.top-to.top;
+      if(Math.abs(dx)+Math.abs(dy)<1)return;
+      var bend=Math.min(18,Math.hypot(dx,dy)*.08)*(i%2?1:-1);
+      var animation=cell.animate([
+        {transform:'translate('+dx+'px,'+dy+'px)',zIndex:5},
+        {transform:'translate('+(dx*.5+bend)+'px,'+(dy*.5-bend)+'px)',zIndex:5,offset:.5},
+        {transform:'translate(0,0)',zIndex:5}
+      ],{duration:640+(i%4)*35,easing:'cubic-bezier(.22,.75,.25,1)'});
+      animation.id='schulte-travel';
+    })
   }
   function answerSchulte(n,button){
     if(schulteFinished)return;
     var target=schulteSequence[schulteIndex];
     if(n!==target){schulteWrong++;$('schulteWrong').textContent=schulteWrong;wrongTone();return}
-    correctTone();button.classList.add('done');button.disabled=true;button.setAttribute('aria-label','已完成數字 '+n);schulteIndex++;updateSchulteHud();
+    correctTone();button.getAnimations().forEach(function(a){if(a.id==='schulte-travel')a.cancel()});button.classList.add('done');button.disabled=true;button.setAttribute('aria-label','已完成數字 '+n);schulteIndex++;updateSchulteHud();
     reshuffleSchulteRemaining();
     if(schulteIndex>=schulteSequence.length){
       schulteFinished=true;clearPlayTimer(schulteTimer);schulteTimer=null;

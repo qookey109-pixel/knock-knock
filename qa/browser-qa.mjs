@@ -254,6 +254,7 @@ async function runViewport(browser, viewport, name) {
   await oneCell.click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '2');
   assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: correct Schulte hit should keep all 50 cells visible`);
+  assert(await page.locator('#schulteGrid .schulte-cell:not(.done)').evaluateAll(nodes => nodes.some(n=>n.getAnimations().some(a=>a.id==='schulte-travel' && a.playState==='running'))), `${name}: remaining numbers must visibly travel between slots`);
   const afterOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
   assert(beforeOrder.indexOf('1') === afterOrder.indexOf('1'), `${name}: completed Schulte number must stay in its original slot`);
   assert(beforeOrder.join(',') !== afterOrder.join(','), `${name}: unfinished numbers must change positions after a hit`);
@@ -509,11 +510,10 @@ async function runChillJourney(browser) {
   await assertA11y(page, 'five-star ratings recap');
   await page.screenshot({path:'/tmp/brain7-chill-recap-mobile.png',fullPage:true});
   await exitToHome(page);
-  await page.locator('#recentPlays > summary').click();
-  assert((await page.locator('#historyList').innerText()).includes('完成 7 關'), 'history must record the full journey');
+  assert(await page.locator('#recentPlays').count() === 0, 'home must omit the recent-play panel');
+  assert(await page.evaluate(() => JSON.parse(localStorage.getItem('brain7-play-history') || '[]').some(r=>r.completed===7)), 'completed journey data should remain saved');
   await page.reload();
-  await page.locator('#recentPlays > summary').click();
-  assert((await page.locator('#historyList').innerText()).includes('完成 7 關'), 'history must survive reload');
+  assert(await page.evaluate(() => JSON.parse(localStorage.getItem('brain7-play-history') || '[]').some(r=>r.completed===7)), 'saved journey data should survive reload');
 
   // Rest-page exit preserves completed ratings; recap can replay a single game.
   await page.locator('#dailyBtn').click();
