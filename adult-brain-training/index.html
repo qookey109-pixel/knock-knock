@@ -418,6 +418,74 @@
     }
     @media(max-width:679px){.hero{padding-bottom:20px}.app::before{opacity:.16}}
     @media(prefers-reduced-motion:reduce){body::before{transform:none}.screen.active,#home.screen.active .mode,.pause-card{animation:none!important}.mode{transform:none!important;transition:none!important}.kk-seam{display:none}}
+
+    /* A coherent collection of seven playful doorplates. */
+    body{--kk-room-tint:#e64724;background:#f6f2e9}
+    body::before{background:linear-gradient(112deg,transparent 55%,color-mix(in srgb,var(--kk-room-tint) 7%,transparent) 55.2%,transparent 88%),radial-gradient(ellipse at 10% 8%,#e647240c,transparent 48%);transition:background 300ms ease}
+    .app{width:min(100%,1120px)}
+    .top{padding-bottom:18px}
+    .hero{padding:40px 0 28px;display:flex;align-items:center;justify-content:space-between;gap:28px}
+    .hero h2{font-size:clamp(48px,8vw,96px);line-height:1;letter-spacing:-.075em}
+    #home .hero .actions{margin:0;width:240px;flex:none}
+    #dailyBtn{min-height:58px;border-radius:999px;box-shadow:0 4px 0 #17171718}
+    .hero #resumeDailyNote{position:absolute;bottom:0;right:0;max-width:240px;font-size:10px!important}
+    .home-select{margin-top:18px}
+    .modes{gap:16px}
+    #home .mode{min-height:220px;grid-column:auto;border-radius:20px;padding:22px;gap:14px;border-color:color-mix(in srgb,var(--mode) 26%,#17171722)}
+    .mode.is-active:not(:hover):not(:focus-visible){transform:none}
+    .mode::after{display:none}
+    .mode-index{width:34px;height:34px;background:#fffdf87a;box-shadow:0 2px 0 #17171710}
+    .mode-num{font-size:9px;letter-spacing:.13em}
+    .mode-copy{gap:7px}
+    .mode-copy h3{font-size:25px!important;line-height:1.2;max-width:85%;text-wrap:balance}
+    .mode-copy p{font-size:12px;max-width:92%;line-height:1.6;min-height:38px}
+    .mode-start{font-size:12px;margin-top:4px}
+    .mode-arrow{position:absolute;right:22px;bottom:20px;font-size:25px}
+    .kk-game-mark{position:absolute;right:16px;top:14px;width:78px;height:78px;fill:none;stroke:currentColor;stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round;color:var(--mode);opacity:.38;pointer-events:none;transition:transform 260ms var(--kk-motion),opacity 200ms ease}
+    .mode:hover .kk-game-mark,.mode:focus-visible .kk-game-mark{transform:rotate(-6deg) translateY(-2px);opacity:.68}
+    .mode:hover .mode-index{background:#fffdf8}
+    button:focus-visible,summary:focus-visible{outline:3px solid #171717;outline-offset:4px}
+    .choice:focus-visible,.key:focus-visible{outline-color:var(--ink)}
+    .gamehead h2{line-height:1.2}
+    .gamehead::after{transition:width 240ms var(--kk-motion)}
+    .panel{border-color:#17171719;background:#fffdf8;box-shadow:0 4px 0 #30281b08,0 18px 40px #30281b06}
+    .clue{border-radius:0 9px 9px 0}
+    .result-box{border-bottom-color:#1717171c}
+    .journey-row{border-radius:14px;transition:border-color 180ms ease,background 180ms ease}
+    .journey-row[open]{background:#fffdf8;border-color:#17171735}
+    .audio-popover{box-shadow:0 6px 0 #1717170a,0 18px 50px #30281b1a}
+    .note{margin-top:28px}
+    @media(min-width:900px){
+      .modes{grid-template-columns:repeat(3,minmax(0,1fr))}
+      #home .mode:last-child{grid-column:span 3;min-height:154px}
+      .mode:last-child .mode-copy{max-width:75%}
+      .mode:last-child .kk-game-mark{width:105px;height:105px;right:64px;top:22px}
+    }
+    @media(min-width:680px) and (max-width:899px){
+      .hero{gap:18px}.hero h2{font-size:68px}
+      #home .hero .actions{width:200px}
+      #home .mode:last-child{grid-column:span 2;min-height:170px}
+    }
+    @media(max-width:679px){
+      .hero{display:grid;gap:20px;padding:24px 0 12px}
+      #home .hero .actions{width:100%;max-width:none}
+      .hero #resumeDailyNote{position:static;max-width:none}
+      .modes{gap:10px}
+      #home .mode{min-height:207px;padding:15px;border-radius:15px;gap:18px}
+      #home .mode:last-child{grid-column:span 2;min-height:153px}
+      .mode-copy h3{font-size:20px!important;max-width:100%}
+      .mode-copy p{font-size:11px;max-width:100%;min-height:49px}
+      .mode:last-child .mode-copy{max-width:80%}
+      .mode:last-child .mode-copy p{min-height:0}
+      .kk-game-mark{width:56px;height:56px;right:8px;top:9px;opacity:.32}
+      .mode-arrow{right:13px;bottom:14px;font-size:20px}
+      .mode-num{font-size:8px;letter-spacing:.055em}
+    }
+    @media(prefers-reduced-motion:no-preference){
+      .mode:active .kk-game-mark{transform:scale(.94)}
+      .screen.active:not(#home){animation:kk-room-arrive 240ms var(--kk-motion)}
+    }
+    @media(prefers-reduced-motion:reduce){.kk-game-mark{transition:none!important;transform:none!important}}
   </style>
 </head>
 <body>
@@ -435,13 +503,13 @@
     </div>
     <div id="homeSelect" class="home-select">
       <div class="modes" aria-label="選擇單項訓練">
-        <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="每級 60 秒。累計答對升級，全程只用兩個數運算。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>每級 60 秒。累計答對升級，全程只用兩個數運算。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
-        <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 6 秒，作答不限時；最高 9 位數。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 6 秒，慢慢完整輸入；最高 9 位數。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
-        <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
-        <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
-        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標。兩種搜尋方向，數字持續大幅漂動，答對的數字固定，其餘換位。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、兩種方向；數字持續漂動，答對的數字固定，其餘換位。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
-        <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#a62b74" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
-        <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="從 16 格一路增加到 24 格。每回合只有 1 個箭頭與文字不一致。"><span class="mode-index">07</span><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>從 16 到 24 格，找出唯一一個箭頭與文字不一致的訊號。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="每級 60 秒。累計答對升級，全程只用兩個數運算。"><span class="mode-index">01</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M20 32h20M30 22v20M62 30h18M62 38h18M25 65l12 12M37 65L25 77"/><path d="M59 71h23M71 59v24"/></svg><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>每級 60 秒。累計答對升級，全程只用兩個數運算。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 6 秒，作答不限時；最高 9 位數。"><span class="mode-index">02</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="18" y="19" width="55" height="65" rx="6"/><path d="M73 31h10v54a8 8 0 0 1-8 8H31v-9M30 35h30M30 47h18M30 59h27"/><circle cx="57" cy="71" r="3"/></svg><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 6 秒，慢慢完整輸入；最高 9 位數。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M23 70V29h22v22h31v23H54V52H23M45 29h30v22"/><circle cx="23" cy="70" r="5"/><circle cx="76" cy="29" r="5"/></svg><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M19 34h61l-12-12M80 34L68 46M81 72H20l12-12M20 72l12 12"/><path d="M35 51v6M65 51v6"/></svg><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標。兩種搜尋方向，數字持續大幅漂動，答對的數字固定，其餘換位。"><span class="mode-index">05</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><rect x="18" y="18" width="66" height="66" rx="7"/><path d="M40 18v66M62 18v66M18 40h66M18 62h66"/><circle cx="51" cy="51" r="5"/></svg><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、兩種方向；數字持續漂動，答對的數字固定，其餘換位。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#a62b74" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M26 77L45 23h11l19 54M34 56h32"/><path d="M23 85h56"/><circle cx="78" cy="26" r="8" fill="currentColor" stroke="none"/></svg><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="從 16 格一路增加到 24 格。每回合只有 1 個箭頭與文字不一致。"><span class="mode-index">07</span><svg class="kk-game-mark" viewBox="0 0 100 100" aria-hidden="true" focusable="false"><path d="M24 30h48M60 18l12 12-12 12M72 70H24M36 58L24 70l12 12"/><path d="M29 49h4M48 49h4M67 49h4"/></svg><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>從 16 到 24 格，找出唯一一個箭頭與文字不一致的訊號。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
       </div>
       <aside hidden id="homePreview" class="home-preview" aria-live="polite" tabindex="0" aria-label="目前選擇的訓練關卡，可左右滑動切換">
         <label class="preview-picker" for="previewSelect">先看看玩法<select id="previewSelect"><option value="math">01 · 快速心算</option><option value="memory">02 · 瞬間記憶</option><option value="logic">03 · 邏輯推理</option><option value="executive">04 · 規則切換</option><option value="schulte">05 · 舒爾特方格</option><option value="stroop">06 · Stroop 顏色衝突</option><option value="odd">07 · 表裡不一</option></select></label>
@@ -1539,6 +1607,7 @@
     if(!active||active===lastActive)return;
     lastActive=active;
     root.style.setProperty('--kk-ambient-x','0px');root.style.setProperty('--kk-ambient-y','0px');
+    body.style.setProperty('--kk-room-tint',getComputedStyle(active).getPropertyValue('--chapter').trim()||'#e64724');
     if(motion.matches)return;
     seam.style.setProperty('--kk-chapter',getComputedStyle(active).getPropertyValue('--chapter').trim()||'#e64724');
     seam.classList.remove('play');void seam.offsetWidth;seam.classList.add('play');
