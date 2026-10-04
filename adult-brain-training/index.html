@@ -375,17 +375,15 @@
 <body>
 <main class="app">
   <header class="top">
-    <div class="brand"><h1>Knock <span>Knock</span></h1><p>慢慢玩就好</p></div>
+    <div class="brand"><h1>Knock <span>Knock</span></h1></div>
     <div class="sound-controls"><button id="soundBtn" class="sound" type="button" aria-label="關閉聲音" aria-pressed="false">♪</button><details class="audio-settings"><summary aria-label="音樂與音效設定">聲音</summary><div class="audio-popover"><button id="musicToggle" class="secondary" type="button" aria-label="切換背景音樂" aria-pressed="false">BGM 開啟</button><label for="musicVolume">BGM <output id="musicValue">38%</output></label><input id="musicVolume" type="range" min="0" max="100" value="38"><button id="effectsToggle" class="secondary" type="button" aria-label="切換音效" aria-pressed="false">音效開啟</button><button id="knockPreview" class="secondary" type="button" aria-label="試聽敲門音效">試聽咚咚</button><label for="effectVolume">音效 <output id="effectValue">70%</output></label><input id="effectVolume" type="range" min="0" max="100" value="70"></div></details></div>
   </header>
 
   <div id="playToolbar" class="play-toolbar hidden"><span id="sessionContext">隨心玩一關</span><div><button id="pauseBtn" class="secondary" type="button">休息一下</button><button id="finishEarlyBtn" class="secondary" type="button">先玩到這裡</button></div></div>
   <section id="home" class="screen active">
     <div class="hero">
-      <div class="eyebrow">KNOCK KNOCK / COME ON IN</div>
-      <h2>敲敲門，<br><span>讓腦袋出來玩。</span></h2>
-      <p>7 個小遊戲，陪腦袋散個步。想玩一關，或慢慢走完七關都可以。每關最多五顆星。照自己的節奏玩就好。</p>
-      <div class="actions"><button id="dailyBtn" class="primary" type="button">慢慢玩完 7 關</button><button id="resumeDailyBtn" class="secondary hidden" type="button">繼續上次散步</button></div><p id="resumeDailyNote" class="session-info hidden">已完成的關卡已保存；未完成的下一關會從頭開始。</p><p class="session-info">完整遊玩長度依節奏而定 · 每關之間可以休息 · 隨時暫停</p>
+      <h2>Knock <span>Knock</span></h2>
+      <div class="actions"><button id="dailyBtn" class="primary" type="button">慢慢玩完 7 關</button><button id="resumeDailyBtn" class="secondary hidden" type="button">繼續上次散步</button></div><p id="resumeDailyNote" class="session-info hidden">已完成的關卡已保存；未完成的下一關會從頭開始。</p>
     </div>
     <div id="homeSelect" class="home-select">
       <div class="modes" aria-label="選擇單項訓練">
