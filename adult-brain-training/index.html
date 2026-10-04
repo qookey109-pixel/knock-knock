@@ -407,7 +407,8 @@
       -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent 82%);
       mask-image:linear-gradient(to bottom,rgba(0,0,0,.8),transparent 82%)
     }
-    .top{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+    .top{z-index:80;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+    .audio-settings[open]{z-index:90}
     .brand h1{transition:letter-spacing .45s var(--kk-motion),transform .45s var(--kk-motion)}
     .brand:hover h1{letter-spacing:-.038em;transform:translateX(2px)}
     .screen.active{transform-origin:50% 0;animation:kk-screen-in .58s var(--kk-motion) both}
