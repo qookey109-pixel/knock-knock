@@ -314,19 +314,18 @@ async function runNarrowHome(browser) {
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
   const metrics = await page.evaluate(() => {
-    const preview = document.getElementById('homePreview').getBoundingClientRect();
-    const modes = document.querySelector('.modes').getBoundingClientRect();
-    const play = document.getElementById('previewPlay').getBoundingClientRect();
+    const mode = document.querySelector('.mode').getBoundingClientRect();
+    const daily = document.getElementById('dailyBtn').getBoundingClientRect();
     return {
       overflow: document.documentElement.scrollWidth - window.innerWidth,
-      previewTop: preview.top,
-      modesTop: modes.top,
-      playHeight: play.height
+      modeHeight: mode.height,
+      dailyHeight: daily.height,
+      previewHidden: document.getElementById('homePreview').hidden || getComputedStyle(document.getElementById('homePreview')).display === 'none'
     };
   });
   assert(metrics.overflow <= 1, `narrow-mobile: horizontal overflow detected (${metrics.overflow}px)`);
-  assert(metrics.previewTop < metrics.modesTop, 'narrow-mobile: preview should appear before the mode list');
-  assert(metrics.playHeight >= 44, `narrow-mobile: preview action is too small (${metrics.playHeight}px)`);
+  assert(metrics.previewHidden, 'narrow-mobile: legacy preview must stay hidden');
+  assert(metrics.modeHeight >= 44 && metrics.dailyHeight >= 44, 'narrow-mobile: primary game actions must remain touch-safe');
   await assertA11y(page, 'narrow-mobile home');
   await context.close();
 }
@@ -338,20 +337,19 @@ async function runAwardResponsiveShell(browser, width, height, label) {
   const shell = await page.evaluate(() => {
     const daily = document.getElementById('dailyBtn').getBoundingClientRect();
     const sound = document.getElementById('soundBtn').getBoundingClientRect();
-    const picker = document.getElementById('previewSelect').getBoundingClientRect();
     return {
       overflow: document.documentElement.scrollWidth - window.innerWidth,
       dailyHeight: daily.height,
       soundWidth: sound.width,
       soundHeight: sound.height,
-      pickerHeight: picker.height,
+      previewHidden: document.getElementById('homePreview').hidden || getComputedStyle(document.getElementById('homePreview')).display === 'none',
       heroBadges: document.querySelectorAll('.hero-chip').length
     };
   });
   assert(shell.overflow <= 1, `${label}: horizontal overflow detected (${shell.overflow}px)`);
   assert(shell.dailyHeight >= 44, `${label}: primary action is too small`);
   assert(shell.soundWidth >= 44 && shell.soundHeight >= 44, `${label}: sound control is below 44px`);
-  assert(shell.pickerHeight >= 44, `${label}: named preview picker must be at least 44px`);
+  assert(shell.previewHidden, `${label}: legacy side preview must stay hidden`);
   assert(shell.heroBadges === 0, `${label}: homepage should not regress to SaaS-style hero badges`);
   await page.locator('[data-mode="math"]').click();
   await acceptReady(page);
@@ -386,10 +384,7 @@ async function runChillJourney(browser) {
   page.on('pageerror', e => errors.push(e.message));
   await page.clock.install();
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
-  await page.locator('#previewSelect').selectOption('schulte');
-  await page.locator('[data-mode="memory"]').hover();
-  assert((await page.locator('#previewTitle').innerText()) === '舒爾特方格', 'hover must not change an explicitly chosen preview');
-  await page.locator('#previewPlay').click();
+  await page.locator('[data-mode="schulte"]').click();
   await acceptReady(page);
   await page.clock.runFor(40);
   await page.locator('#schulte.active').waitFor();
