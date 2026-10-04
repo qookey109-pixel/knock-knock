@@ -91,6 +91,7 @@ async function runViewport(browser, viewport, name) {
   assert(publicIdentity.manifestOk && publicIdentity.shortName === 'BRAIN/7', `${name}: manifest should load and identify BRAIN/7`);
   assert(publicIdentity.iconOk && publicIdentity.iconSrc === './brain7-mark.svg', `${name}: identity icon should load and be linked from the manifest`);
   assert(await page.locator('.mode').count() === 7, `${name}: expected seven modes`);
+  assert(await page.locator('.rating-guide').count() === 0, `${name}: star conversion explanation should be removed`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
   await assertA11y(page, `${name} home`);
