@@ -725,7 +725,27 @@
       body.is-game #odd .odd-arrow{font-size:34px}
       body.is-game #odd .odd-label{font-size:17px;line-height:1.1}
     }
-  </style>
+  
+    /* Readable questions: spend the fixed stage on content instead of gaps. */
+    #logic .clue{font-size:21px;line-height:1.4}
+    #logic .choice{font-size:28px}
+    #memory .memory-label{font-size:20px;line-height:1.35;letter-spacing:0}
+    #memory .memory-number:has(.memory-digit-row){font-size:80px}
+    @media(max-width:680px){
+      body.is-game #logic .logic-q{font-size:26px;line-height:1.25;padding:10px 12px}
+      body.is-game #logic .clue{font-size:20px;line-height:1.3;padding:6px 8px;gap:6px}
+      body.is-game #logic .clue::before{font-size:12px;padding:0 4px}
+      body.is-game #logic .choices{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+      body.is-game #logic .choice{font-size:26px;min-height:52px;padding:6px 12px}
+      body.is-game #logic .choice:last-child:nth-child(odd){grid-column:1/-1}
+      body.is-game #memory .memory-label{font-size:20px;line-height:1.35}
+      body.is-game #memory .memory-number:has(.memory-digit-row){font-size:clamp(48px,var(--memory-digit-size,19vw),80px);margin:24px 0}
+      body.is-game #memory .memory-input{font-size:42px}
+      body.is-game #memory .key{font-size:34px}
+      body.is-game #memory .key.special{font-size:16px}
+    }
+
+</style>
 </head>
 <body>
 <div class="kk-shape-grid" aria-hidden="true"><canvas id="kkShapeGrid"></canvas></div>
@@ -1436,7 +1456,8 @@
   $('memoryStart').addEventListener('click',nextMemoryRound);
   function renderMemoryDigits(value,masked){
     var area=$('memoryNumber');area.innerHTML='';area.setAttribute('aria-label',masked?'數字已隱藏':value);
-    var split=value.length>6?Math.ceil(value.length/2):value.length;
+    var split=value.length>4?Math.ceil(value.length/2):value.length;
+    area.style.setProperty('--memory-digit-size','calc((100vw - 68px) / '+(split*1.12)+')');
     for(var offset=0;offset<value.length;offset+=split){var row=document.createElement('div');row.className='memory-digit-row';
       value.slice(offset,offset+split).split('').forEach(function(digit){var span=document.createElement('span');span.textContent=digit;span.setAttribute('aria-hidden','true');row.appendChild(span)});area.appendChild(row)}
   }
@@ -1495,8 +1516,17 @@
     button.addEventListener('click',function(){inputMemory(key)});$('memoryKeys').appendChild(button)
   });
   document.addEventListener('keydown',function(e){
-    if(paused||!memoryAwaitingAnswer||!$('memory').classList.contains('active')||e.ctrlKey||e.metaKey||e.altKey||e.target.closest('.audio-settings'))return;
-    if(/^\d$/.test(e.key)||['Delete','Backspace','Enter'].indexOf(e.key)>=0){e.preventDefault();inputMemory(e.key)}
+    if(paused||!$('memory').classList.contains('active')||e.ctrlKey||e.metaKey||e.altKey||e.isComposing||e.target.closest('.audio-settings')||!$('readyOverlay').classList.contains('hidden'))return;
+    if(!memoryAwaitingAnswer){
+      if(!$('memoryStart').classList.contains('hidden')&&!e.repeat&&(e.key==='Enter'||e.key===' ')&&(!e.target.closest('button')||e.target===$('memoryStart'))){
+        e.preventDefault();nextMemoryRound()
+      }
+      return
+    }
+    var key=/^Numpad\d$/.test(e.code)?e.code.slice(-1):e.key;
+    if(/^\d$/.test(key)||['Delete','Backspace','Enter'].indexOf(key)>=0){
+      e.preventDefault();if(key==='Enter'&&e.repeat)return;inputMemory(key)
+    }
   });
   function endMemory(){
     var total=MEMORY_ROUNDS.reduce(function(sum,r){return sum+r.points},0);
