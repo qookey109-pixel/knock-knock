@@ -61,7 +61,7 @@ async function exitToHome(page) {
     await page.locator('#dailyResult .back').click();
   }
   await page.locator('#home.active').waitFor();
-  if(hasNextPicker)assert(await page.locator('.mode:focus').count()===1,'next-game action should focus the selection list');
+  if(hasNextPicker){await page.locator('.mode:focus').waitFor();assert(await page.locator('.mode:focus').count()===1,'next-game action should focus the selection list')}
 }
 
 async function runViewport(browser, viewport, name) {
