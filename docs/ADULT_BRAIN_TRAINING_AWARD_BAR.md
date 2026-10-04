@@ -74,3 +74,7 @@ The latest user instruction supersedes the previous all-number fixed-order rule:
 ## Flow rules — 2026-10-03 23:42 Asia/Taipei
 
 Latest explicit instruction: math is easier and always two operands; keep the 60s per-level reset. Memory exposure is 6s and answering untimed; retain 900ms feedback. Render 8 digits as 4+4 and 9 as 5+4. Logic is untimed and clicking a choice submits directly, with 8 types across each 10-question session. Schulte unfinished targets change colors as well as positions. Stroop yellow is bright #ffdf00 on a dark readable backdrop. Between-game screens show stars and next action; details stay in final recaps. Music and effects have separate persisted mute switches and volumes available during play.
+
+## 首頁入口整理
+
+移除沒有文字的七色色塊。遊戲卡片保留直接開始，加上「開始玩」文字；預覽面板使用原生、有標籤的七關選單，切換玩法不會開始計時。選單保留瀏覽器鍵盤操作，面板本身仍可左右鍵與滑動切換。參考 AI Resource Hub 收錄的 UI Skills（https://github.com/ibelick/ui-skills/blob/main/skills/baseline-ui/SKILL.md），採用既有元件與清楚操作入口，保留目前品牌配色。
