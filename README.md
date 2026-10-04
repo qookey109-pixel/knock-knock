@@ -25,3 +25,8 @@
 手機遊玩區使用可用視窗高度，減少上方空間與切關捲動。瞬間記憶內建數字鍵盤自動出現，支援實體鍵盤、清除、刪除與保留前導零。
 
 關間只顯示星等與下一關，詳細統計集中在最後回顧。BGM 與音效有獨立開關、獨立音量，遊玩中可調整並保存在瀏覽器。
+
+
+## Flow updates
+
+Each game shows its rules before a first play on the current browser. Exiting a live game opens a recap so completed ratings are preserved; the pause sheet also offers an early finish. Daily Training saves completed games locally and can resume at the next game after a reload; an unfinished game restarts from its beginning. Result screens return directly to the game selector. Accuracy, errors, streaks, and reaction times appear in the recap, while live play keeps only the controls and game progress needed to continue.
