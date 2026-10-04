@@ -366,7 +366,7 @@
     @media(prefers-reduced-motion:no-preference){
       .screen.active:not(#home){animation:room-enter 220ms var(--ease-out)}
       .completion-star .lit{animation:knock-star 360ms var(--ease-out) both;animation-delay:calc(var(--star-index)*60ms)}
-      @keyframes room-enter{from{opacity:.4;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+      @keyframes room-enter{from{transform:translateX(8px)}to{transform:translateX(0)}}
       @keyframes knock-star{0%{transform:scale(.82)}45%{transform:scale(1.08)}75%{transform:scale(.98)}100%{transform:scale(1)}}
     }
 
