@@ -92,6 +92,8 @@ async function runViewport(browser, viewport, name) {
   assert(publicIdentity.iconOk && publicIdentity.iconSrc === './brain7-mark.svg', `${name}: identity icon should load and be linked from the manifest`);
   assert(await page.locator('.mode').count() === 7, `${name}: expected seven modes`);
   assert(await page.locator('.rating-guide').count() === 0, `${name}: star conversion explanation should be removed`);
+  const starCopy = await page.locator('#home .hero p').innerText();
+  assert(starCopy.includes('每關最多五顆星。') && !starCopy.includes('依答題表現點亮'), `${name}: home should show only the star rating, without an explanation`);
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   assert(overflow <= 1, `${name}: horizontal overflow detected (${overflow}px)`);
   await assertA11y(page, `${name} home`);
