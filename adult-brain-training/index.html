@@ -486,9 +486,57 @@
       .screen.active:not(#home){animation:kk-room-arrive 240ms var(--kk-motion)}
     }
     @media(prefers-reduced-motion:reduce){.kk-game-mark{transition:none!important;transform:none!important}}
+
+    /* Colourful playroom accents stay outside the answering area. */
+    body{background:#fff7e9}
+    body::before{background:radial-gradient(ellipse at 2% 5%,#ffd8cf 0,transparent 38%),radial-gradient(ellipse at 98% 55%,#fff0a6 0,transparent 40%),linear-gradient(118deg,transparent 64%,color-mix(in srgb,var(--kk-room-tint) 10%,transparent) 64.2%,transparent 90%)}
+    .kk-playfield{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.62}
+    .kk-playfield svg{width:100%;height:100%;display:block}
+    body.is-game .kk-playfield{display:none}
+    .top{border-bottom-color:#17171724}
+    .hero h2 span{text-shadow:3px 3px 0 #ffd173}
+    #dailyBtn{background:#b9e800;border:2px solid #526800;box-shadow:0 5px 0 #52680035}
+    #home .mode{border-width:2px;box-shadow:0 5px 0 color-mix(in srgb,var(--mode) 19%,transparent)}
+    .mode:nth-child(1){--block:#ffd1c5}.mode:nth-child(2){--block:#ffe49a}.mode:nth-child(3){--block:#bdebd1}.mode:nth-child(4){--block:#bfddff}.mode:nth-child(5){--block:#e0f399}.mode:nth-child(6){--block:#ffcae6}.mode:nth-child(7){--block:#ded0ff}
+    .kk-game-mark{opacity:.55}
+    .mode-index{border:1.5px solid color-mix(in srgb,var(--mode) 55%,transparent);background:#fffdf8;box-shadow:0 3px 0 color-mix(in srgb,var(--mode) 17%,transparent)}
+    .mode-start{background:#fffdf871;border-radius:99px;padding:6px 11px;border:1px solid #17171718;font-size:11px}
+    .mode:hover .mode-start,.mode:focus-visible .mode-start{background:#fffdf8;border-color:var(--mode)}
+    .screen:not(#home) .gamehead{border-bottom:2px solid color-mix(in srgb,var(--chapter,var(--accent)) 45%,#17171712)}
+    .screen:not(#home) .pill{background:color-mix(in srgb,var(--chapter,var(--acid)) 27%,#fffdf8);border-color:color-mix(in srgb,var(--chapter,var(--acid)) 55%,#171717);box-shadow:0 3px 0 #1717170c}
+    .screen:not(#home) .panel{background:linear-gradient(145deg,color-mix(in srgb,var(--chapter,var(--acid)) 8%,#fffdf8),#fffdf8 45%);border-color:color-mix(in srgb,var(--chapter,var(--acid)) 32%,#17171722)}
+    #math .big-problem{color:#a52f18;text-shadow:2px 3px 0 #ffd8cf}
+    #math .answer-input,#memory .memory-input{background:#fff5cf;border:2px solid #d7b753}
+    #math .key,#memory .key{background:#fff2c1;border-color:#c8b272;box-shadow:0 3px 0 #d8bd7470}
+    #math .key:nth-child(3n+2),#memory .key:nth-child(3n+2){background:#d8efff;border-color:#8fc1dd;box-shadow:0 3px 0 #8fc1dd65}
+    #math .key.special,#memory .key.special{background:#e3f5b3;color:#3a5300;border-color:#9cbf59;box-shadow:0 3px 0 #9cbf5965}
+    #memory .memory-digit:nth-child(odd){color:#815000}
+    #logic .clue{background:#dff3e7;border-left-color:#147a55}
+    #logic .choice:nth-child(3n+1){background:#fff0b2}
+    #logic .choice:nth-child(3n+2){background:#d3edff}
+    #logic .choice:nth-child(3n){background:#ecdfff}
+    #logic .choice{border-color:#17171729;box-shadow:0 3px 0 #1717170b}
+    #logic .choice:hover{border-color:#147a55}
+    .choice:active,.key:active{box-shadow:none!important}
+    .logic-progress i{background:#cfe4d9}.logic-progress i.on{background:#147a55}
+    .result-score{background:#fff0a6;box-shadow:6px 6px 0 #e6472425}
+    .pause-card::before{background-color:#ffe49a}
+    @media(max-width:679px){
+      .kk-playfield{opacity:.3}
+      #home .mode{gap:14px}
+      .mode-start{padding:5px 8px}
+      body.is-game .gamehead{border-bottom-width:1px}
+      body.is-game .pill{box-shadow:none}
+    }
+    @media(prefers-reduced-motion:no-preference){
+      #home.active .kk-game-mark{animation:kk-mark-greet 650ms var(--kk-motion) backwards;animation-delay:calc(var(--kk-order,0)*35ms)}
+      @keyframes kk-mark-greet{from{transform:rotate(9deg) scale(.9)}to{transform:none}}
+    }
+    @media(prefers-reduced-motion:reduce){.kk-game-mark{animation:none!important}}
   </style>
 </head>
 <body>
+<div class="kk-playfield" aria-hidden="true"><svg viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="#e64724" stroke-width="13" d="M55 145h65M87 113v65"/><path fill="#ffce55" stroke="#171717" stroke-width="2" d="M1335 130l44 18-18 44-44-18z"/><path stroke="#60b7ed" stroke-width="14" d="M1395 390l-22 22 22 22-22 22"/><path stroke="#8d70cf" stroke-width="10" d="M20 500q30-50 60 0t60 0"/><path fill="#a6d973" stroke="#171717" stroke-width="2" d="M62 765l44-32 18 54z"/><path stroke="#e56ba2" stroke-width="12" d="M1300 815h64M1332 783v64"/><path fill="#60b7ed" d="M150 945h48v-48h-48z"/><path stroke="#ffce55" stroke-width="8" d="M1255 980l26-45 26 45z"/></g></svg></div>
 <main class="app">
   <header class="top">
     <div class="brand"><h1>Knock <span>Knock</span></h1></div>
