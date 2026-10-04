@@ -1,8 +1,8 @@
-# BRAIN/7｜大人的腦部鍛鍊
+# Knock Knock
 
 七個輕鬆的腦力小遊戲：快速心算、瞬間記憶、邏輯推理、規則切換、舒爾特方格、Stroop、表裡不一。
 
-[玩 BRAIN/7](https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/) · [原版快速心算](https://qookey109-pixel.github.io/quick-math-brain-training/)
+[玩 Knock Knock](https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/) · [原版快速心算](https://qookey109-pixel.github.io/quick-math-brain-training/)
 
 - 每關最高五顆星，沿用原本答題分數換算；七關回顧分別呈現各關星等。0 分不亮星，1–39／40–59／60–74／75–89／90–100 分分別為一至五星。
 - 結尾回顧遊玩時間與各關活動，答題細節可自行展開。
