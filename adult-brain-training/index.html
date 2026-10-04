@@ -760,6 +760,11 @@
       body.is-game #logic .logic-progress,body.is-game #logic .logic-q,body.is-game #logic .clues{flex-shrink:0}
       body.is-game #logic .choices{margin-top:auto;flex-shrink:0;grid-template-rows:repeat(2,58px);min-height:126px}
     }
+
+    /* Let every shared recap sit directly on the ambient background. */
+    #result .panel.result,#sessionBreak .panel.result,#dailyResult .panel.result{
+      background:transparent;border:0;box-shadow:none;border-radius:0;
+    }
 </style>
 </head>
 <body>
