@@ -58,7 +58,7 @@
     .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}.actions>*{flex:1 1 170px}
     #home .actions{max-width:420px;margin-top:2px}
     #dailyBtn{min-height:62px;font-size:16px;letter-spacing:.01em;position:relative;overflow:hidden}#dailyBtn::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.38) 48%,transparent 72%);transform:translateX(-120%)}@media(prefers-reduced-motion:no-preference){#dailyBtn:hover::after,#dailyBtn:focus-visible::after{animation:cta-scan 620ms var(--ease-out)}@keyframes cta-scan{to{transform:translateX(120%)}}}
-    .home-select{display:grid;grid-template-areas:'preview' 'modes';gap:16px;margin-top:30px}.modes{grid-area:modes;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;border-top:0}
+    #homeSelect{scroll-margin-top:18px}.home-select{display:grid;grid-template-areas:'preview' 'modes';gap:16px;margin-top:30px}.modes{grid-area:modes;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;border-top:0}
     .home-preview{grid-area:preview;--preview:#ff6b4a;position:relative;min-height:230px;border:1px solid var(--line-strong);border-top:6px solid var(--preview);border-radius:22px;background:var(--surface);overflow:hidden;padding:22px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:none;transition:border-color 180ms var(--ease-out),transform 180ms var(--ease-out)}
     .home-preview::before{content:"";position:absolute;right:-88px;bottom:-118px;width:270px;height:270px;background:color-mix(in srgb,var(--preview) 17%,transparent);clip-path:polygon(49% 0,100% 25%,86% 100%,16% 88%,0 22%);pointer-events:none;transform:rotate(-7deg);transition:transform 180ms var(--ease-out),background 180ms var(--ease-out)}
     .home-preview-kicker{position:relative;z-index:1;font:900 10px/1 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.16em;color:var(--preview)}
@@ -267,7 +267,8 @@
     .completion-star{font-size:100px;line-height:1.2;color:#805c00;margin:20px auto}.completion-stars{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;font-size:clamp(28px,6vw,52px);margin:26px auto;color:#805c00}.unlit{color:#746d60}.session-dots{font-size:24px;gap:8px;color:#805c00}.result-unit{max-width:480px;margin:0 auto 22px;font-size:15px;line-height:1.8}.result .result-grid{max-width:620px;margin:0 auto;text-align:left}.recap-details{grid-column:1/-1;width:100%;margin:12px 0;text-align:left;border-top:1px solid var(--line);padding-top:10px}.recap-details summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-size:13px;font-weight:800;color:var(--muted)}.recap-details summary::before{content:'＋';margin-right:8px}.recap-details[open] summary::before{content:'−'}
     .journey-row{display:grid;grid-template-columns:26px 1fr auto;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:14px 0;text-align:left}.journey-row>span:last-of-type{font-size:12px;color:var(--muted)}.journey-star{font-size:24px;color:#805c00}.journey-row>.recap-details{grid-column:2/-1}.recent-plays{margin-top:28px;border-top:1px solid var(--line);padding-top:12px;font-size:13px;color:var(--muted)}.recent-plays summary{cursor:pointer;min-height:44px;font-weight:800}.history-row{padding:10px 0;border-bottom:1px solid var(--line);line-height:1.7}
     .pause-overlay{position:fixed;inset:0;z-index:10000;display:grid;place-items:center;padding:22px;background:#f7f3eaf2}.pause-card{width:min(100%,440px);padding:32px;border-radius:24px;border:1px solid var(--line);background:var(--surface);text-align:center}.pause-card h2{font-size:40px;letter-spacing:-.05em}.pause-card p{line-height:1.8;color:var(--muted);margin-bottom:24px}.is-paused .schulte-float{animation-play-state:paused!important}
-    .quiet-stat,#math .stats .stat:nth-child(3),#memory .stats .stat:nth-child(3),#schulte .stats .stat:nth-child(n+3),#executive .stats,#stroop .stats,#odd .stats{display:none}
+    #math .stats .stat:nth-child(n+2),#memory .stats .stat:nth-child(3),#logic .stats,#executive .stats,#schulte .stats,#stroop .stats,#odd .stats{display:none}
+    .math-hud{display:flex;align-items:center;gap:6px}.math-hud .pill{white-space:nowrap}
     #math .stats,#memory .stats{grid-template-columns:repeat(2,1fr)}#schulte .stats{grid-template-columns:repeat(2,1fr)}
     @media(max-width:560px){.play-toolbar{align-items:flex-start;flex-direction:column;gap:8px}.play-toolbar>div{width:100%;justify-content:space-between}.brand p{max-width:75px;line-height:1.5}.brand{gap:8px}.sound-controls{gap:4px}.journey-row{grid-template-columns:24px 1fr}.journey-row>span:last-of-type{grid-column:2}.home-preview{min-height:290px}#schulte .panel{padding:10px}.schulte-mode-grid{margin-bottom:8px}.schulte-stats{margin-bottom:8px}.schulte-stats .stat{padding:8px 10px}.schulte-instruction{font-size:11px}.schulte-targetbar{position:sticky;top:6px;z-index:3;box-shadow:0 3px 10px #17171714}.schulte-cell{min-height:44px}.schulte-float{min-height:42px}}
     .daily-summary{gap:0}.journey-row{display:block;padding:0;border-bottom:1px solid var(--line)}.journey-heading{display:grid;grid-template-columns:26px minmax(0,1fr) auto;align-items:center;gap:10px;min-height:76px;padding:12px 0;list-style:none;cursor:pointer}.journey-heading::-webkit-details-marker{display:none}.journey-heading strong{font-size:15px}.journey-time{font-size:12px;color:var(--muted)}details.journey-row .journey-time::after{content:' ＋'}details.journey-row[open] .journey-time::after{content:' −'}.journey-row .result-grid{padding:0 0 16px 36px}
@@ -365,9 +366,9 @@
       <div class="eyebrow">TAKE YOUR TIME / SEVEN LITTLE GAMES</div>
       <h2>慢慢玩，<br><span>腦袋散個步。</span></h2>
       <p>7 個小遊戲，陪腦袋散個步。想玩一關，或慢慢走完七關都可以。每關最多五顆星，依答題表現點亮。照自己的節奏玩就好。</p>
-      <div class="actions"><button id="dailyBtn" class="primary" type="button">慢慢玩完 7 關</button></div><p class="session-info">完整遊玩長度依節奏而定 · 每關之間可以休息 · 隨時暫停</p>
+      <div class="actions"><button id="dailyBtn" class="primary" type="button">慢慢玩完 7 關</button><button id="resumeDailyBtn" class="secondary hidden" type="button">繼續上次散步</button></div><p id="resumeDailyNote" class="session-info hidden">已完成的關卡已保存；未完成的下一關會從頭開始。</p><p class="session-info">完整遊玩長度依節奏而定 · 每關之間可以休息 · 隨時暫停</p>
     </div>
-    <div class="home-select">
+    <div id="homeSelect" class="home-select">
       <div class="modes" aria-label="選擇單項訓練">
         <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="每級 60 秒。累計答對升級，全程只用兩個數運算。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>每級 60 秒。累計答對升級，全程只用兩個數運算。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
         <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 6 秒，作答不限時；最高 9 位數。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 6 秒，慢慢完整輸入；最高 9 位數。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
@@ -392,9 +393,8 @@
   </section>
 
   <section id="math" class="screen">
-    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div><div id="mathLevelMark" class="pill">LV 1 · 0/8</div></div>
-    <div class="panel">
-      <div class="stats"><div class="stat"><span>時間</span><strong id="mathTime">60</strong></div><div class="stat"><span>已玩題數</span><strong id="mathPlayed">0</strong></div><div class="stat quiet-stat"><span>連對</span><strong id="mathStreak">0</strong></div></div>
+    <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div><div class="math-hud"><span id="mathLevelMark" class="pill">LV 1 · 0/8</span><span class="pill"><span id="mathTime">60</span> 秒</span></div></div>
+    <div class="panel"><div class="game-live-detail hidden" aria-hidden="true"><span id="mathPlayed">0</span><span id="mathStreak">0</span></div>
       <div class="mini-instruction">每級 60 秒 · 8 題正確升級 · 全程兩個數運算 · 最高 LV10</div>
       <div id="mathProblem" class="big-problem">準備</div>
       <div class="answer-wrap"><input id="mathAnswer" class="answer-input" inputmode="none" autocomplete="off" readonly aria-label="答案；手機使用畫面數字鍵盤，電腦可直接使用數字鍵盤輸入"><button id="mathSubmit" class="primary" type="button">送出</button></div>
@@ -406,7 +406,7 @@
   <section id="memory" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div><div id="memoryRoundPill" class="pill">1 / 10</div></div>
     <div class="panel">
-      <div class="stats"><div class="stat"><span>回合</span><strong id="memoryRound">1</strong></div><div class="stat"><span>位數</span><strong id="memoryDigits">4</strong></div><div class="stat"><span>正確</span><strong id="memoryCorrect">0</strong></div></div>
+      <div class="stats"><div class="stat"><span>回合</span><strong id="memoryRound">1</strong></div><div class="stat"><span>位數</span><strong id="memoryDigits">4</strong></div><strong id="memoryCorrect" class="hidden" aria-hidden="true">0</strong></div>
       <div class="mini-instruction">每回合看 6 秒，作答不限時；最多記 9 位數。</div><div class="memory-stage"><div id="memoryLabel" class="memory-label">準備好後開始</div><div id="memoryNumber" class="memory-number" role="img" aria-label="準備記憶數字">••••</div><div id="memoryAnswerTimer" class="memory-answer-timer hidden">作答不限時</div><div id="memoryEntry" class="hidden"><input id="memoryAnswer" class="memory-input" readonly inputmode="none" maxlength="9" autocomplete="off" aria-label="輸入剛才的數字"><div id="memoryKeys" class="keypad" aria-label="記憶數字鍵盤"></div><div class="actions"><button id="memorySubmit" class="primary" type="button">確認</button></div></div><button id="memoryStart" class="primary" type="button">開始</button></div>
     </div>
   </section>
@@ -414,7 +414,7 @@
   <section id="logic" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>邏輯推理</h2></div><div id="logicPill" class="pill">1 / 10 · 排序</div></div>
     <div class="panel">
-      <div class="stats logic-stats"><div class="stat"><span>答對題數</span><strong id="logicCorrectCount">0</strong></div><div class="stat"><span>作答節奏</span><strong id="logicTimer">不限時</strong></div></div>
+      <div class="stats logic-stats hidden" aria-hidden="true"><div class="stat"><span>答對題數</span><strong id="logicCorrectCount">0</strong></div><div class="stat"><span>作答節奏</span><strong id="logicTimer">不限時</strong></div></div>
       <div class="mini-instruction">作答不限時。點選答案直接換題，不顯示答案解析。</div>
       <div id="logicProgress" class="logic-progress"></div><div id="logicQuestion" class="logic-q"></div><div id="logicClues" class="clues"></div><div id="logicChoices" class="choices"></div>
     </div>
@@ -423,7 +423,7 @@
   <section id="executive" class="screen exec-theme rule-parity">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>規則切換</h2></div><div id="execRoundPill" class="pill">1 / 18 · 熟悉 A</div></div>
     <div class="panel">
-      <div class="stats exec-stats"><div class="stat"><span>正確題數</span><strong id="execCorrect">0</strong></div><div class="stat"><span>切換命中</span><strong id="execSwitch">0/0</strong></div><div class="stat"><span>平均反應</span><strong id="execRt">—</strong></div></div>
+      <div class="stats exec-stats hidden" aria-hidden="true"><div class="stat"><span>正確題數</span><strong id="execCorrect">0</strong></div><div class="stat"><span>切換命中</span><strong id="execSwitch">0/0</strong></div><div class="stat"><span>平均反應</span><strong id="execRt">—</strong></div></div>
       <div class="mini-instruction exec-instruction"><strong>先看規則，再判斷數字。</strong><br>後半段規則會更頻繁切換，不要沿用上一題的反應。</div><div class="exec-stage"><div id="execRule" class="exec-rule">準備</div><div id="execNumber" class="exec-number">—</div></div>
       <div class="exec-choices"><button id="execLeft" class="choice" type="button">左</button><button id="execRight" class="choice" type="button">右</button></div>
       <div id="execHint" class="exec-hint">依照目前規則作答；規則切換時不要沿用上一題。</div>
@@ -437,7 +437,7 @@
         <button type="button" class="schulte-mode active" data-schulte-mode="A"><b>A</b><span>1 → 50</span></button>
         <button type="button" class="schulte-mode" data-schulte-mode="B"><b>B</b><span>50 → 1</span></button>
       </div>
-      <div class="stats schulte-stats"><div class="stat"><span>目前目標</span><strong id="schulteNext">1</strong></div><div class="stat"><span>已完成</span><strong id="schulteDone">0 / 50</strong></div><div class="stat"><span>錯誤</span><strong id="schulteWrong">0</strong></div><div class="stat"><span>時間</span><strong id="schulteTime">0.0 秒</strong></div></div>
+      <div class="stats schulte-stats hidden" aria-hidden="true"><div class="stat"><span>目前目標</span><strong id="schulteNext">1</strong></div><div class="stat"><span>已完成</span><strong id="schulteDone">0 / 50</strong></div><div class="stat"><span>錯誤</span><strong id="schulteWrong">0</strong></div><div class="stat"><span>時間</span><strong id="schulteTime">0.0 秒</strong></div></div>
       <div class="mini-instruction schulte-instruction">找出目前目標。數字會持續較大幅度漂動；答對的數字留在原位，其餘數字重新換位。</div>
       <div class="schulte-targetbar"><span>現在找</span><strong id="schulteTargetBig">1</strong></div>
       <div id="schulteGrid" class="schulte-grid" aria-label="動態舒爾特搜尋場"></div>
@@ -447,7 +447,7 @@
   <section id="stroop" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>Stroop 顏色衝突</h2></div><div id="stroopPill" class="pill">1 / 20</div></div>
     <div class="panel">
-      <div class="stats stroop-stats"><div class="stat"><span>正確題數</span><strong id="stroopCorrect">0</strong></div><div class="stat"><span>衝突命中</span><strong id="stroopConflict">0/0</strong></div><div class="stat"><span>平均反應</span><strong id="stroopRt">—</strong></div></div>
+      <div class="stats stroop-stats hidden" aria-hidden="true"><div class="stat"><span>正確題數</span><strong id="stroopCorrect">0</strong></div><div class="stat"><span>衝突命中</span><strong id="stroopConflict">0/0</strong></div><div class="stat"><span>平均反應</span><strong id="stroopRt">—</strong></div></div>
       <div class="mini-instruction stroop-instruction"><strong>只看字體顏色，不要讀文字。</strong><br>例如「紅」如果是藍色字，就要按「藍色」。</div>
       <div id="stroopTrialTag" class="stroop-trial-tag">準備</div>
       <div class="stroop-stage"><div id="stroopWord" class="stroop-word" aria-live="polite" data-color="red">紅</div></div>
@@ -461,7 +461,7 @@
   <section id="odd" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>表裡不一</h2></div><div id="oddPill" class="pill">1 / 16 · 16 格</div></div>
     <div class="panel">
-      <div class="stats odd-stats"><div class="stat"><span>首擊命中</span><strong id="oddCorrect">0/0</strong></div><div class="stat"><span>錯誤點擊</span><strong id="oddWrong">0</strong></div><div class="stat"><span>平均搜尋</span><strong id="oddRt">—</strong></div></div>
+      <div class="stats odd-stats hidden" aria-hidden="true"><div class="stat"><span>首擊命中</span><strong id="oddCorrect">0/0</strong></div><div class="stat"><span>錯誤點擊</span><strong id="oddWrong">0</strong></div><div class="stat"><span>平均搜尋</span><strong id="oddRt">—</strong></div></div>
       <div class="mini-instruction odd-instruction"><strong>找出唯一一個「箭頭方向」與「文字方向」不一致的格子。</strong><br>色塊只是視覺干擾，不代表答案。</div>
       <div id="oddGrid" class="odd-grid density-16" aria-label="表裡不一選項"></div>
     </div>
@@ -491,13 +491,14 @@
     <div class="panel result"><div class="eyebrow">SEVEN LITTLE MOMENTS</div><div id="dailyScore" class="completion-stars" role="img"></div><div id="dailyMessage" class="result-unit">每關各有五顆星，看看這次的遊玩回顧。</div><div id="dailyOverview" class="result-grid"></div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再散步一次</button></div></div>
   </section>
 </main>
-<div id="pauseOverlay" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="pause-card"><div class="eyebrow">TAKE A BREATH</div><h2 id="pauseTitle">休息一下。</h2><p>遊戲和計時都停在這裡。準備好了，再繼續。</p><button id="resumeBtn" class="primary" type="button">繼續玩</button></div></div>
+<div id="pauseOverlay" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="pause-card"><div class="eyebrow">TAKE A BREATH</div><h2 id="pauseTitle">休息一下。</h2><p>遊戲和計時都停在這裡。準備好了，再繼續。</p><div class="actions"><button id="resumeBtn" class="primary" type="button">繼續玩</button><button id="pauseFinishBtn" class="secondary" type="button">先玩到這裡</button></div></div></div>
+<div id="readyOverlay" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="readyTitle" aria-describedby="readyRule"><div class="pause-card"><div class="eyebrow">TAKE YOUR TIME</div><h2 id="readyTitle">準備好再開始。</h2><p id="readyRule"></p><div class="actions"><button id="readyCancel" class="secondary" type="button">返回選關</button><button id="readyStart" class="primary" type="button">準備好了</button></div></div></div>
 <div id="transitionBurst" class="transition-burst" aria-hidden="true"></div>
 
 <script>
 (function(){
   var screens=[].slice.call(document.querySelectorAll('.screen'));
-  var dailyMode=false,dailyQueue=[],dailySelection=[],dailyRecords={};
+  var dailyMode=false,dailyQueue=[],dailySelection=[],dailyRecords={},pendingStartMode=null,readyReturnFocus=null;
   var currentMode=null,modeStartedAt=0,lastPlay=null;
   var muted=false,audioCtx=null;
   var mathTimer=null,mathTime=60,mathCorrect=0,mathWrong=0,mathAnswerValue=0,mathLevel=1,mathLevelCorrect=0,mathStreak=0,mathMaxStreak=0,mathSeen=new Set(),mathOps=[],mathStepCount=1,mathQuestionStartedAt=0,mathTotalResponseMs=0,mathResponseCount=0,mathGameStartedAt=0,mathTransitioning=false,mathTransitionTimer=null;
@@ -608,6 +609,37 @@
   var allModes=['math','memory','logic','executive','schulte','stroop','odd'];
   var modeNames={math:'快速心算',memory:'瞬間記憶',logic:'邏輯推理',executive:'規則切換',schulte:'舒爾特方格',stroop:'Stroop 顏色衝突',odd:'表裡不一'};
   var reduceMotion=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var ruleHints={math:'每級 60 秒，答對 8 題升級；每題只用兩個數字。',memory:'每回合先看 6 秒，接著不限時輸入；數字最多 9 位。',logic:'不限時，讀完線索後點選答案就會進入下一題。',executive:'先看當回合規則，再選左或右；總共 18 回合。',schulte:'選擇 1 → 50 或 50 → 1，依序找到 50 個數字。',stroop:'只看字體顏色，不要讀字義；共 20 題。',odd:'找出箭頭方向和文字方向不同的格子；共 16 回合。'};
+  var DAILY_CHECKPOINT_KEY='brain7-daily-checkpoint';
+  function seenRules(){try{var x=JSON.parse(localStorage.getItem('brain7-rules-seen')||'[]');return Array.isArray(x)?x:[]}catch(e){return []}}
+  function requestModeStart(mode){
+    if(seenRules().indexOf(mode)>=0){startMode(mode);return}
+    pendingStartMode=mode;readyReturnFocus=document.activeElement;
+    $('readyTitle').textContent=modeNames[mode]+'，準備好再開始。';$('readyRule').textContent=ruleHints[mode];
+    $('readyOverlay').classList.remove('hidden');document.querySelector('main').inert=true;$('readyStart').focus()
+  }
+  function closeReady(start){
+    if($('readyOverlay').classList.contains('hidden'))return;
+    var mode=pendingStartMode;pendingStartMode=null;$('readyOverlay').classList.add('hidden');document.querySelector('main').inert=false;
+    if(start&&mode){var seen=seenRules();if(seen.indexOf(mode)<0)seen.push(mode);try{localStorage.setItem('brain7-rules-seen',JSON.stringify(seen))}catch(e){};startMode(mode)}
+    else {if(dailyMode&&mode)dailyQueue.unshift(mode);if(readyReturnFocus&&readyReturnFocus.isConnected)readyReturnFocus.focus()}
+  }
+  $('readyStart').addEventListener('click',function(){closeReady(true)});$('readyCancel').addEventListener('click',function(){closeReady(false)});
+  $('readyOverlay').addEventListener('keydown',function(e){if(e.key==='Escape'){e.preventDefault();closeReady(false)}if(e.key==='Tab'){e.preventDefault();(document.activeElement===$('readyStart')?$('readyCancel'):$('readyStart')).focus()}});
+  function loadDailyCheckpoint(){
+    try{var c=JSON.parse(localStorage.getItem(DAILY_CHECKPOINT_KEY)||'null');if(!c||c.version!==1||!Array.isArray(c.selection)||c.selection.join('|')!==allModes.join('|')||!Array.isArray(c.queue)||!c.queue.every(function(m){return allModes.indexOf(m)>=0})||!c.records||typeof c.records!=='object')return null;
+      var records={};Object.keys(c.records).forEach(function(m){var r=c.records[m];if(allModes.indexOf(m)>=0&&r&&r.mode===m&&typeof r.completed==='boolean'&&Number.isFinite(r.seconds)&&Array.isArray(r.items))records[m]=r});
+      return c.queue.length?{selection:allModes.slice(),queue:c.queue.slice(),records:records}:null
+    }catch(e){return null}
+  }
+  function saveDailyCheckpoint(){
+    if(!dailyMode||!dailyQueue.length){try{localStorage.removeItem(DAILY_CHECKPOINT_KEY)}catch(e){};refreshResumeControl();return}
+    try{localStorage.setItem(DAILY_CHECKPOINT_KEY,JSON.stringify({version:1,selection:dailySelection,queue:dailyQueue,records:dailyRecords,savedAt:Date.now()}))}catch(e){}
+    refreshResumeControl()
+  }
+  function refreshResumeControl(){var c=loadDailyCheckpoint();$('resumeDailyBtn').classList.toggle('hidden',!c);$('resumeDailyNote').classList.toggle('hidden',!c);if(c)$('resumeDailyBtn').textContent='繼續上次散步（已完成 '+Object.keys(c.records).length+' 關）'}
+  function resumeDaily(){var c=loadDailyCheckpoint();if(!c)return;dailyMode=true;dailySelection=c.selection;dailyQueue=c.queue;dailyRecords=c.records;startNextDaily()}
+  $('resumeDailyBtn').addEventListener('click',resumeDaily);
 
 
 
@@ -678,19 +710,21 @@
   function renderHistory(){var list=$('historyList'),history=readHistory();list.innerHTML='';if(!history.length){var p=document.createElement('p');p.textContent='這次的星光，從你想玩的那一關開始。紀錄只留在這個瀏覽器。';list.appendChild(p);return}
     history.slice(0,5).forEach(function(item){var row=document.createElement('p');row.className='history-row';var d=new Date(item.date);row.textContent=(Number.isNaN(d.getTime())?'':d.toLocaleDateString('zh-TW',{month:'numeric',day:'numeric'}))+' · '+item.label+' · '+(item.ratingVersion===1?(item.ratedGames?'星等合計 '+item.stars+' / '+(item.ratedGames*5)+' · 完成 '+item.completed+' 關':'尚未評星'):'完成 '+item.stars+' 關（舊版紀錄）')+' · '+formatTime(item.seconds);list.appendChild(row)})
   }
-  function goHome(){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm();renderHistory()}
+  function goHome(focusSelection,selectedMode){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm();renderHistory();refreshResumeControl();if(focusSelection){if(selectedMode&&homeModeButtons.some(function(b){return b.dataset.mode===selectedMode}))previewMode(selectedMode);requestAnimationFrame(function(){$('homeSelect').scrollIntoView({behavior:reduceMotion?'auto':'smooth',block:'start'});var target=selectedMode?document.querySelector('.mode[data-mode="'+selectedMode+'"]'):document.querySelector('.mode');if(target)target.focus({preventScroll:true})})}}
+  function leaveCurrentFlow(){if(currentMode){finishEarly();return}if($('sessionBreak').classList.contains('active')){dailyQueue=[];showDailyResult();return}goHome()}
   function finishEarly(){
     if(!currentMode)return;
     var mode=currentMode,record={mode:mode,completed:false,seconds:Math.max(0,(playNow()-modeStartedAt)/1000),items:[['遊玩狀態','這次先玩到這裡']]};
     stopAll();lastPlay=record;
-    if(dailyMode){dailyRecords[mode]=record;dailyQueue=[];showDailyResult()}else{savePlay([record]);showResult(mode,null,{items:record.items})}
+    if(dailyMode){dailyRecords[mode]=record;dailyQueue=[];try{localStorage.removeItem(DAILY_CHECKPOINT_KEY)}catch(e){};showDailyResult()}else{savePlay([record]);showResult(mode,null,{items:record.items})}
   }
   $('pauseBtn').addEventListener('click',pausePlay);$('resumeBtn').addEventListener('click',resumePlay);$('finishEarlyBtn').addEventListener('click',finishEarly);
-  $('pauseOverlay').addEventListener('keydown',function(e){if(e.key==='Tab'){e.preventDefault();$('resumeBtn').focus()}if(e.key==='Escape'){e.preventDefault();e.stopPropagation();resumePlay()}});
+  $('pauseOverlay').addEventListener('keydown',function(e){if(e.key==='Tab'){e.preventDefault();(document.activeElement===$('resumeBtn')?$('pauseFinishBtn'):$('resumeBtn')).focus()}if(e.key==='Escape'){e.preventDefault();e.stopPropagation();resumePlay()}});
+  $('pauseFinishBtn').addEventListener('click',finishEarly);
+  document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',leaveCurrentFlow)});
   document.addEventListener('visibilitychange',function(){if(document.hidden)pausePlay()});
   document.addEventListener('keydown',function(e){if(e.key==='Escape'&&currentMode&&!paused){e.preventDefault();pausePlay()}});
-  renderHistory();
-
+  renderHistory();refreshResumeControl();
   function $(id){return document.getElementById(id)}
   function applyScreen(id){
     screens.forEach(function(s){s.classList.toggle('active',s.id===id)});document.body.classList.toggle('is-game',allModes.indexOf(id)>=0);
@@ -770,7 +804,7 @@
   function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
   function enterMode(mode,source){
     if(!mode)return;
-    stopHomeBgm();transitionClick();startMode(mode)
+    stopHomeBgm();transitionClick();requestModeStart(mode)
   }
 
   function saveAudioPreferences(){try{localStorage.setItem('brain7-audio',JSON.stringify({music:musicVolume,effects:effectVolume,muted:muted,musicMuted:musicMuted,effectsMuted:effectsMuted}))}catch(e){}}
@@ -790,7 +824,6 @@
   $('soundBtn').addEventListener('click',function(){var turnOff=!(musicMuted&&effectsMuted);musicMuted=turnOff;effectsMuted=turnOff;muted=false;updateAudioUi();saveAudioPreferences();homeBgmUnlocked=true;if(turnOff){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else if(gameFlowActive())startGameBgm()});
   document.addEventListener('pointerdown',unlockHomeBgm,{once:true});
   document.addEventListener('keydown',unlockHomeBgm,{once:true});
-  document.querySelectorAll('.back').forEach(function(b){b.addEventListener('click',function(){stopAll();stopGameBgm();dailyMode=false;show('home');startHomeBgm()})});
   var homeModeButtons=[].slice.call(document.querySelectorAll('.mode'));
   function previewMode(mode){
     var b=document.querySelector('.mode[data-mode="'+mode+'"]');if(!b)return;
@@ -845,8 +878,8 @@
     currentMode=null;
     $('playToolbar').classList.add('hidden');
     clearPlayTimer(mathTimer);mathTimer=null;clearPlayTimer(mathTransitionTimer);mathTransitionTimer=null;mathTransitioning=false;clearPlayTimer(memoryTimeout);memoryTimeout=null;clearPlayTimer(memoryAnswerTimeout);memoryAnswerTimeout=null;clearPlayTimer(memoryAnswerTicker);memoryAnswerTicker=null;memoryAwaitingAnswer=false;clearPlayTimer(logicTimer);logicTimer=null;clearPlayTimer(logicTimeout);logicTimeout=null;clearPlayTimer(schulteTimer);schulteTimer=null}
-  function startDaily(){stopAll();dailyMode=true;dailyRecords={};dailySelection=allModes.slice();dailyQueue=dailySelection.slice();startNextDaily()}
-  function startNextDaily(){if(!dailyQueue.length){showDailyResult();return}startMode(dailyQueue.shift())}
+  function startDaily(){stopAll();try{localStorage.removeItem(DAILY_CHECKPOINT_KEY)}catch(e){};refreshResumeControl();dailyMode=true;dailyRecords={};dailySelection=allModes.slice();dailyQueue=dailySelection.slice();startNextDaily()}
+  function startNextDaily(){if(!dailyQueue.length){showDailyResult();return}requestModeStart(dailyQueue.shift())}
   function startMode(mode){
     stopAll();stopHomeBgm();
     currentMode=mode;modeStartedAt=playNow();
@@ -1188,7 +1221,7 @@
   function endExecutive(){
     var acc=Math.round(execCorrect/EXEC_TOTAL_ROUNDS*100),switchAcc=execSwitchTotal?Math.round(execSwitchCorrect/execSwitchTotal*100):0;
     var avg=execRound?Math.round(execRtTotal/execRound):0,speed=Math.max(0,Math.min(100,Math.round((2400-avg)/16)));
-    finishMode('executive',Math.round(acc*.55+switchAcc*.25+speed*.20),{items:[['遊玩題數',execRound+' 題'],['答對題數',execCorrect+' / '+execRound],['平均作答',execRound?(execRtTotal/execRound/1000).toFixed(2)+' 秒':'—']]})
+    finishMode('executive',Math.round(acc*.55+switchAcc*.25+speed*.20),{items:[['遊玩題數',execRound+' 題'],['答對題數',execCorrect+' / '+execRound],['切換命中',execSwitchCorrect+' / '+execSwitchTotal],['平均作答',execRound?(execRtTotal/execRound/1000).toFixed(2)+' 秒':'—']]})
   }
 
   function buildSchulteSequence(mode){
@@ -1251,7 +1284,7 @@
       schulteFinished=true;clearPlayTimer(schulteTimer);schulteTimer=null;
       var sec=(playNow()-schulteStart)/1000;
       var accuracy=50/(50+schulteWrong)*100,pace=Math.max(0,Math.min(100,Math.round(130-sec*.7)));
-      finishMode('schulte',Math.round(accuracy*.72+pace*.28),{items:[['搜尋方向',schulteModeDetail],['找到目標','50 / 50'],['平均搜尋',(sec/50).toFixed(2)+' 秒']]})
+      finishMode('schulte',Math.round(accuracy*.72+pace*.28),{items:[['搜尋方向',schulteModeDetail],['找到目標','50 / 50'],['錯誤點擊',String(schulteWrong)],['總搜尋時間',sec.toFixed(1)+' 秒'],['平均搜尋',(sec/50).toFixed(2)+' 秒']]})
     }
   }
 
@@ -1305,7 +1338,7 @@
   function endStroop(){
     var acc=Math.round(stroopCorrect/STROOP_TOTAL*100),conflict=stroopConflictTotal?Math.round(stroopConflictCorrect/stroopConflictTotal*100):0;
     var avg=stroopRtTotal/STROOP_TOTAL,speed=Math.max(0,Math.min(100,Math.round((2200-avg)/16)));
-    finishMode('stroop',Math.round(acc*.55+conflict*.30+speed*.15),{items:[['遊玩題數',stroopRound+' 題'],['答對題數',stroopCorrect+' / '+stroopRound],['平均作答',stroopRound?(stroopRtTotal/stroopRound/1000).toFixed(2)+' 秒':'—']]})
+    finishMode('stroop',Math.round(acc*.55+conflict*.30+speed*.15),{items:[['遊玩題數',stroopRound+' 題'],['答對題數',stroopCorrect+' / '+stroopRound],['衝突命中',stroopConflictCorrect+' / '+stroopConflictTotal],['錯誤作答',String(stroopWrong)],['平均作答',stroopRound?(stroopRtTotal/stroopRound/1000).toFixed(2)+' 秒':'—']]})
   }
 
   var ODD_TOTAL=16;
@@ -1354,12 +1387,12 @@
   function endOdd(){
     var avg=oddCorrect?oddRtTotal/oddCorrect:0,firstHit=Math.round(oddFirstHit/ODD_TOTAL*100),accuracy=Math.round(ODD_TOTAL/(ODD_TOTAL+oddWrong)*100);
     var speed=Math.max(0,Math.min(100,Math.round((4500-avg)/35)));
-    finishMode('odd',Math.round(accuracy*.45+firstHit*.35+speed*.20),{items:[['找到目標',oddCorrect+' 個'],['平均搜尋',oddCorrect?(oddRtTotal/oddCorrect/1000).toFixed(2)+' 秒':'—'],['一次找到',oddFirstHit+' / '+oddCorrect]]})
+    finishMode('odd',Math.round(accuracy*.45+firstHit*.35+speed*.20),{items:[['找到目標',oddCorrect+' 個'],['錯誤點擊',String(oddWrong)],['平均搜尋',oddCorrect?(oddRtTotal/oddCorrect/1000).toFixed(2)+' 秒':'—'],['一次找到',oddFirstHit+' / '+oddCorrect]]})
   }
 
   function showDailyBreak(mode,unused,stats){
     var completed=Object.keys(dailyRecords).length;
-    show('sessionBreak');
+    show('sessionBreak');saveDailyCheckpoint();
     $('sessionProgressPill').textContent=completed+' / '+dailySelection.length;
     $('sessionBreakTitle').textContent=modeNames[mode]+'，玩好了';
     renderRating($('sessionBreakScore'),dailyRecords[mode]);
@@ -1380,10 +1413,10 @@
     renderRecap($('resultGrid'),lastPlay);
     var a=$('resultActions');a.innerHTML='';
     var retry=document.createElement('button');retry.className='primary';retry.type='button';retry.textContent='再玩一次';retry.addEventListener('click',function(){dailyMode=false;startMode(mode)});
-    var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='換一關玩';home.addEventListener('click',goHome);a.appendChild(retry);a.appendChild(home)
+    var home=document.createElement('button');home.className='secondary';home.type='button';home.textContent='挑下一關';home.addEventListener('click',function(){goHome(true,mode)});a.appendChild(retry);a.appendChild(home)
   }
   function showDailyResult(){
-    show('dailyResult');dailyMode=false;
+    try{localStorage.removeItem(DAILY_CHECKPOINT_KEY)}catch(e){};dailyMode=false;refreshResumeControl();show('dailyResult');
     var records=dailySelection.map(function(m){return dailyRecords[m]}).filter(Boolean),completed=records.filter(function(r){return r.completed}).length;
     $('dailyScore').textContent='每關五星 · 七關回顧';
     $('dailyScore').setAttribute('aria-label','完成 '+completed+' / 7 關，每關最多五星');
