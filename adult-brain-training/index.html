@@ -1862,8 +1862,8 @@
       var col=x/size,row=y/size;
       ctx.strokeStyle='#796b54';ctx.globalAlpha=.22;ctx.lineWidth=1;
       ctx.strokeRect(x,y,size,size);
-      if((col+row*3)%11===0){
-        ctx.globalAlpha=.38;ctx.fillStyle=['#ffbe55','#60d6a7','#a78bfa'][Math.floor((col+row)%3)];
+      if((col-row+99)%11===0){
+        ctx.globalAlpha=.38;ctx.fillStyle=['#ffbe55','#60d6a7','#a78bfa'][Math.abs(col-row)%3];
         ctx.beginPath();ctx.moveTo(x+24,y+22);ctx.lineTo(x+55,y+52);ctx.lineTo(x+22,y+55);ctx.closePath();ctx.fill();
       }
     }}
