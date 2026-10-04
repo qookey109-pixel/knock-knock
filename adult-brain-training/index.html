@@ -351,20 +351,39 @@
       body.is-game .play-toolbar .audio-popover .secondary{font-size:13px}
       body.is-game .memory-answer-timer{font-size:11px;padding:4px 8px;margin-bottom:6px}
     }
+
+    /* Knock Knock: doorways, room numbers and wooden knock feedback. */
+    .hero::after{content:"";width:clamp(80px,16vw,180px);height:clamp(130px,24vw,260px);top:14px;right:8px;border:3px solid rgba(23,23,23,.07);border-radius:22px 22px 6px 6px;background:radial-gradient(circle at 82% 53%,rgba(23,23,23,.09) 0 5px,transparent 6px),linear-gradient(100deg,transparent,rgba(185,232,0,.08));transform:rotate(5deg)}
+    .mode{border-radius:20px 20px 8px 8px}
+    .mode::after{right:14px;bottom:15px;width:58px;height:86px;border:2px solid color-mix(in srgb,var(--mode) 18%,transparent);border-radius:12px 12px 4px 4px;background:radial-gradient(circle at 80% 52%,var(--mode) 0 3px,transparent 4px);opacity:.3;transform:rotate(-5deg)}
+    .mode:hover::after,.mode.is-active::after,.mode:focus-visible::after{transform:rotate(0deg);opacity:.55}
+    .mode-index{border-radius:6px;box-shadow:0 2px 0 rgba(23,23,23,.06)}
+    .home-preview::before{right:-26px;bottom:-100px;width:190px;height:280px;clip-path:none;border:2px solid color-mix(in srgb,var(--preview) 20%,transparent);border-radius:26px 26px 5px 5px;background:radial-gradient(circle at 80% 44%,color-mix(in srgb,var(--preview) 35%,transparent) 0 7px,transparent 8px),color-mix(in srgb,var(--preview) 9%,transparent);transform:rotate(7deg)}
+    .home-preview.is-pulsing::before{transform:rotate(3deg)}
+    .home-preview,.panel{border-radius:22px 22px 10px 10px}
+    .pause-card::before{content:"";display:block;width:30px;height:42px;border:2px solid var(--ink);border-radius:7px 7px 2px 2px;margin:0 auto 16px;background:radial-gradient(circle at 79% 53%,var(--ink) 0 2px,transparent 3px),var(--acid)}
+    .completion-star .lit{display:inline-block}
+    @media(prefers-reduced-motion:no-preference){
+      .screen.active:not(#home){animation:room-enter 220ms var(--ease-out)}
+      .completion-star .lit{animation:knock-star 360ms var(--ease-out) both;animation-delay:calc(var(--star-index)*60ms)}
+      @keyframes room-enter{from{opacity:.4;transform:translateX(8px)}to{opacity:1;transform:translateX(0)}}
+      @keyframes knock-star{0%{transform:scale(.82)}45%{transform:scale(1.08)}75%{transform:scale(.98)}100%{transform:scale(1)}}
+    }
+
   </style>
 </head>
 <body>
 <main class="app">
   <header class="top">
     <div class="brand"><h1>Knock <span>Knock</span></h1><p>慢慢玩就好</p></div>
-    <div class="sound-controls"><button id="soundBtn" class="sound" type="button" aria-label="關閉聲音" aria-pressed="false">♪</button><details class="audio-settings"><summary aria-label="音樂與音效設定">聲音</summary><div class="audio-popover"><button id="musicToggle" class="secondary" type="button" aria-label="切換背景音樂" aria-pressed="false">BGM 開啟</button><label for="musicVolume">BGM <output id="musicValue">38%</output></label><input id="musicVolume" type="range" min="0" max="100" value="38"><button id="effectsToggle" class="secondary" type="button" aria-label="切換音效" aria-pressed="false">音效開啟</button><label for="effectVolume">音效 <output id="effectValue">70%</output></label><input id="effectVolume" type="range" min="0" max="100" value="70"></div></details></div>
+    <div class="sound-controls"><button id="soundBtn" class="sound" type="button" aria-label="關閉聲音" aria-pressed="false">♪</button><details class="audio-settings"><summary aria-label="音樂與音效設定">聲音</summary><div class="audio-popover"><button id="musicToggle" class="secondary" type="button" aria-label="切換背景音樂" aria-pressed="false">BGM 開啟</button><label for="musicVolume">BGM <output id="musicValue">38%</output></label><input id="musicVolume" type="range" min="0" max="100" value="38"><button id="effectsToggle" class="secondary" type="button" aria-label="切換音效" aria-pressed="false">音效開啟</button><button id="knockPreview" class="secondary" type="button" aria-label="試聽敲門音效">試聽咚咚</button><label for="effectVolume">音效 <output id="effectValue">70%</output></label><input id="effectVolume" type="range" min="0" max="100" value="70"></div></details></div>
   </header>
 
   <div id="playToolbar" class="play-toolbar hidden"><span id="sessionContext">隨心玩一關</span><div><button id="pauseBtn" class="secondary" type="button">休息一下</button><button id="finishEarlyBtn" class="secondary" type="button">先玩到這裡</button></div></div>
   <section id="home" class="screen active">
     <div class="hero">
-      <div class="eyebrow">TAKE YOUR TIME / SEVEN LITTLE GAMES</div>
-      <h2>慢慢玩，<br><span>腦袋散個步。</span></h2>
+      <div class="eyebrow">KNOCK KNOCK / COME ON IN</div>
+      <h2>敲敲門，<br><span>讓腦袋出來玩。</span></h2>
       <p>7 個小遊戲，陪腦袋散個步。想玩一關，或慢慢走完七關都可以。每關最多五顆星。照自己的節奏玩就好。</p>
       <div class="actions"><button id="dailyBtn" class="primary" type="button">慢慢玩完 7 關</button><button id="resumeDailyBtn" class="secondary hidden" type="button">繼續上次散步</button></div><p id="resumeDailyNote" class="session-info hidden">已完成的關卡已保存；未完成的下一關會從頭開始。</p><p class="session-info">完整遊玩長度依節奏而定 · 每關之間可以休息 · 隨時暫停</p>
     </div>
@@ -385,11 +404,11 @@
         <div class="home-preview-copy">
           <h3 id="previewTitle">快速心算</h3>
           <div id="previewDemo" class="preview-demo" aria-label="玩法示例">8 + 6 = ?</div><p id="previewText">每級 60 秒。累計答對升級，全程只用兩個數運算。</p>
-          <div class="home-preview-foot"><span class="preview-dot"></span><span>選擇遊戲看玩法 · 按下方按鈕開始</span></div><button id="previewPlay" class="secondary" type="button">進入這一關 →</button>
+          <div class="home-preview-foot"><span class="preview-dot"></span><span>七扇小門 · 選一關進去玩</span></div><button id="previewPlay" class="secondary" type="button">進入這一關 →</button>
         </div>
       </aside>
     </div>
-    <details id="recentPlays" class="recent-plays"><summary>最近的遊玩足跡</summary><div id="historyList"><p>這次的星光，從你想玩的那一關開始。</p></div></details><div class="note">♪ 首頁輕音樂 · 關卡 Rag Time · 可隨時關閉聲音。<br>娛樂與練習用途，不作 IQ、醫療或認知功能診斷。</div>
+    <details id="recentPlays" class="recent-plays"><summary>最近的遊玩足跡</summary><div id="historyList"><p>這次的星光，從你想玩的那一關開始。</p></div></details><div class="note">♪ 咚咚敲門音效 · 首頁輕音樂 · 關卡 Rag Time · 聲音可獨立調整。<br>娛樂與練習用途，不作 IQ、醫療或認知功能診斷。</div>
   </section>
 
   <section id="math" class="screen">
@@ -470,7 +489,7 @@
   <section id="sessionBreak" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 結束訓練</button><h2>本關完成</h2></div><div id="sessionProgressPill" class="pill">1 / 7</div></div>
     <div class="panel result">
-      <div class="eyebrow">SESSION PROGRESS</div>
+      <div class="eyebrow">ONE DOOR AT A TIME</div>
       <h2 id="sessionBreakTitle" class="session-break-title">快速心算完成</h2>
       <div id="sessionBreakScore" class="completion-star" role="img" aria-label="完成一關">★</div>
       <div class="result-unit">每關五顆星，記下這次的答題表現。</div>
@@ -483,15 +502,15 @@
 
   <section id="result" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2 id="resultTitle">訓練完成</h2></div></div>
-    <div class="panel result"><div class="eyebrow">A LITTLE MOMENT FOR YOU</div><div id="resultScore" class="completion-star" role="img" aria-label="完成一關">★</div><div id="resultMessage" class="result-unit">每關最多五顆星。謝謝你陪腦袋玩一下。</div><div id="resultGrid" class="result-grid"></div><div id="resultActions" class="actions"></div></div>
+    <div class="panel result"><div class="eyebrow">A LITTLE LIGHT INSIDE</div><div id="resultScore" class="completion-star" role="img" aria-label="完成一關">★</div><div id="resultMessage" class="result-unit">每關最多五顆星。謝謝你陪腦袋玩一下。</div><div id="resultGrid" class="result-grid"></div><div id="resultActions" class="actions"></div></div>
   </section>
 
   <section id="dailyResult" class="screen">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>這趟散步，完成了</h2></div></div>
-    <div class="panel result"><div class="eyebrow">SEVEN LITTLE MOMENTS</div><div id="dailyScore" class="completion-stars" role="img"></div><div id="dailyMessage" class="result-unit">每關各有五顆星，看看這次的遊玩回顧。</div><div id="dailyOverview" class="result-grid"></div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再散步一次</button></div></div>
+    <div class="panel result"><div class="eyebrow">SEVEN LITTLE DOORS</div><div id="dailyScore" class="completion-stars" role="img"></div><div id="dailyMessage" class="result-unit">每關各有五顆星，看看這次的遊玩回顧。</div><div id="dailyOverview" class="result-grid"></div><div id="dailySummary" class="daily-summary"></div><div class="actions"><button id="dailyAgain" class="primary" type="button">再散步一次</button></div></div>
   </section>
 </main>
-<div id="pauseOverlay" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="pause-card"><div class="eyebrow">TAKE A BREATH</div><h2 id="pauseTitle">休息一下。</h2><p>遊戲和計時都停在這裡。準備好了，再繼續。</p><div class="actions"><button id="resumeBtn" class="primary" type="button">繼續玩</button><button id="pauseFinishBtn" class="secondary" type="button">先玩到這裡</button></div></div></div>
+<div id="pauseOverlay" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="pauseTitle"><div class="pause-card"><div class="eyebrow">DOOR OPEN / TAKE A BREATH</div><h2 id="pauseTitle">休息一下。</h2><p>遊戲和計時都停在這裡。準備好了，再繼續。</p><div class="actions"><button id="resumeBtn" class="primary" type="button">繼續玩</button><button id="pauseFinishBtn" class="secondary" type="button">先玩到這裡</button></div></div></div>
 <div id="readyOverlay" class="pause-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="readyTitle" aria-describedby="readyRule"><div class="pause-card"><div class="eyebrow">TAKE YOUR TIME</div><h2 id="readyTitle">準備好再開始。</h2><p id="readyRule"></p><div class="actions"><button id="readyCancel" class="secondary" type="button">返回選關</button><button id="readyStart" class="primary" type="button">準備好了</button></div></div></div>
 <div id="transitionBurst" class="transition-burst" aria-hidden="true"></div>
 
@@ -663,7 +682,7 @@
   function clearPlayTimer(id){var t=playTimers.get(id);if(t){clearTimeout(t.native);playTimers.delete(id)}}
   function pausePlay(){
     if(paused||!currentMode)return;
-    paused=true;pauseStarted=performance.now();pauseFocus=document.activeElement;
+    stopKnockSound();paused=true;pauseStarted=performance.now();pauseFocus=document.activeElement;
     playTimers.forEach(function(t){t.remaining=Math.max(0,t.due-pauseStarted);clearTimeout(t.native)});
     $('pauseOverlay').classList.remove('hidden');document.querySelector('main').inert=true;document.body.classList.add('is-paused');
     if(audioCtx)audioCtx.suspend().catch(function(){});
@@ -732,14 +751,34 @@
     var heading=$(id).querySelector('h2');if(heading){heading.tabIndex=-1;heading.focus({preventScroll:true})}
   }
   function show(id){applyScreen(id)}
-  function tone(freq,dur){
-    if(muted||effectsMuted||paused||effectVolume===0)return;var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
-    if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
-    var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;
-    o.frequency.value=freq;o.type='sine';g.gain.setValueAtTime(.035*effectVolume,t);g.gain.exponentialRampToValueAtTime(.001,t+dur);o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+dur)
+  var knockBus=null,knockNoise=null,knockVoices=new Set();
+  function stopKnockSound(){knockVoices.forEach(function(node){try{node.stop()}catch(e){}});knockVoices.clear()}
+  function knockSound(kind){
+    if(muted||effectsMuted||paused||effectVolume===0)return;
+    var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume().catch(function(){});
+    if(!knockBus){knockBus=audioCtx.createGain();knockBus.connect(audioCtx.destination)}
+    knockBus.gain.setValueAtTime(effectVolume,audioCtx.currentTime);
+    if(!knockNoise){knockNoise=audioCtx.createBuffer(1,Math.ceil(audioCtx.sampleRate*.08),audioCtx.sampleRate);var data=knockNoise.getChannelData(0);for(var i=0;i<data.length;i++)data[i]=(Math.random()*2-1)*(1-i/data.length)}
+    var patterns={tap:[[0,350,.48]],enter:[[0,190,.85],[.14,230,.75]],correct:[[0,310,.65],[.10,420,.45]],wrong:[[0,135,.5]],complete:[[0,210,.85],[.15,270,.75],[.32,540,.32]]};
+    (patterns[kind]||patterns.tap).forEach(function(hit){
+      var t=audioCtx.currentTime+hit[0],freq=hit[1],weight=hit[2];
+      [1,2.63].forEach(function(ratio,index){
+        var o=audioCtx.createOscillator(),g=audioCtx.createGain(),dur=index?.07:.15;
+        o.type='sine';o.frequency.setValueAtTime(freq*ratio,t);o.frequency.exponentialRampToValueAtTime(freq*ratio*.88,t+dur);
+        g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime((index?.026:.085)*weight,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+        o.connect(g);g.connect(knockBus);knockVoices.add(o);
+        o.onended=function(){knockVoices.delete(o);o.disconnect();g.disconnect()};o.start(t);o.stop(t+dur+.01);
+      });
+      var n=audioCtx.createBufferSource(),filter=audioCtx.createBiquadFilter(),ng=audioCtx.createGain();
+      n.buffer=knockNoise;filter.type='bandpass';filter.frequency.value=freq*5;filter.Q.value=1.2;
+      ng.gain.setValueAtTime(.028*weight,t);ng.gain.exponentialRampToValueAtTime(.0001,t+.045);
+      n.connect(filter);filter.connect(ng);ng.connect(knockBus);knockVoices.add(n);
+      n.onended=function(){knockVoices.delete(n);n.disconnect();filter.disconnect();ng.disconnect()};n.start(t);n.stop(t+.06);
+    })
   }
-  function correctTone(){tone(680,.08);setTimeout(function(){tone(900,.1)},60)}
-  function wrongTone(){tone(340,.07)}
+  function correctTone(){knockSound('correct')}
+  function wrongTone(){knockSound('wrong')}
   async function loadGameBgm(){
     if(gameBgmBuffer)return gameBgmBuffer;
     var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return null;
@@ -790,16 +829,15 @@
     homeBgmUnlocked=true;
     if($('home').classList.contains('active')&&!muted)startHomeBgm()
   }
-  function mathTapTone(){tone(520,.035)}
-  function transitionClick(){
-    if(muted||effectsMuted||paused||effectVolume===0)return;
-    var AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
-    if(!audioCtx)audioCtx=new AC();if(audioCtx.state==='suspended')audioCtx.resume();
-    var o=audioCtx.createOscillator(),g=audioCtx.createGain(),t=audioCtx.currentTime;
-    o.type='sine';o.frequency.setValueAtTime(1540,t);o.frequency.exponentialRampToValueAtTime(820,t+.028);
-    g.gain.setValueAtTime(.028*effectVolume,t);g.gain.exponentialRampToValueAtTime(.001,t+.04);
-    o.connect(g);g.connect(audioCtx.destination);o.start(t);o.stop(t+.045);
-  }
+  function mathTapTone(){knockSound('tap')}
+  function transitionClick(){knockSound('enter')}
+  $('knockPreview').addEventListener('click',function(){knockSound('enter')});
+  document.addEventListener('click',function(e){
+    var button=e.target.closest('button');if(!button||button.disabled)return;
+    if(button.matches('.mode,.key,.choice,.schulte-cell,.odd-cell,#dailyBtn,#previewPlay,#knockPreview,#mathSubmit,#memorySubmit'))return;
+    knockSound('tap')
+  });
+  $('previewSelect').addEventListener('change',function(){knockSound('tap')});
   function rand(a,b){return Math.floor(Math.random()*(b-a+1))+a}
   function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
   function enterMode(mode,source){
@@ -809,6 +847,8 @@
 
   function saveAudioPreferences(){try{localStorage.setItem('brain7-audio',JSON.stringify({music:musicVolume,effects:effectVolume,muted:muted,musicMuted:musicMuted,effectsMuted:effectsMuted}))}catch(e){}}
   function updateAudioUi(){
+    if(knockBus)knockBus.gain.setValueAtTime(muted||effectsMuted?0:effectVolume,audioCtx.currentTime);
+    if(muted||effectsMuted||effectVolume===0)stopKnockSound();
     $('musicVolume').value=Math.round(musicVolume*100);$('effectVolume').value=Math.round(effectVolume*100);
     $('musicValue').textContent=Math.round(musicVolume*100)+'%';$('effectValue').textContent=Math.round(effectVolume*100)+'%';
     $('musicToggle').textContent=musicMuted?'BGM 已關閉':'BGM 開啟';$('musicToggle').setAttribute('aria-pressed',String(musicMuted));
@@ -873,6 +913,7 @@
   $('dailyAgain').addEventListener('click',startDaily);
 
   function stopAll(){
+    stopKnockSound();
     playTimers.forEach(function(t){clearTimeout(t.native)});playTimers.clear();
     clearPause();
     currentMode=null;
@@ -892,7 +933,7 @@
   function finishMode(mode,score,stats){
     score=Math.max(0,Math.min(100,Math.round(score)));
     var record={mode:mode,completed:true,score:score,stars:scoreToStars(score),seconds:Math.max(0,(playNow()-modeStartedAt)/1000),items:(stats.items||[]).concat([['本關得分',score+' / 100']])};
-    stopAll();dailyRecords[mode]=record;lastPlay=record;
+    stopAll();knockSound('complete');dailyRecords[mode]=record;lastPlay=record;
     if(dailyMode){showDailyBreak(mode,null,stats);return}
     savePlay([record]);showResult(mode,null,stats)
   }
@@ -956,7 +997,7 @@
     if(mathLevel>=MATH_MAX_LEVEL){endMath(true);return}
     mathLevel++;mathLevelCorrect=0;updateMathLevelMark();
     $('mathProblem').textContent='LEVEL '+mathLevel;$('mathAnswer').value='';
-    tone(523.25,.09);playTimeout(function(){tone(659.25,.09)},80);playTimeout(function(){tone(783.99,.15)},160);
+    knockSound('complete');
     mathTransitionTimer=playTimeout(function(){if(paused||!$('math').classList.contains('active'))return;makeMath();startMathLevelTimer()},650)
   }
   function startMath(){
@@ -1087,7 +1128,7 @@
   $('memorySubmit').addEventListener('click',submitMemory);
   function inputMemory(key){
     if(paused||!memoryAwaitingAnswer||!$('memory').classList.contains('active'))return;
-    var input=$('memoryAnswer');
+    var input=$('memoryAnswer');if(key!=='Enter')knockSound('tap');
     if(key==='清除'||key==='Delete')input.value='';
     else if(key==='←'||key==='Backspace')input.value=input.value.slice(0,-1);
     else if(/^\d$/.test(key))input.value=(input.value+key).slice(0,9);
