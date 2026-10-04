@@ -49,8 +49,9 @@
     .hero h2{margin:0;max-width:720px;font-size:clamp(46px,9vw,82px);line-height:.92;letter-spacing:-.065em;font-weight:950;position:relative;z-index:1}
     .hero h2 span{color:var(--accent)}
     .hero p{margin:0;max-width:650px;color:var(--muted);font-weight:720;line-height:1.75;font-size:15px;position:relative;z-index:1}
-    .circuit-strip{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;max-width:460px}
-    .circuit-strip button{--c:var(--line-strong);height:44px;min-width:0;border:0;border-radius:8px;background:linear-gradient(var(--c),var(--c)) center/100% 7px no-repeat;padding:0;cursor:pointer;opacity:.38;transition:transform 140ms var(--ease-out),opacity 140ms var(--ease-out)}.circuit-strip button:nth-child(1){--c:#ff6b4a}.circuit-strip button:nth-child(2){--c:#ffbe55}.circuit-strip button:nth-child(3){--c:#60d6a7}.circuit-strip button:nth-child(4){--c:#59a6ff}.circuit-strip button:nth-child(5){--c:#d8ff4f}.circuit-strip button:nth-child(6){--c:#f075c2}.circuit-strip button:nth-child(7){--c:#a78bfa}.circuit-strip button.is-active{transform:scaleY(1.08);opacity:1}.circuit-strip button:focus-visible{outline:2px solid var(--c);outline-offset:2px}
+    .preview-picker{position:relative;z-index:1;display:grid;gap:8px;margin-bottom:20px;font-size:13px;font-weight:800}
+    #previewSelect{width:100%;min-height:48px;padding:10px 12px;border:1px solid var(--line-strong);border-radius:10px;background:var(--surface);color:var(--ink);font:inherit}
+    .mode-start{display:block;margin-top:8px;font-size:13px;font-weight:900;color:var(--ink)}
     .primary,.secondary,.choice,.key{min-height:54px;border-radius:12px;font-weight:900;border:1px solid var(--line-strong);transition:transform 120ms var(--ease-out),background 160ms var(--ease-out),border-color 160ms var(--ease-out)}
     .primary{background:var(--acid);border-color:#99c400;color:#171717;padding:0 20px;box-shadow:0 6px 0 rgba(23,23,23,.10)}
     .secondary{background:var(--surface);color:var(--ink);padding:0 18px;box-shadow:0 4px 0 rgba(23,23,23,.06)}
@@ -228,8 +229,6 @@
       .hero p{font-size:14px;line-height:1.65}
       #home .actions{max-width:none}.actions>*{flex-basis:100%}
       #dailyBtn{min-height:58px}
-      .circuit-strip{max-width:none;gap:3px}
-      .circuit-strip button{height:44px;background-size:100% 6px}
       .home-select{margin-top:18px;gap:12px}
       .home-preview{min-height:246px;padding:18px;border-radius:18px}
       .home-preview-number{font-size:150px;right:-4px;bottom:-20px}
@@ -366,26 +365,26 @@
       <div class="eyebrow">TAKE YOUR TIME / SEVEN LITTLE GAMES</div>
       <h2>慢慢玩，<br><span>腦袋散個步。</span></h2>
       <p>7 個小遊戲，陪腦袋散個步。想玩一關，或慢慢走完七關都可以。每關最多五顆星，依答題表現點亮。照自己的節奏玩就好。</p>
-      <div class="circuit-strip" aria-label="七關回路"><button type="button" data-preview-mode="math" aria-label="預覽快速心算"></button><button type="button" data-preview-mode="memory" aria-label="預覽瞬間記憶"></button><button type="button" data-preview-mode="logic" aria-label="預覽邏輯推理"></button><button type="button" data-preview-mode="executive" aria-label="預覽規則切換"></button><button type="button" data-preview-mode="schulte" aria-label="預覽舒爾特方格"></button><button type="button" data-preview-mode="stroop" aria-label="預覽 Stroop"></button><button type="button" data-preview-mode="odd" aria-label="預覽表裡不一"></button></div>
       <div class="actions"><button id="dailyBtn" class="primary" type="button">慢慢玩完 7 關</button></div><p class="session-info">完整遊玩長度依節奏而定 · 每關之間可以休息 · 隨時暫停</p>
     </div>
     <div class="home-select">
       <div class="modes" aria-label="選擇單項訓練">
-        <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="每級 60 秒。累計答對升級，全程只用兩個數運算。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>每級 60 秒。累計答對升級，全程只用兩個數運算。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 6 秒，作答不限時；最高 9 位數。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 6 秒，慢慢完整輸入；最高 9 位數。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標。兩種搜尋方向，數字持續大幅漂動，答對的數字固定，其餘換位。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、兩種方向；數字持續漂動，答對的數字固定，其餘換位。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#a62b74" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p></span><span class="mode-arrow">→</span></button>
-        <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="從 16 格一路增加到 24 格。每回合只有 1 個箭頭與文字不一致。"><span class="mode-index">07</span><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>從 16 到 24 格，找出唯一一個箭頭與文字不一致的訊號。</p></span><span class="mode-arrow">→</span></button>
+        <button class="mode is-active" type="button" data-mode="math" data-index="01" data-label="SPEED" data-color="#b53116" data-preview="每級 60 秒。累計答對升級，全程只用兩個數運算。"><span class="mode-index">01</span><span class="mode-copy"><span class="mode-num">SPEED</span><h3>快速心算</h3><p>每級 60 秒。累計答對升級，全程只用兩個數運算。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="memory" data-index="02" data-label="MEMORY" data-color="#8a5500" data-preview="看 6 秒，作答不限時；最高 9 位數。"><span class="mode-index">02</span><span class="mode-copy"><span class="mode-num">MEMORY</span><h3>瞬間記憶</h3><p>看 6 秒，慢慢完整輸入；最高 9 位數。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="logic" data-index="03" data-label="LOGIC" data-color="#147a55" data-preview="把矛盾一個個排掉，直到只剩唯一解。"><span class="mode-index">03</span><span class="mode-copy"><span class="mode-num">LOGIC</span><h3>邏輯推理</h3><p>把矛盾一個個排掉，直到只剩唯一解。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="executive" data-index="04" data-label="SWITCH" data-color="#1769aa" data-preview="規則會突然翻面。反應不能跟著上一題慣性走。"><span class="mode-index">04</span><span class="mode-copy"><span class="mode-num">SWITCH</span><h3>規則切換</h3><p>規則會突然翻面。反應不能跟著上一題慣性走。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="schulte" data-index="05" data-label="SEARCH" data-color="#526800" data-preview="50 個目標。兩種搜尋方向，數字持續大幅漂動，答對的數字固定，其餘換位。"><span class="mode-index">05</span><span class="mode-copy"><span class="mode-num">SEARCH</span><h3>舒爾特方格</h3><p>50 個目標、兩種方向；數字持續漂動，答對的數字固定，其餘換位。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#a62b74" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
+        <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="從 16 格一路增加到 24 格。每回合只有 1 個箭頭與文字不一致。"><span class="mode-index">07</span><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>從 16 到 24 格，找出唯一一個箭頭與文字不一致的訊號。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
       </div>
       <aside id="homePreview" class="home-preview" aria-live="polite" tabindex="0" aria-label="目前選擇的訓練關卡，可左右滑動切換">
+        <label class="preview-picker" for="previewSelect">先看看玩法<select id="previewSelect"><option value="math">01 · 快速心算</option><option value="memory">02 · 瞬間記憶</option><option value="logic">03 · 邏輯推理</option><option value="executive">04 · 規則切換</option><option value="schulte">05 · 舒爾特方格</option><option value="stroop">06 · Stroop 顏色衝突</option><option value="odd">07 · 表裡不一</option></select></label>
         <div class="home-preview-kicker"><span id="previewIndex">01</span> / <span id="previewLabel">SPEED</span></div>
         <div id="previewNumber" class="home-preview-number" aria-hidden="true">01</div>
         <div class="home-preview-copy">
           <h3 id="previewTitle">快速心算</h3>
           <div id="previewDemo" class="preview-demo" aria-label="玩法示例">8 + 6 = ?</div><p id="previewText">每級 60 秒。累計答對升級，全程只用兩個數運算。</p>
-          <div class="home-preview-foot"><span class="preview-dot"></span><span>左右切換回路 · 點擊進入</span></div><button id="previewPlay" class="secondary" type="button">進入這一關 →</button>
+          <div class="home-preview-foot"><span class="preview-dot"></span><span>選擇遊戲看玩法 · 按下方按鈕開始</span></div><button id="previewPlay" class="secondary" type="button">進入這一關 →</button>
         </div>
       </aside>
     </div>
@@ -796,7 +795,7 @@
   function previewMode(mode){
     var b=document.querySelector('.mode[data-mode="'+mode+'"]');if(!b)return;
     homeModeButtons.forEach(function(x){x.classList.toggle('is-active',x===b)});
-    document.querySelectorAll('[data-preview-mode]').forEach(function(x){x.classList.toggle('is-active',x.dataset.previewMode===mode)});
+    $('previewSelect').value=mode;
     var preview=$('homePreview');preview.style.setProperty('--preview',b.dataset.color||'#ff6b4a');
     $('previewIndex').textContent=b.dataset.index||'01';$('previewNumber').textContent=b.dataset.index||'01';
     $('previewLabel').textContent=b.dataset.label||'';$('previewTitle').textContent=b.querySelector('h3').textContent;
@@ -807,16 +806,7 @@
     preview.classList.remove('is-pulsing');void preview.offsetWidth;preview.classList.add('is-pulsing');
     clearTimeout(preview._pulseTimer);preview._pulseTimer=setTimeout(function(){preview.classList.remove('is-pulsing')},220);
   }
-  homeModeButtons.forEach(function(b){
-    // Selection changes only through explicit controls, never hover.
-    
-  });
-  var circuitStrip=document.querySelector('.circuit-strip');
-  circuitStrip.addEventListener('click',function(e){
-    var control=e.target.closest('[data-preview-mode]');
-    if(!control)return;
-    previewMode(control.dataset.previewMode);
-  });
+  $('previewSelect').addEventListener('change',function(){previewMode(this.value)});
   previewMode('math');
   var homePreview=$('homePreview');
   $('previewPlay').addEventListener('click',function(e){
@@ -833,10 +823,12 @@
   var previewStartX=0,previewStartY=0;
   homePreview.addEventListener('pointerdown',function(e){previewStartX=e.clientX;previewStartY=e.clientY});
   homePreview.addEventListener('pointerup',function(e){
+    if(e.target.closest('select,button,label'))return;
     var dx=e.clientX-previewStartX,dy=e.clientY-previewStartY;
     if(Math.abs(dx)>48&&Math.abs(dx)>Math.abs(dy)*1.25)stepPreview(dx<0?1:-1);
   });
   homePreview.addEventListener('keydown',function(e){
+    if(e.target!==homePreview)return;
     if(e.key==='ArrowRight'){e.preventDefault();stepPreview(1)}
     if(e.key==='ArrowLeft'){e.preventDefault();stepPreview(-1)}
     if(e.target===homePreview&&(e.key==='Enter'||e.key===' ')){e.preventDefault();$('previewPlay').click()}

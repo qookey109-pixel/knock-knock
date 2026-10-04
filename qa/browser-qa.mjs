@@ -74,8 +74,10 @@ async function runViewport(browser, viewport, name) {
   await page.screenshot({path:'/tmp/brain7-chill-home-'+name+'.png',fullPage:true});
 
   // Home interactive circuit preview
-  assert(await page.locator('[data-preview-mode]').count() === 7, `${name}: expected seven circuit preview controls`);
-  await page.locator('[data-preview-mode="schulte"]').click();
+  assert(await page.locator('.circuit-strip').count() === 0, `${name}: unlabeled color strip should be removed`);
+  assert(await page.locator('#previewSelect option').count() === 7, `${name}: expected seven named preview choices`);
+  assert(await page.locator('.mode-start').count() === 7, `${name}: each game card must state its action`);
+  await page.locator('#previewSelect').selectOption('schulte');
   assert((await page.locator('#previewIndex').innerText()).trim() === '05', `${name}: preview index should switch to 05`);
   assert((await page.locator('#previewLabel').innerText()).trim() === 'SEARCH', `${name}: preview label should switch to SEARCH`);
   assert((await page.locator('#previewTitle').innerText()).trim() === '舒爾特方格', `${name}: preview title should switch to Schulte`);
@@ -85,13 +87,13 @@ async function runViewport(browser, viewport, name) {
   assert(await page.evaluate(() => document.activeElement === document.querySelector('#schulte h2')), 'screen entry must focus its heading');
   await page.locator('.back:visible').click();
   await page.locator('#home.active').waitFor();
-  await page.locator('[data-preview-mode="math"]').click();
+  await page.locator('#previewSelect').selectOption('math');
   const homePreview = page.locator('#homePreview');
   await homePreview.focus();
   await homePreview.press('ArrowRight');
   await page.waitForFunction(() => document.getElementById('previewIndex')?.textContent.trim() === '02');
   assert((await page.locator('#previewIndex').innerText()).trim() === '02', `${name}: keyboard preview should advance to 02`);
-  await page.locator('[data-preview-mode="math"]').click();
+  await page.locator('#previewSelect').selectOption('math');
 
 
   // Daily Training contract: the public session must run all seven games in sequence.
@@ -319,20 +321,20 @@ async function runAwardResponsiveShell(browser, width, height, label) {
   const shell = await page.evaluate(() => {
     const daily = document.getElementById('dailyBtn').getBoundingClientRect();
     const sound = document.getElementById('soundBtn').getBoundingClientRect();
-    const circuits = [...document.querySelectorAll('.circuit-strip button')].map(x => x.getBoundingClientRect());
+    const picker = document.getElementById('previewSelect').getBoundingClientRect();
     return {
       overflow: document.documentElement.scrollWidth - window.innerWidth,
       dailyHeight: daily.height,
       soundWidth: sound.width,
       soundHeight: sound.height,
-      circuitMin: Math.min(...circuits.map(r => Math.min(r.width, r.height))),
+      pickerHeight: picker.height,
       heroBadges: document.querySelectorAll('.hero-chip').length
     };
   });
   assert(shell.overflow <= 1, `${label}: horizontal overflow detected (${shell.overflow}px)`);
   assert(shell.dailyHeight >= 44, `${label}: primary action is too small`);
   assert(shell.soundWidth >= 44 && shell.soundHeight >= 44, `${label}: sound control is below 44px`);
-  assert(shell.circuitMin >= 44, `${label}: circuit preview controls must be at least 44px`);
+  assert(shell.pickerHeight >= 44, `${label}: named preview picker must be at least 44px`);
   assert(shell.heroBadges === 0, `${label}: homepage should not regress to SaaS-style hero badges`);
   await page.locator('[data-mode="math"]').click();
   await page.locator('#math.active').waitFor();
@@ -360,7 +362,7 @@ async function runChillJourney(browser) {
   page.on('pageerror', e => errors.push(e.message));
   await page.clock.install();
   await page.goto('http://127.0.0.1:4173/adult-brain-training/', { waitUntil: 'networkidle' });
-  await page.locator('[data-preview-mode="schulte"]').click();
+  await page.locator('#previewSelect').selectOption('schulte');
   await page.locator('[data-mode="memory"]').hover();
   assert((await page.locator('#previewTitle').innerText()) === '舒爾特方格', 'hover must not change an explicitly chosen preview');
   await page.locator('#previewPlay').click();
