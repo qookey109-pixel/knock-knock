@@ -587,6 +587,78 @@
       @keyframes kk-keepsake-arrive{from{transform:translateY(12px) rotate(-1deg)}to{transform:none}}
     }
 
+
+    /* Seven small play spaces: the controls, rather than a dashboard frame, are the stage. */
+    .kk-room .gamehead{border-bottom:0!important;padding-bottom:10px}
+    .kk-room .gamehead::after{display:none}
+    .kk-room .gamehead>div:first-child{position:relative}
+    .kk-room .gamehead h2{display:flex;align-items:center;gap:10px}
+    .kk-room-symbol{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;flex-shrink:0;background:color-mix(in srgb,var(--chapter) 32%,#fffdf8);border-radius:12px;transform:rotate(-6deg)}
+    .kk-room-symbol svg{width:28px;height:28px;fill:none;stroke:#171717;stroke-width:5;stroke-linecap:round;stroke-linejoin:round}
+    .kk-room .panel{border:0!important;box-shadow:none;background:transparent!important;border-radius:0}
+    .kk-room .pill{border:1px solid #17171730!important;border-radius:99px;box-shadow:0 3px 0 #1717170d}
+    .kk-room .mini-instruction{color:#51463d;text-align:left;border-left:3px solid var(--chapter);padding-left:10px}
+    #math .big-problem{background:#ffd1c5;border:1.5px solid #a52f182d;border-radius:38px 38px 38px 10px;box-shadow:0 6px 0 #a52f1812;margin:22px 0;color:#842b17;text-shadow:2px 3px 0 #fff2d4}
+    #math .answer-input,#memory .memory-input{border-radius:16px;background:#fffdf8;border:2px solid #17171732;box-shadow:inset 0 -4px 0 #ffdf8c40}
+    #math .keypad,#memory .keypad{padding:12px;background:#fffdf886;border:1px solid #17171718;border-radius:24px}
+    #math .key,#memory .key{border-radius:18px 18px 12px 12px;border-width:1.5px;box-shadow:0 4px 0 #17171718}
+    #mathSubmit,#memorySubmit,#memoryStart{background:#ffd45d;border-color:#9b731c;color:#171717;border-radius:99px;box-shadow:0 4px 0 #9b731c30}
+    #memory .stats{display:flex;justify-content:center;gap:12px;overflow:visible;border:0;background:transparent}
+    #memory .stat{display:flex;align-items:baseline;gap:8px;border:1px solid #17171724;background:#ffe49a;border-radius:99px;padding:9px 16px}
+    #memory .stat span{color:#51463d}
+    #memory .stat strong{margin:0;font-size:22px}
+    #memory .memory-label{font-family:inherit;color:#51463d;letter-spacing:.03em;font-size:13px}
+    #memory .memory-digit-row{gap:.16em}
+    #memory .memory-digit-row>span{display:inline-flex;align-items:center;justify-content:center;width:1.08em;height:1.35em;background:#ffe49a;border:1px solid #99762340;border-radius:.18em;box-shadow:0 .06em 0 #99762320;color:#5a3a00}
+    #memory .memory-digit-row>span:nth-child(2n){background:#fff5cc}
+    #logic .logic-q{background:#bdebd1;border-radius:24px 24px 24px 6px;padding:20px 22px}
+    #logic .clues{counter-reset:kk-clue}
+    #logic .clue{counter-increment:kk-clue;display:flex;gap:10px;align-items:flex-start;border:1px solid #1717171e;background:#fffdf8;border-radius:14px;padding:12px}
+    #logic .clue::before{content:counter(kk-clue,decimal-leading-zero);font-size:11px;line-height:1.6;font-weight:850;background:#bdebd1;color:#174c38;padding:2px 7px;border-radius:6px;flex-shrink:0}
+    #logic .choice{border-radius:16px;border-width:1.5px}
+    #logic .logic-progress{gap:5px}
+    #logic .logic-progress i{border-radius:99px}
+    #executive .exec-stage{border-color:#17171740;border-radius:34px 34px 14px 34px;box-shadow:0 6px 0 #17171710}
+    #executive .exec-rule{border-bottom:1px solid #17171730}
+    #executive .exec-choices .choice{border:1.5px solid #17171745;border-radius:24px}
+    #schulte .schulte-mode{border-radius:99px;border-color:#17171730;background:#fffdf8}
+    #schulte .schulte-mode.active{background:#e0f399;border-color:#526800}
+    #schulte .schulte-targetbar{width:fit-content;min-width:160px;margin-inline:auto;border:1px solid #52680065;border-radius:99px;background:#e0f399;box-shadow:0 4px 0 #52680018;padding-inline:24px}
+    #schulte .schulte-cell{border-color:#17171745;border-radius:12px}
+    #stroop .stroop-stage{border:1.5px solid #17171725;background:#ffcae6;border-radius:44px 44px 14px 44px;box-shadow:0 6px 0 #a93d7b15}
+    #stroop .stroop-word{margin:12px;line-height:1.1}
+    #stroop .stroop-trial-tag{border:0;background:#fffdf8;padding:6px 12px;border-radius:99px;width:fit-content;margin-inline:auto;color:#51463d}
+    #stroop .stroop-choices .choice{border:1.5px solid #17171740;border-radius:24px;box-shadow:0 4px 0 #17171712}
+    #odd .odd-grid{padding:14px;background:#ded0ff80;border:1px solid #17171718;border-radius:24px}
+    #odd .odd-cell{border-color:#17171745;border-radius:16px;box-shadow:0 3px 0 #17171712}
+    .kk-room .primary:focus-visible,.kk-room .choice:focus-visible,.kk-room .key:focus-visible{outline:3px solid #171717;outline-offset:3px}
+    @media(max-width:680px){
+      body.is-game .kk-room .gamehead{padding-bottom:0}
+      body.is-game .kk-room .gamehead h2{gap:6px;font-size:19px}
+      body.is-game .kk-room-symbol{width:26px;height:26px;border-radius:8px}
+      body.is-game .kk-room-symbol svg{width:22px;height:22px}
+      body.is-game #math .big-problem{margin:10px 0;padding:18px 0;border-radius:26px 26px 26px 8px}
+      body.is-game #math .keypad,body.is-game #memory .keypad{padding:8px;border-radius:18px}
+      body.is-game #math .key,body.is-game #memory .key{border-radius:12px}
+      body.is-game #memory .stats{gap:8px}
+      body.is-game #memory .stat{padding:5px 12px}
+      body.is-game #memory .stat strong{font-size:19px}
+      body.is-game #memory .memory-number:has(.memory-digit-row){margin:10px 0;font-size:30px}
+      body.is-game #logic .logic-q{padding:12px 14px;font-size:18px;border-radius:18px 18px 18px 5px}
+      body.is-game #logic .clue{gap:7px;padding:6px 8px}
+      body.is-game #logic .clue::before{font-size:10px;padding:0 5px}
+      body.is-game #executive .exec-stage{border-radius:24px 24px 10px 24px}
+      body.is-game #executive .exec-choices .choice{border-radius:18px}
+      body.is-game #stroop .stroop-stage{padding:8px 0;border-radius:28px 28px 10px 28px}
+      body.is-game #stroop .stroop-word{margin:6px}
+      body.is-game #stroop .stroop-choices .choice{border-radius:18px}
+      body.is-game #schulte .schulte-targetbar{min-width:136px;padding:4px 20px}
+      body.is-game #schulte .schulte-cell{border-radius:7px}
+      body.is-game #odd .odd-grid{padding:6px;border-radius:16px}
+      body.is-game #odd .odd-cell{border-radius:10px}
+    }
+    @media(max-width:370px){body.is-game .kk-room .gamehead h2{font-size:17px}body.is-game .kk-room-symbol{display:none}}
+
   </style>
 </head>
 <body>
@@ -627,7 +699,7 @@
     <details id="recentPlays" class="recent-plays"><summary>最近的遊玩足跡</summary><div id="historyList"><p>這次的星光，從你想玩的那一關開始。</p></div></details><div class="note">♪ 咚咚敲門音效 · 首頁輕音樂 · 關卡 Rag Time · 聲音可獨立調整。<br>娛樂與練習用途，不作 IQ、醫療或認知功能診斷。</div>
   </section>
 
-  <section id="math" class="screen">
+  <section id="math" class="screen kk-room">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>快速心算</h2></div><div class="math-hud"><span id="mathLevelMark" class="pill">LV 1 · 0/8</span><span class="pill"><span id="mathTime">60</span> 秒</span></div></div>
     <div class="panel"><div class="game-live-detail hidden" aria-hidden="true"><span id="mathPlayed">0</span><span id="mathStreak">0</span></div>
       <div class="mini-instruction">每級 60 秒 · 8 題正確升級 · 全程兩個數運算 · 最高 LV10</div>
@@ -638,7 +710,7 @@
     </div>
   </section>
 
-  <section id="memory" class="screen">
+  <section id="memory" class="screen kk-room">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>瞬間記憶</h2></div><div id="memoryRoundPill" class="pill">1 / 10</div></div>
     <div class="panel">
       <div class="stats"><div class="stat"><span>回合</span><strong id="memoryRound">1</strong></div><div class="stat"><span>位數</span><strong id="memoryDigits">4</strong></div><strong id="memoryCorrect" class="hidden" aria-hidden="true">0</strong></div>
@@ -646,7 +718,7 @@
     </div>
   </section>
 
-  <section id="logic" class="screen">
+  <section id="logic" class="screen kk-room">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>邏輯推理</h2></div><div id="logicPill" class="pill">1 / 10 · 排序</div></div>
     <div class="panel">
       <div class="stats logic-stats hidden" aria-hidden="true"><div class="stat"><span>答對題數</span><strong id="logicCorrectCount">0</strong></div><div class="stat"><span>作答節奏</span><strong id="logicTimer">不限時</strong></div></div>
@@ -655,7 +727,7 @@
     </div>
   </section>
 
-  <section id="executive" class="screen exec-theme rule-parity">
+  <section id="executive" class="screen exec-theme rule-parity kk-room">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>規則切換</h2></div><div id="execRoundPill" class="pill">1 / 18 · 熟悉 A</div></div>
     <div class="panel">
       <div class="stats exec-stats hidden" aria-hidden="true"><div class="stat"><span>正確題數</span><strong id="execCorrect">0</strong></div><div class="stat"><span>切換命中</span><strong id="execSwitch">0/0</strong></div><div class="stat"><span>平均反應</span><strong id="execRt">—</strong></div></div>
@@ -665,7 +737,7 @@
     </div>
   </section>
 
-  <section id="schulte" class="screen">
+  <section id="schulte" class="screen kk-room">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>舒爾特方格</h2></div><div id="schulteModePill" class="pill">A · 1 → 50</div></div>
     <div class="panel">
       <div class="schulte-mode-grid" aria-label="舒爾特模式">
@@ -679,7 +751,7 @@
     </div>
   </section>
 
-  <section id="stroop" class="screen">
+  <section id="stroop" class="screen kk-room">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>Stroop 顏色衝突</h2></div><div id="stroopPill" class="pill">1 / 20</div></div>
     <div class="panel">
       <div class="stats stroop-stats hidden" aria-hidden="true"><div class="stat"><span>正確題數</span><strong id="stroopCorrect">0</strong></div><div class="stat"><span>衝突命中</span><strong id="stroopConflict">0/0</strong></div><div class="stat"><span>平均反應</span><strong id="stroopRt">—</strong></div></div>
@@ -693,7 +765,7 @@
     </div>
   </section>
 
-  <section id="odd" class="screen">
+  <section id="odd" class="screen kk-room">
     <div class="gamehead"><div><button class="back" type="button">← 首頁</button><h2>表裡不一</h2></div><div id="oddPill" class="pill">1 / 16 · 16 格</div></div>
     <div class="panel">
       <div class="stats odd-stats hidden" aria-hidden="true"><div class="stat"><span>首擊命中</span><strong id="oddCorrect">0/0</strong></div><div class="stat"><span>錯誤點擊</span><strong id="oddWrong">0</strong></div><div class="stat"><span>平均搜尋</span><strong id="oddRt">—</strong></div></div>
@@ -1705,6 +1777,12 @@
   var fine=window.matchMedia('(hover: hover) and (pointer: fine)');
   var root=document.documentElement,body=document.body;
   var seam=document.createElement('div');seam.className='kk-seam';seam.setAttribute('aria-hidden','true');body.appendChild(seam);
+
+  document.querySelectorAll('.kk-room').forEach(function(room){
+    var homeMark=document.querySelector('#home [data-mode="'+room.id+'"] .kk-game-mark'),title=room.querySelector('.gamehead h2');
+    if(homeMark&&title){var icon=document.createElement('span');icon.className='kk-room-symbol';icon.setAttribute('aria-hidden','true');var symbol=homeMark.cloneNode(true);symbol.removeAttribute('class');icon.appendChild(symbol);title.insertBefore(icon,title.firstChild)}
+  });
+
   var lastActive=document.querySelector('.screen.active');
   var observer=new MutationObserver(function(){
     var active=document.querySelector('.screen.active');
