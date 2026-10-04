@@ -377,7 +377,7 @@
   
     /* Knock Knock — award-motion system */
     :root{
-      --kk-px:50%;--kk-py:35%;--kk-ambient-x:0px;--kk-ambient-y:0px;
+      --kk-px:50%;--kk-py:35%;--kk-ambient-x:0px;--kk-ambient-y:0px;--kk-ambient-x2:0px;--kk-ambient-y2:0px;
       --kk-motion:cubic-bezier(.22,1,.36,1)
     }
     body{
@@ -398,7 +398,7 @@
     body::after{
       width:min(62vw,720px);height:min(62vw,720px);right:-24vw;bottom:-30vw;
       background:radial-gradient(circle,rgba(185,232,0,.14),rgba(185,232,0,0) 70%);
-      transform:translate3d(calc(var(--kk-ambient-x) * -.65),calc(var(--kk-ambient-y) * -.65),0)
+      transform:translate3d(var(--kk-ambient-x2),var(--kk-ambient-y2),0)
     }
     .app::before{
       content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.42;
@@ -1672,7 +1672,9 @@
     root.style.setProperty('--kk-px',(50+nx*16).toFixed(2)+'%');
     root.style.setProperty('--kk-py',(38+ny*12).toFixed(2)+'%');
     root.style.setProperty('--kk-ambient-x',(nx*26).toFixed(1)+'px');
-    root.style.setProperty('--kk-ambient-y',(ny*22).toFixed(1)+'px')
+    root.style.setProperty('--kk-ambient-y',(ny*22).toFixed(1)+'px');
+    root.style.setProperty('--kk-ambient-x2',(-nx*17).toFixed(1)+'px');
+    root.style.setProperty('--kk-ambient-y2',(-ny*14).toFixed(1)+'px')
   },{passive:true});
 
   var interactive='button,a,select,input,[tabindex]:not([tabindex="-1"])';
