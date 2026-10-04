@@ -370,6 +370,10 @@
       @keyframes knock-star{0%{transform:scale(.82)}45%{transform:scale(1.08)}75%{transform:scale(.98)}100%{transform:scale(1)}}
     }
 
+      /* Keep the homepage focused on direct game selection. */
+    #homePreview{display:none}
+    .hero::after{display:none}
+    .home-select{grid-template-columns:minmax(0,1fr);grid-template-areas:'modes'}
   </style>
 </head>
 <body>
@@ -395,7 +399,7 @@
         <button class="mode" type="button" data-mode="stroop" data-index="06" data-label="INHIBITION" data-color="#a62b74" data-preview="字在騙你，顏色才是真的。壓住第一直覺再回答。"><span class="mode-index">06</span><span class="mode-copy"><span class="mode-num">INHIBITION</span><h3>Stroop 顏色衝突</h3><p>字在騙你，顏色才是真的。壓住第一直覺再回答。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
         <button class="mode" type="button" data-mode="odd" data-index="07" data-label="INTERFERENCE" data-color="#6947c6" data-preview="從 16 格一路增加到 24 格。每回合只有 1 個箭頭與文字不一致。"><span class="mode-index">07</span><span class="mode-copy"><span class="mode-num">INTERFERENCE</span><h3>表裡不一</h3><p>從 16 到 24 格，找出唯一一個箭頭與文字不一致的訊號。</p><span class="mode-start">開始玩 →</span></span><span class="mode-arrow" aria-hidden="true">→</span></button>
       </div>
-      <aside id="homePreview" class="home-preview" aria-live="polite" tabindex="0" aria-label="目前選擇的訓練關卡，可左右滑動切換">
+      <aside hidden id="homePreview" class="home-preview" aria-live="polite" tabindex="0" aria-label="目前選擇的訓練關卡，可左右滑動切換">
         <label class="preview-picker" for="previewSelect">先看看玩法<select id="previewSelect"><option value="math">01 · 快速心算</option><option value="memory">02 · 瞬間記憶</option><option value="logic">03 · 邏輯推理</option><option value="executive">04 · 規則切換</option><option value="schulte">05 · 舒爾特方格</option><option value="stroop">06 · Stroop 顏色衝突</option><option value="odd">07 · 表裡不一</option></select></label>
         <div class="home-preview-kicker"><span id="previewIndex">01</span> / <span id="previewLabel">SPEED</span></div>
         <div id="previewNumber" class="home-preview-number" aria-hidden="true">01</div>
