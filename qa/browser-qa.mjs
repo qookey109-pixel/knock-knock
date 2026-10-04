@@ -551,7 +551,12 @@ async function runChillJourney(browser) {
   await page.locator('#memory .back').click();
   await page.locator('#dailyResult.active').waitFor();
   assert((await page.locator('#dailyOverview').innerText()).includes('1 / 7'), 'resumed early exit must preserve one completed game');
-  assert((await page.locator('#dailySummary').innerText()).includes('平均作答'),'saved game recap should retain its detailed performance data');
+  const savedMathRow=page.locator('#dailySummary .journey-row').first();
+  await savedMathRow.locator('summary').click();
+  const savedMathDetails=savedMathRow.locator('.recap-details');
+  assert(await savedMathDetails.count()===1,'completed-game recap should keep optional detailed stats');
+  await savedMathDetails.locator('summary').click();
+  assert((await savedMathDetails.innerText()).includes('平均作答'),'saved game recap should retain its detailed performance data');
   assert(!(await page.evaluate(() => !!localStorage.getItem('brain7-daily-checkpoint'))), 'finished journey recap should clear its checkpoint');
   await page.locator('#dailySummary .journey-row summary').first().click();
   await page.getByRole('button', {name:'再玩快速心算',exact:true}).click();
