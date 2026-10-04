@@ -661,9 +661,36 @@
     }
     @media(max-width:370px){body.is-game .kk-room .gamehead h2{font-size:17px}body.is-game .kk-room-symbol{display:none}}
 
+
+    /* Reference-driven polish: Shape Grid, tactile surfaces and short spring responses. */
+    .kk-shape-grid{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:.26;display:none;mask-image:radial-gradient(ellipse at 50% 38%,#0002,#000 90%);-webkit-mask-image:radial-gradient(ellipse at 50% 38%,#0002,#000 90%)}
+    body.kk-home-visible .kk-shape-grid{display:block}
+    .kk-shape-grid canvas{display:block;width:calc(100% + 80px);height:calc(100% + 80px)}
+    #dailyBtn{background:linear-gradient(160deg,#d2f73d,#b9e800 65%,#a9d600);box-shadow:inset 0 2px 0 #ffffff90,inset 0 -3px 0 #52680020,0 5px 0 #52680035;transition:transform 180ms cubic-bezier(.2,1.5,.5,1),box-shadow 180ms ease}
+    #dailyBtn:active{transform:translateY(3px) scale(.98);box-shadow:inset 0 2px 3px #52680025,0 1px 0 #52680035}
+    .kk-room .key{background-image:linear-gradient(160deg,#ffffff65,transparent 60%)!important;box-shadow:inset 0 2px 0 #ffffff80,0 4px 0 #17171718!important;transition:transform 160ms cubic-bezier(.2,1.5,.5,1),box-shadow 160ms ease}
+    .kk-room .key:active{transform:translateY(3px) scale(.97);box-shadow:inset 0 2px 3px #17171715,0 1px 0 #17171710!important}
+    .kk-room .choice{background-image:linear-gradient(160deg,#ffffff55,transparent 65%);box-shadow:inset 0 2px 0 #ffffff80,0 4px 0 #17171712}
+    .kk-room .choice:active{transform:translateY(2px) scale(.98);box-shadow:inset 0 2px 2px #17171712,0 1px 0 #17171710}
+    .audio-popover{transform-origin:top right}
+    .kk-celebrate{position:absolute;inset:0;overflow:hidden;pointer-events:none;border-radius:24px}
+    .kk-celebrate i{position:absolute;left:50%;top:15%;width:9px;height:15px;background:var(--paper);border-radius:2px}
+    #result .panel.result,#sessionBreak .panel.result{position:relative}
+    @media(prefers-reduced-motion:no-preference){
+      body.kk-home-visible:not(.kk-page-hidden) .kk-shape-grid canvas{animation:kk-grid-glide 32s linear infinite}
+      @keyframes kk-grid-glide{to{transform:translate(-80px,-80px)}}
+      .audio-settings[open] .audio-popover{animation:kk-panel-open 220ms cubic-bezier(.2,1.35,.5,1)}
+      @keyframes kk-panel-open{from{transform:translateY(-6px) scale(.94)}to{transform:none}}
+      .kk-celebrate i{animation:kk-paper-flight 800ms cubic-bezier(.2,.7,.3,1) both;animation-delay:var(--delay)}
+      @keyframes kk-paper-flight{0%{transform:translate(0,0) rotate(0);opacity:0}12%{opacity:1}80%{opacity:1}100%{transform:translate(var(--dx),var(--dy)) rotate(var(--turn));opacity:0}}
+    }
+    @media(max-width:680px){.kk-shape-grid{opacity:.15}}
+    @media(prefers-reduced-motion:reduce){.kk-shape-grid canvas{animation:none!important}.kk-celebrate{display:none}.audio-popover{animation:none!important}}
+
   </style>
 </head>
 <body>
+<div class="kk-shape-grid" aria-hidden="true"><canvas id="kkShapeGrid"></canvas></div>
 <div class="kk-playfield" aria-hidden="true"><svg viewBox="0 0 1440 1000" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="#e64724" stroke-width="13" d="M55 145h65M87 113v65"/><path fill="#ffce55" stroke="#171717" stroke-width="2" d="M1335 130l44 18-18 44-44-18z"/><path stroke="#60b7ed" stroke-width="14" d="M1395 390l-22 22 22 22-22 22"/><path stroke="#8d70cf" stroke-width="10" d="M20 500q30-50 60 0t60 0"/><path fill="#a6d973" stroke="#171717" stroke-width="2" d="M62 765l44-32 18 54z"/><path stroke="#e56ba2" stroke-width="12" d="M1300 815h64M1332 783v64"/><path fill="#60b7ed" d="M150 945h48v-48h-48z"/><path stroke="#ffce55" stroke-width="8" d="M1255 980l26-45 26 45z"/></g></svg></div>
 <main class="app">
   <header class="top">
@@ -1819,5 +1846,70 @@
   window.addEventListener('pagehide',resetMotion);
 })();
 </script>
+
+<script>
+(function(){
+  'use strict';
+  // Lightweight square-grid adaptation of React Bits ShapeGrid.
+  // See design-reference-notices.md for its MIT + Commons Clause notice.
+  var canvas=document.getElementById('kkShapeGrid'),ctx=canvas&&canvas.getContext('2d');
+  var motion=matchMedia('(prefers-reduced-motion: reduce)'),fine=matchMedia('(hover: hover) and (pointer: fine)');
+  var size=80,width=0,height=0,hover=null,frame=0,body=document.body;
+  function draw(){
+    frame=0;if(!ctx)return;
+    ctx.clearRect(0,0,width,height);
+    for(var x=0;x<width;x+=size){for(var y=0;y<height;y+=size){
+      var col=x/size,row=y/size;
+      ctx.strokeStyle='#796b54';ctx.globalAlpha=.22;ctx.lineWidth=1;
+      ctx.strokeRect(x,y,size,size);
+      if((col+row*3)%11===0){
+        ctx.globalAlpha=.38;ctx.fillStyle=['#ffbe55','#60d6a7','#a78bfa'][Math.floor((col+row)%3)];
+        ctx.beginPath();ctx.moveTo(x+24,y+22);ctx.lineTo(x+55,y+52);ctx.lineTo(x+22,y+55);ctx.closePath();ctx.fill();
+      }
+    }}
+    if(hover){ctx.globalAlpha=.62;ctx.fillStyle='#ffce55';ctx.fillRect(hover.x*size+1,hover.y*size+1,size-2,size-2);}
+    ctx.globalAlpha=1;
+  }
+  function resize(){
+    if(!ctx)return;
+    width=innerWidth+size;height=innerHeight+size;
+    var dpr=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);draw();
+  }
+  function queue(){if(!frame)frame=requestAnimationFrame(draw);}
+  function clearHover(){if(hover){hover=null;queue();}}
+  document.addEventListener('pointermove',function(e){
+    if(!ctx||!fine.matches||motion.matches||e.pointerType!=='mouse'||!body.classList.contains('kk-home-visible'))return;
+    var rect=canvas.getBoundingClientRect(),next={x:Math.floor((e.clientX-rect.left)/size),y:Math.floor((e.clientY-rect.top)/size)};
+    if(!hover||hover.x!==next.x||hover.y!==next.y){hover=next;queue();}
+  },{passive:true});
+  document.documentElement.addEventListener('pointerleave',clearHover);
+  window.addEventListener('resize',resize,{passive:true});
+  function visibility(){body.classList.toggle('kk-page-hidden',document.hidden);if(document.hidden)clearHover();}
+  document.addEventListener('visibilitychange',visibility);
+  motion.addEventListener('change',clearHover);
+  var last=null,paperTimer=null;
+  function update(){
+    var active=document.querySelector('.screen.active');
+    body.classList.toggle('kk-home-visible',!!active&&active.id==='home');
+    if(active===last)return;last=active;clearHover();
+    document.querySelectorAll('.kk-celebrate').forEach(function(el){el.remove()});clearTimeout(paperTimer);
+    if(!active||motion.matches||['result','sessionBreak'].indexOf(active.id)<0)return;
+    // Wait for this turn's result markup, and celebrate completed ratings only.
+    paperTimer=setTimeout(function(){
+      if(!active.classList.contains('active')||!active.querySelector('.completion-star .lit'))return;
+      var panel=active.querySelector('.panel.result');if(!panel)return;
+      var layer=document.createElement('div');layer.className='kk-celebrate';layer.setAttribute('aria-hidden','true');
+      var colors=['#e64724','#ffbe55','#147a55','#59a6ff','#a78bfa'];
+      for(var i=0;i<12;i++){var p=document.createElement('i');p.style.setProperty('--paper',colors[i%colors.length]);p.style.setProperty('--dx',((i%2?-1:1)*(70+Math.floor(i/2)*25))+'px');p.style.setProperty('--dy',(50+(i%4)*32)+'px');p.style.setProperty('--turn',((i%2?-1:1)*(80+i*22))+'deg');p.style.setProperty('--delay',(i%3*35)+'ms');layer.appendChild(p)}
+      panel.appendChild(layer);paperTimer=setTimeout(function(){layer.remove()},1000);
+    },0);
+  }
+  var observer=new MutationObserver(update);
+  document.querySelectorAll('.screen').forEach(function(el){observer.observe(el,{attributes:true,attributeFilter:['class']})});
+  resize();visibility();update();
+})();
+</script>
+
 </body>
 </html>
