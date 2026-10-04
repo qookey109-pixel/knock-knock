@@ -458,17 +458,6 @@
       opacity:0;transition:opacity .2s ease
     }
     .primary:hover::before,.secondary:hover::before,.choice:hover::before,.key:hover::before,.sound:hover::before,.schulte-mode:hover::before{opacity:.72}
-    .kk-cursor-dot,.kk-cursor-ring{
-      position:fixed;left:0;top:0;z-index:9999;pointer-events:none;opacity:0;
-      transform:translate3d(-50%,-50%,0);will-change:left,top,width,height,opacity,border-color,background
-    }
-    .kk-cursor-dot{width:7px;height:7px;border-radius:50%;background:#171717}
-    .kk-cursor-ring{
-      width:34px;height:34px;border:1.5px solid rgba(23,23,23,.68);border-radius:50%;
-      transition:width .2s var(--kk-motion),height .2s var(--kk-motion),background .2s ease,border-color .2s ease,opacity .18s ease
-    }
-    .kk-cursor-ring.is-interactive{width:52px;height:52px;background:rgba(185,232,0,.18);border-color:rgba(82,104,0,.72)}
-    .kk-cursor-ring.is-pressed{width:26px;height:26px;background:rgba(230,71,36,.18);border-color:var(--accent)}
     .kk-ripple{
       position:fixed;z-index:9997;width:10px;height:10px;border-radius:50%;pointer-events:none;
       border:1.5px solid rgba(23,23,23,.48);transform:translate(-50%,-50%) scale(.2);
@@ -489,10 +478,6 @@
     .mode:focus-visible,.primary:focus-visible,.secondary:focus-visible,.choice:focus-visible,.key:focus-visible{
       outline-offset:5px
     }
-    @media(hover:hover) and (pointer:fine){
-      body.kk-cursor-on,body.kk-cursor-on a,body.kk-cursor-on button,body.kk-cursor-on select{cursor:none}
-      .kk-cursor-dot,.kk-cursor-ring{opacity:1}
-    }
     @media(max-width:679px){
       body{background:linear-gradient(150deg,#f8f3e8,#faf6ef 58%,#f3efdf)}
       .app::before{background-size:36px 36px;opacity:.28}
@@ -501,7 +486,7 @@
     @media(prefers-reduced-motion:reduce){
       body::before,body::after{transform:none!important}
       .screen.active,#home.screen.active .mode,.screen:not(#home).active .panel{animation:none!important}
-      .kk-cursor-dot,.kk-cursor-ring,.kk-ripple,.kk-curtain{display:none!important}
+      .kk-ripple,.kk-curtain{display:none!important}
       .mode{transform:none!important;transition:none!important}
     }
 
@@ -1653,22 +1638,8 @@
   });
 
   if(!fine||reduce)return;
-  body.classList.add('kk-cursor-on');
-  var dot=document.createElement('i'),ring=document.createElement('i');
-  dot.className='kk-cursor-dot';ring.className='kk-cursor-ring';
-  dot.setAttribute('aria-hidden','true');ring.setAttribute('aria-hidden','true');
-  body.appendChild(ring);body.appendChild(dot);
-
-  var tx=innerWidth/2,ty=innerHeight/2,rx=tx,ry=ty,raf=0;
-  function animate(){
-    rx+=(tx-rx)*.19;ry+=(ty-ry)*.19;
-    ring.style.left=rx+'px';ring.style.top=ry+'px';
-    raf=requestAnimationFrame(animate)
-  }
-  animate();
 
   document.addEventListener('pointermove',function(e){
-    tx=e.clientX;ty=e.clientY;dot.style.left=tx+'px';dot.style.top=ty+'px';
     var nx=(e.clientX/Math.max(1,innerWidth)-.5),ny=(e.clientY/Math.max(1,innerHeight)-.5);
     root.style.setProperty('--kk-px',(50+nx*16).toFixed(2)+'%');
     root.style.setProperty('--kk-py',(38+ny*12).toFixed(2)+'%');
@@ -1677,12 +1648,6 @@
     root.style.setProperty('--kk-ambient-x2',(-nx*17).toFixed(1)+'px');
     root.style.setProperty('--kk-ambient-y2',(-ny*14).toFixed(1)+'px')
   },{passive:true});
-
-  var interactive='button,a,select,input,[tabindex]:not([tabindex="-1"])';
-  document.addEventListener('pointerover',function(e){ring.classList.toggle('is-interactive',!!e.target.closest(interactive))},{passive:true});
-  document.addEventListener('pointerdown',function(){ring.classList.add('is-pressed')},{passive:true});
-  document.addEventListener('pointerup',function(){ring.classList.remove('is-pressed')},{passive:true});
-  document.addEventListener('pointercancel',function(){ring.classList.remove('is-pressed')},{passive:true});
 
   document.querySelectorAll('.mode').forEach(function(card){
     card.addEventListener('pointermove',function(e){
@@ -1693,7 +1658,6 @@
     card.addEventListener('pointerleave',function(){card.style.setProperty('--kk-rx','0deg');card.style.setProperty('--kk-ry','0deg')},{passive:true})
   });
 
-  window.addEventListener('pagehide',function(){if(raf)cancelAnimationFrame(raf)},{once:true})
 })();
 </script>
 
