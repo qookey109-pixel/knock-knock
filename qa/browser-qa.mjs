@@ -263,6 +263,14 @@ async function runViewport(browser, viewport, name) {
     return [s.getPropertyValue('--float-x1'),s.getPropertyValue('--float-x2'),s.getPropertyValue('--float-y1'),s.getPropertyValue('--float-y2')];
   });
   assert(driftVars.some(v => Math.abs(parseFloat(v)) >= 4), `${name}: Schulte drift should use visibly larger travel`);
+  const driftVectors = await page.locator('#schulteGrid .schulte-float').evaluateAll(nodes => nodes.map(el => {
+    const s=el.style,x1=parseFloat(s.getPropertyValue('--float-x1')),x2=parseFloat(s.getPropertyValue('--float-x2')),y1=parseFloat(s.getPropertyValue('--float-y1')),y2=parseFloat(s.getPropertyValue('--float-y2'));
+    return {dx:x2-x1,dy:y2-y1};
+  }));
+  assert(driftVectors.some(v => Math.abs(v.dx) > Math.abs(v.dy)*1.8), `${name}: Schulte drift should include horizontal travel`);
+  assert(driftVectors.some(v => Math.abs(v.dy) > Math.abs(v.dx)*1.8), `${name}: Schulte drift should include vertical travel`);
+  assert(driftVectors.some(v => v.dx*v.dy > 0), `${name}: Schulte drift should include one diagonal slope`);
+  assert(driftVectors.some(v => v.dx*v.dy < 0), `${name}: Schulte drift should include the opposite diagonal slope`);
   await oneCell.click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '2');
   assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: correct Schulte hit should keep all 50 cells visible`);
