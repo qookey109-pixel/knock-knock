@@ -73,7 +73,7 @@ async function runViewport(browser, viewport, name) {
   assert(await page.title() === 'Knock Knock', `${name}: wrong page title`);
   assert((await page.locator('meta[name="color-scheme"]').getAttribute('content')) === 'light', `${name}: Knock Knock should use the light color scheme`);
   assert((await page.locator('meta[name="application-name"]').getAttribute('content')) === 'Knock Knock', `${name}: application identity metadata is missing`);
-  assert((await page.locator('link[rel="canonical"]').getAttribute('href')) === 'https://qookey109-pixel.github.io/quick-math-brain-training/adult-brain-training/', `${name}: canonical URL should target the public Knock Knock page`);
+  assert((await page.locator('link[rel="canonical"]').getAttribute('href')) === 'https://qookey109-pixel.github.io/knock-knock/', `${name}: canonical URL should target the public Knock Knock page`);
   assert((await page.locator('link[rel="icon"]').getAttribute('href')) === './brain7-mark.svg', `${name}: Knock Knock favicon should be declared`);
   assert((await page.locator('link[rel="manifest"]').getAttribute('href')) === './manifest.webmanifest', `${name}: web app manifest should be declared`);
   assert((await page.locator('meta[property="og:title"]').getAttribute('content')) === 'Knock Knock', `${name}: Open Graph title should expose the product identity`);
