@@ -1265,6 +1265,10 @@
   $('musicVolume').addEventListener('input',function(){musicVolume=Number(this.value)/100;updateAudioUi();saveAudioPreferences();if(gameBgmGain)gameBgmGain.gain.value=musicMuted?0:musicVolume;if(musicVolume===0){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else startGameBgm()});
   $('effectVolume').addEventListener('input',function(){effectVolume=Number(this.value)/100;updateAudioUi();saveAudioPreferences()});
   $('soundBtn').addEventListener('click',function(){var turnOff=!(musicMuted&&effectsMuted);musicMuted=turnOff;effectsMuted=turnOff;muted=false;updateAudioUi();saveAudioPreferences();homeBgmUnlocked=true;if(turnOff){stopHomeBgm();stopGameBgm()}else if($('home').classList.contains('active'))startHomeBgm();else if(gameFlowActive())startGameBgm()});
+  document.addEventListener('pointerdown',function(e){
+    var settings=document.querySelector('.audio-settings');
+    if(settings&&settings.open&&!settings.contains(e.target))settings.open=false
+  });
   document.addEventListener('pointerdown',unlockHomeBgm,{once:true});
   document.addEventListener('keydown',unlockHomeBgm,{once:true});
   var homeModeButtons=[].slice.call(document.querySelectorAll('.mode'));
