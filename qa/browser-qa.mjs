@@ -578,6 +578,10 @@ async function runChillJourney(browser) {
   await page.locator('.audio-settings > summary').click();
   await page.locator('#musicVolume').evaluate(el => {el.value='25';el.dispatchEvent(new Event('input',{bubbles:true}))});
   assert((await page.locator('#musicValue').innerText()) === '25%', 'music control must update its visible value');
+  await page.locator('.audio-popover label[for="musicVolume"]').click();
+  assert(await page.locator('.audio-settings').getAttribute('open') !== null, 'audio settings must stay open for interactions inside the popover');
+  await page.locator('#home .hero h2').click();
+  assert(await page.locator('.audio-settings').getAttribute('open') === null, 'clicking outside audio settings must close the popover');
   await page.reload();
   assert(await page.locator('#musicVolume').inputValue() === '25', 'music preference must survive reload');
   await page.locator('.audio-settings > summary').click();
