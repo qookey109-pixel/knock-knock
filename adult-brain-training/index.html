@@ -162,8 +162,16 @@
     .schulte-cell:hover{border-color:#171717;filter:brightness(.98)}
     .schulte-cell.done,.schulte-cell:disabled{opacity:1;background:#eee9df;color:#746e65;border-color:#b8b1a5;box-shadow:none;cursor:default}
     .schulte-cell.done .schulte-float{opacity:.58}
-    .schulte-float{width:100%;min-height:52px;display:flex;align-items:center;justify-content:center;animation:schulte-float var(--float-duration,2.8s) ease-in-out var(--float-delay,0s) infinite alternate;transform:translate(0,0);will-change:transform}
-    @keyframes schulte-float{from{transform:translate(var(--float-x1,-8px),var(--float-y1,5px))}to{transform:translate(var(--float-x2,8px),var(--float-y2,-5px))}}
+    .schulte-float{width:100%;min-height:52px;display:flex;align-items:center;justify-content:center;animation:schulte-float var(--float-duration,1.3s) cubic-bezier(.42,0,.58,1) var(--float-delay,0s) infinite;transform:translate(0,0);will-change:transform}
+    @keyframes schulte-float{
+      0%{transform:translate(var(--float-x1,0%),var(--float-y1,-28%))}
+      16%{transform:translate(var(--float-x2,28%),var(--float-y2,-16%))}
+      34%{transform:translate(var(--float-x3,30%),var(--float-y3,18%))}
+      51%{transform:translate(var(--float-x4,8%),var(--float-y4,30%))}
+      69%{transform:translate(var(--float-x5,-28%),var(--float-y5,20%))}
+      84%{transform:translate(var(--float-x6,-30%),var(--float-y6,-10%))}
+      100%{transform:translate(var(--float-x1,0%),var(--float-y1,-28%))}
+    }
     @media(min-width:800px){.schulte-grid{grid-template-columns:repeat(10,minmax(0,1fr));gap:8px}.schulte-cell{min-height:60px}.schulte-float{min-height:58px}}
     @media(max-width:560px){.schulte-mode-grid{grid-template-columns:repeat(2,1fr)}.schulte-stats{grid-template-columns:repeat(2,1fr)}.schulte-grid{gap:6px}.schulte-cell{min-height:50px}.schulte-float{min-height:48px}}
     @media(prefers-reduced-motion:reduce){.schulte-float{animation:none!important}.schulte-cell{transition:none!important}}
@@ -1699,13 +1707,21 @@
     var b=document.createElement('button');b.type='button';b.className='schulte-cell';b.dataset.number=String(n);b.setAttribute('aria-label','數字 '+n);
     b.style.setProperty('--cell-bg',colors[index%colors.length]);
     var f=document.createElement('span');f.className='schulte-float';f.textContent=n;
-    f.style.setProperty('--float-duration',(1.5+Math.random()*1.3).toFixed(2)+'s');
-    f.style.setProperty('--float-delay',(-Math.random()*2).toFixed(2)+'s');
-    // Cycle through eight travel directions so the field does not collapse into one diagonal rhythm.
-    var patterns=[[-1,0,1,0],[1,0,-1,0],[0,-1,0,1],[0,1,0,-1],[-1,-1,1,1],[1,-1,-1,1],[-1,1,1,-1],[1,1,-1,-1]],motion=patterns[index%patterns.length];
-    function driftAxis(sign,vertical){if(sign===0)return rand(-5,5);return sign*rand(vertical?18:18,vertical?25:22)}
-    f.style.setProperty('--float-x1',driftAxis(motion[0],false)+'%');f.style.setProperty('--float-y1',driftAxis(motion[1],true)+'%');
-    f.style.setProperty('--float-x2',driftAxis(motion[2],false)+'%');f.style.setProperty('--float-y2',driftAxis(motion[3],true)+'%');
+    f.style.setProperty('--float-duration',(0.95+Math.random()*.60).toFixed(2)+'s');
+    f.style.setProperty('--float-delay',(-Math.random()*1.8).toFixed(2)+'s');
+    // Six-point loops mix orbital, zig-zag and cross-field motion instead of retracing one axis.
+    var paths=[
+      [[0,-1],[.85,-.55],[1,.25],[.3,1],[-.8,.7],[-1,-.2]],
+      [[1,-.2],[.55,.9],[-.3,1],[-1,.3],[-.65,-.85],[.2,-1]],
+      [[-.9,-.55],[.25,-1],[1,-.15],[.5,.9],[-.55,1],[-1,.1]],
+      [[.1,1],[1,.35],[.65,-.85],[-.2,-1],[-1,-.3],[-.5,.8]],
+      [[-1,0],[.1,-1],[.95,.5],[-.4,1],[.6,-.75],[-.85,-.4]],
+      [[0,-1],[-1,.15],[.3,1],[1,-.1],[-.55,-.9],[.7,.75]]
+    ],path=paths[index%paths.length],ampX=rand(27,35),ampY=rand(25,34);
+    path.forEach(function(point,i){
+      var x=Math.round(point[0]*ampX+rand(-3,3)),y=Math.round(point[1]*ampY+rand(-3,3));
+      f.style.setProperty('--float-x'+(i+1),x+'%');f.style.setProperty('--float-y'+(i+1),y+'%')
+    });
     b.appendChild(f);b.addEventListener('click',function(){answerSchulte(Number(b.dataset.number),b)});return b
   }
   function updateSchulteHud(){
