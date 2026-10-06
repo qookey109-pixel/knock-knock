@@ -258,19 +258,18 @@ async function runViewport(browser, viewport, name) {
   const beforeColors=await page.locator('#schulteGrid button').evaluateAll(nodes=>Object.fromEntries(nodes.map(n=>[n.dataset.number,n.style.getPropertyValue('--cell-bg')])));
   const beforeOrder = await page.locator('#schulteGrid .schulte-cell').evaluateAll(nodes => nodes.map(n => n.dataset.number));
   const oneCell = page.locator('#schulteGrid .schulte-cell[data-number="1"]');
-  const driftVars = await oneCell.locator('.schulte-float').evaluate(el => {
-    const s = el.style;
-    return [s.getPropertyValue('--float-x1'),s.getPropertyValue('--float-x2'),s.getPropertyValue('--float-y1'),s.getPropertyValue('--float-y2')];
+  const driftProfile = await oneCell.locator('.schulte-float').evaluate(el => {
+    const s=el.style,points=[];
+    for(let i=1;i<=6;i++) points.push([parseFloat(s.getPropertyValue('--float-x'+i)),parseFloat(s.getPropertyValue('--float-y'+i))]);
+    return {points,duration:parseFloat(s.getPropertyValue('--float-duration'))};
   });
-  assert(driftVars.some(v => Math.abs(parseFloat(v)) >= 4), `${name}: Schulte drift should use visibly larger travel`);
-  const driftVectors = await page.locator('#schulteGrid .schulte-float').evaluateAll(nodes => nodes.map(el => {
-    const s=el.style,x1=parseFloat(s.getPropertyValue('--float-x1')),x2=parseFloat(s.getPropertyValue('--float-x2')),y1=parseFloat(s.getPropertyValue('--float-y1')),y2=parseFloat(s.getPropertyValue('--float-y2'));
-    return {dx:x2-x1,dy:y2-y1};
-  }));
-  assert(driftVectors.some(v => Math.abs(v.dx) > Math.abs(v.dy)*1.8), `${name}: Schulte drift should include horizontal travel`);
-  assert(driftVectors.some(v => Math.abs(v.dy) > Math.abs(v.dx)*1.8), `${name}: Schulte drift should include vertical travel`);
-  assert(driftVectors.some(v => v.dx*v.dy > 0), `${name}: Schulte drift should include one diagonal slope`);
-  assert(driftVectors.some(v => v.dx*v.dy < 0), `${name}: Schulte drift should include the opposite diagonal slope`);
+  assert(driftProfile.points.length === 6 && driftProfile.points.every(p => p.every(Number.isFinite)), `${name}: Schulte drift should expose six valid waypoints`);
+  assert(driftProfile.duration >= .95 && driftProfile.duration <= 1.55, `${name}: Schulte drift should use the faster motion range`);
+  assert(driftProfile.points.some(p => Math.abs(p[0]) >= 24 || Math.abs(p[1]) >= 24), `${name}: Schulte drift should use the larger travel range`);
+  const stepVectors=driftProfile.points.map((p,i,arr)=>{const n=arr[(i+1)%arr.length];return [n[0]-p[0],n[1]-p[1]]});
+  assert(stepVectors.some(v=>v[0]>8) && stepVectors.some(v=>v[0]<-8), `${name}: Schulte loop should reverse horizontal direction`);
+  assert(stepVectors.some(v=>v[1]>8) && stepVectors.some(v=>v[1]<-8), `${name}: Schulte loop should reverse vertical direction`);
+  assert(new Set(stepVectors.map(v=>Math.abs(v[0])>Math.abs(v[1])?'h':'v')).size === 2, `${name}: Schulte loop should mix horizontal and vertical-dominant legs`);
   await oneCell.click();
   await page.waitForFunction(() => document.getElementById('schulteNext')?.textContent === '2');
   assert(await page.locator('#schulteGrid .schulte-cell').count() === 50, `${name}: correct Schulte hit should keep all 50 cells visible`);
